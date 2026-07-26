@@ -1,20 +1,37 @@
 import 'package:get/get.dart';
 
-import '../modules/home/bindings/home_binding.dart';
-import '../modules/home/views/home_view.dart';
+import '../modules/auth/pengguna/layar_pembuka/views/index_view.dart';
+import '../../core/navigation/pengguna/main_navigasi_pengguna.dart';
+
+import '../bindings/initial_binding.dart';
+import '../bindings/pengguna_binding.dart';
+import '../modules/auth/pengguna/layar_sambutan/halaman_utama/views/index_view.dart';
+
 
 part 'app_routes.dart';
 
 class AppPages {
   AppPages._();
 
-  static const INITIAL = Routes.HOME;
+  static const initial = Routes.indexHalamanUtamaPengguna;
 
   static final routes = [
     GetPage(
-      name: _Paths.HOME,
-      page: () => const HomeView(),
-      binding: HomeBinding(),
+      name: _Paths.indexLayarPembuka,
+      page: () => const LayarPembukaView(),
+      binding: InitialBinding(),
+    ),
+    
+    // Pengguna
+    GetPage(
+      name: _Paths.indexHalamanUtamaPengguna,
+      page: () => const IndexHalamanUtamaView(),
+      binding: PenggunaBinding(),
+    ),
+    GetPage(
+      name: _Paths.mainNavigasiPengguna,
+      page: () => const MainNavigasiPenggunaView(),
+      binding: PenggunaBinding(),
     ),
   ];
 }
