@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 
-class IndexKunciBerkasController extends GetxController {
+class IndexProfilPenggunaController extends GetxController {
   //TODO: Implement HomeController
 
   final count = 0.obs;

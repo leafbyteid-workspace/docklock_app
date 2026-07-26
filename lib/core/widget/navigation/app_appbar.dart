@@ -48,123 +48,137 @@ class AppBarPengguna extends StatelessWidget implements PreferredSizeWidget {
         (hasBackButton && hasAction && hasSubtitle);
 
     return Material(
-      color: backgroundColor,
       elevation: 0,
-      child: SafeArea(
-        bottom: false,
-        child: SizedBox(
-          height: preferredSize.height,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                Row(
-                  children: [
-                    if (hasBackButton)
-                      IconButton(
-                        splashRadius: 24,
-                        icon: const Icon(
-                          Icons.arrow_back_ios_new_rounded,
-                          color: AppColor.iconInverse,
+      child: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color(0xFF3F2B96),
+              Color(0xFF5A3FD9),
+              Color(0xFF1E1B4B),
+            ],
+            stops: [0.0, 0.40, 1.0],
+          ),
+        ),
+        child: SafeArea(
+          bottom: false,
+          child: SizedBox(
+            height: preferredSize.height,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  Row(
+                    children: [
+                      if (hasBackButton)
+                        IconButton(
+                          splashRadius: 24,
+                          icon: const Icon(
+                            Icons.arrow_back_ios_new_rounded,
+                            color: AppColor.iconInverse,
+                          ),
+                          onPressed: onBackPressed ??
+                              () {
+                                if (Get.key.currentState?.canPop() ?? false) {
+                                  Get.back();
+                                }
+                              },
                         ),
-                        onPressed: onBackPressed ??
-                            () {
-                              if (Get.key.currentState?.canPop() ?? false) {
-                                Get.back();
-                              }
-                            },
+                      const Spacer(),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          if (actionIcon1 != null)
+                            IconButton(
+                              onPressed: onAction1,
+                              splashRadius: 20,
+                              padding: EdgeInsets.zero,
+                              constraints: const BoxConstraints(
+                                minWidth: 36,
+                                minHeight: 36,
+                              ),
+                              visualDensity: VisualDensity.compact,
+                              icon: Icon(
+                                actionIcon1,
+                                color: AppColor.iconInverse,
+                              ),
+                            ),
+                          if (actionIcon2 != null) const SizedBox(width: 4),
+                          if (actionIcon2 != null)
+                            IconButton(
+                              onPressed: onAction2,
+                              splashRadius: 20,
+                              padding: EdgeInsets.zero,
+                              constraints: const BoxConstraints(
+                                minWidth: 36,
+                                minHeight: 36,
+                              ),
+                              visualDensity: VisualDensity.compact,
+                              icon: Icon(
+                                actionIcon2,
+                                color: AppColor.iconInverse,
+                              ),
+                            ),
+                        ],
                       ),
-                    const Spacer(),
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        if (actionIcon1 != null)
-                          IconButton(
-                            onPressed: onAction1,
-                            splashRadius: 20,
-                            padding: EdgeInsets.zero,
-                            constraints: const BoxConstraints(
-                              minWidth: 36,
-                              minHeight: 36,
-                            ),
-                            visualDensity: VisualDensity.compact,
-                            icon: Icon(
-                              actionIcon1,
-                              color: AppColor.iconInverse,
-                            ),
-                          ),
-                        if (actionIcon2 != null) const SizedBox(width: 4),
-                        if (actionIcon2 != null)
-                          IconButton(
-                            onPressed: onAction2,
-                            splashRadius: 20,
-                            padding: EdgeInsets.zero,
-                            constraints: const BoxConstraints(
-                              minWidth: 36,
-                              minHeight: 36,
-                            ),
-                            visualDensity: VisualDensity.compact,
-                            icon: Icon(
-                              actionIcon2,
-                              color: AppColor.iconInverse,
-                            ),
-                          ),
-                      ],
-                    ),
-                  ],
-                ),
-                Align(
-                  alignment:
-                      centerTitle ? Alignment.center : Alignment.centerLeft,
-                  child: Padding(
-                    padding: EdgeInsets.only(
-                      left: centerTitle ? 0 : (hasBackButton ? 56 : 0),
-                      right: centerTitle
-                          ? 0
-                          : (actionIcon1 != null && actionIcon2 != null
-                              ? 76
-                              : actionIcon1 != null
-                                  ? 38
-                                  : 0),
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: centerTitle
-                          ? CrossAxisAlignment.center
-                          : CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          title,
-                          textAlign:
-                              centerTitle ? TextAlign.center : TextAlign.start,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: AppTypography.title3().copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: AppColor.textInverse,
-                          ),
-                        ),
-                        if (hasSubtitle) ...[
-                          const SizedBox(height: 1),
+                    ],
+                  ),
+                  Align(
+                    alignment:
+                        centerTitle ? Alignment.center : Alignment.centerLeft,
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                        left: centerTitle ? 0 : (hasBackButton ? 56 : 0),
+                        right: centerTitle
+                            ? 0
+                            : (actionIcon1 != null && actionIcon2 != null
+                                ? 76
+                                : actionIcon1 != null
+                                    ? 38
+                                    : 0),
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: centerTitle
+                            ? CrossAxisAlignment.center
+                            : CrossAxisAlignment.start,
+                        children: [
                           Text(
-                            subtitle!,
+                            title,
                             textAlign: centerTitle
                                 ? TextAlign.center
                                 : TextAlign.start,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: AppTypography.bodySmall().copyWith(
+                            style: AppTypography.title3().copyWith(
+                              fontWeight: FontWeight.bold,
                               color: AppColor.textInverse,
                             ),
                           ),
+                          if (hasSubtitle) ...[
+                            const SizedBox(height: 1),
+                            Text(
+                              subtitle!,
+                              textAlign: centerTitle
+                                  ? TextAlign.center
+                                  : TextAlign.start,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: AppTypography.bodySmall().copyWith(
+                                color: AppColor.textInverse,
+                              ),
+                            ),
+                          ],
                         ],
-                      ],
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

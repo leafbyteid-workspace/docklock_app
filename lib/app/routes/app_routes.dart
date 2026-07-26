@@ -6,6 +6,10 @@ abstract class Routes {
   static const indexLayarPembuka = _Paths.indexLayarPembuka;
 
   // Pengguna
+  // Autentikasi
+  static const indexMasukPengguna = _Paths.indexMasukPengguna;
+  static const indexDaftarPengguna = _Paths.indexDaftarPengguna;
+  // Main Pengguna
   static const indexHalamanUtamaPengguna = _Paths.indexHalamanUtamaPengguna;
   static const mainNavigasiPengguna = _Paths.mainNavigasiPengguna;
 }
@@ -15,6 +19,10 @@ abstract class _Paths {
   static const indexLayarPembuka = '/index-layar-pembuka';
 
   // Pengguna
+  // Autentikasi
+  static const indexMasukPengguna = '/index-masuk-pengguna';
+  static const indexDaftarPengguna = '/index-daftar-pengguna';
+  // Main Pengguna
   static const indexHalamanUtamaPengguna = '/index-halaman-utama-pengguna';
   static const mainNavigasiPengguna = '/index-main-navigasi-pengguna';
 }

@@ -4,7 +4,7 @@ import 'package:material_symbols_icons/material_symbols_icons.dart';
 
 import '../../../app/modules/pengguna/tamu/layar_utama/aktivitas/views/index_view.dart';
 import '../../../app/modules/pengguna/tamu/layar_utama/beranda/views/index_view.dart';
-import '../../../app/modules/pengguna/tamu/layar_utama/kunci_berkas/views/index_view.dart';
+import '../../../app/modules/pengguna/tamu/layar_utama/profil/views/index_view.dart';
 import '../../constants/app_color.dart';
 import '../../constants/app_typography.dart';
 
@@ -24,9 +24,9 @@ class MainNavigasiPenggunaView extends GetView<MainNavigasiPenggunaController> {
   @override
   Widget build(BuildContext context) {
     final pages = [
-      const IndexBerandaView(),
-      const IndexKunciBerkasView(),
       const IndexAktivitasView(),
+      const IndexBerandaView(),
+      const IndexProfilPenggunaView(),
     ];
 
     return Obx(
@@ -101,27 +101,27 @@ class _MenuNavigasi extends StatelessWidget {
         children: [
           Expanded(
             child: _TabNavigasi(
-              label: "Beranda",
-              icon: Symbols.home_rounded,
-              selectedIcon: Symbols.home_rounded,
+              label: "Aktivitas",
+              icon: Symbols.history_rounded,
+              selectedIcon: Symbols.history,
               selected: controller.selectedIndex.value == 0,
               onTap: () => controller.changePage(0),
             ),
           ),
           Expanded(
             child: _TabNavigasi(
-              label: "Kunci Berkas",
-              icon: Symbols.lock_rounded,
-              selectedIcon: Symbols.lock_rounded,
+              label: "Beranda",
+              icon: Symbols.home_rounded,
+              selectedIcon: Symbols.home,
               selected: controller.selectedIndex.value == 1,
               onTap: () => controller.changePage(1),
             ),
           ),
           Expanded(
             child: _TabNavigasi(
-              label: "Aktivitas",
-              icon: Symbols.history_rounded,
-              selectedIcon: Symbols.history_rounded,
+              label: "Profil",
+              icon: Symbols.person_rounded,
+              selectedIcon: Symbols.person,
               selected: controller.selectedIndex.value == 2,
               onTap: () => controller.changePage(2),
             ),
