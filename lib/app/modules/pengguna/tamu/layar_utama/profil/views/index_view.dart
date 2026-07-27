@@ -25,119 +25,132 @@ class IndexProfilPenggunaView extends GetView<IndexProfilPenggunaController> {
           Get.back();
         },
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          /// Profile Header
-          AppProfileCard(
-            title: "Muhammad Rizki Pratama",
-            subtitle: "rizki.pratama@email.com",
-            status: "Aktif",
-            caption: "Pengguna",
-            statusColor: const Color(0xFF16A34A),
-            onTap: () {},
-          ),
+      body: RefreshIndicator(
+        onRefresh: () async {
+          await controller.refreshData();
+        },
+        child: ListView(
+          padding: const EdgeInsets.all(16),
+          children: [
+            Obx(() {
+              if (controller.isLoading.value) {
+                return const Center(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 24),
+                    child: CircularProgressIndicator(),
+                  ),
+                );
+              }
 
-          const SizedBox(height: 24),
+              final pengguna = controller.pengguna.value;
 
-          AppProfileMenuSection(
-            title: "Akun",
-            children: [
-              AppProfileMenuTile(
-                icon: Symbols.person_rounded,
-                title: "Informasi Pribadi",
-                subtitle: "Kelola data profil pengguna",
-                onTap: () {},
-              ),
-              AppProfileMenuTile(
-                icon: Symbols.badge_rounded,
-                title: "Data Kepegawaian",
-                subtitle: "Lihat informasi pegawai",
-                onTap: () {},
-              ),
-              AppProfileMenuTile(
-                icon: Symbols.lock_rounded,
-                title: "Keamanan Akun",
-                subtitle: "Password dan keamanan",
-                showDivider: false,
-                onTap: () {},
-              ),
-            ],
-          ),
+              if (pengguna == null) {
+                return const SizedBox.shrink();
+              }
 
-          AppProfileMenuSection(
-            title: "Preferensi",
-            children: [
-              AppProfileMenuTile(
-                icon: Symbols.notifications_rounded,
-                title: "Notifikasi",
-                subtitle: "Kelola pemberitahuan aplikasi",
+              return AppProfileCard(
+                title: pengguna.namaLengkap,
+                subtitle: controller.email.value,
+                status: "Aktif",
+                caption: "Pengguna",
+                statusColor: const Color(0xFF16A34A),
                 onTap: () {},
-              ),
-              AppProfileMenuTile(
-                icon: Symbols.dark_mode_rounded,
-                title: "Tema",
-                subtitle: "Terang, Gelap, atau Sistem",
-                onTap: () {},
-              ),
-              AppProfileMenuTile(
-                icon: Symbols.language_rounded,
-                title: "Bahasa",
-                subtitle: "Bahasa Indonesia",
-                showDivider: false,
-                onTap: () {},
-              ),
-            ],
-          ),
-
-          AppProfileMenuSection(
-            title: "Bantuan",
-            children: [
-              AppProfileMenuTile(
-                icon: Symbols.help_rounded,
-                title: "Pusat Bantuan",
-                subtitle: "FAQ dan dokumentasi",
-                onTap: () {},
-              ),
-              AppProfileMenuTile(
-                icon: Symbols.info_rounded,
-                title: "Tentang Aplikasi",
-                subtitle: "Versi 1.0.0",
-                showDivider: false,
-                onTap: () {},
-              ),
-            ],
-          ),
-
-          AppProfileMenuSection(
-            title: "Sesi",
-            children: [
-              AppProfileMenuTile(
-                icon: Symbols.logout_rounded,
-                iconColor: Colors.red,
-                textColor: Colors.red,
-                title: "Keluar",
-                subtitle: "Logout dari aplikasi",
-                showDivider: false,
-                onTap: () {},
-              ),
-            ],
-          ),
-
-          const SizedBox(height: 10),
-
-          Center(
-            child: Text(
-              "SIMPEG Mobile\nVersi 1.0.0",
-              textAlign: TextAlign.center,
-              style: AppTypography.footnote().copyWith(
-                color: AppColor.textSecondary,
+              );
+            }),
+            const SizedBox(height: 24),
+            AppProfileMenuSection(
+              title: "Akun",
+              children: [
+                AppProfileMenuTile(
+                  icon: Symbols.person_rounded,
+                  title: "Informasi Pribadi",
+                  subtitle: "Kelola data profil pengguna",
+                  onTap: () {},
+                ),
+                AppProfileMenuTile(
+                  icon: Symbols.badge_rounded,
+                  title: "Data Kepegawaian",
+                  subtitle: "Lihat informasi pegawai",
+                  onTap: () {},
+                ),
+                AppProfileMenuTile(
+                  icon: Symbols.lock_rounded,
+                  title: "Keamanan Akun",
+                  subtitle: "Password dan keamanan",
+                  showDivider: false,
+                  onTap: () {},
+                ),
+              ],
+            ),
+            AppProfileMenuSection(
+              title: "Preferensi",
+              children: [
+                AppProfileMenuTile(
+                  icon: Symbols.notifications_rounded,
+                  title: "Notifikasi",
+                  subtitle: "Kelola pemberitahuan aplikasi",
+                  onTap: () {},
+                ),
+                AppProfileMenuTile(
+                  icon: Symbols.dark_mode_rounded,
+                  title: "Tema",
+                  subtitle: "Terang, Gelap, atau Sistem",
+                  onTap: () {},
+                ),
+                AppProfileMenuTile(
+                  icon: Symbols.language_rounded,
+                  title: "Bahasa",
+                  subtitle: "Bahasa Indonesia",
+                  showDivider: false,
+                  onTap: () {},
+                ),
+              ],
+            ),
+            AppProfileMenuSection(
+              title: "Bantuan",
+              children: [
+                AppProfileMenuTile(
+                  icon: Symbols.help_rounded,
+                  title: "Pusat Bantuan",
+                  subtitle: "FAQ dan dokumentasi",
+                  onTap: () {},
+                ),
+                AppProfileMenuTile(
+                  icon: Symbols.info_rounded,
+                  title: "Tentang Aplikasi",
+                  subtitle: "Versi 1.0.0",
+                  showDivider: false,
+                  onTap: () {},
+                ),
+              ],
+            ),
+            AppProfileMenuSection(
+              title: "Sesi",
+              children: [
+                AppProfileMenuTile(
+                  icon: Symbols.logout_rounded,
+                  iconColor: Colors.red,
+                  textColor: Colors.red,
+                  title: "Keluar",
+                  subtitle: "Logout dari aplikasi",
+                  showDivider: false,
+                  onTap: () {},
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            Center(
+              child: Text(
+                "SIMPEG Mobile\nVersi 1.0.0",
+                textAlign: TextAlign.center,
+                style: AppTypography.footnote().copyWith(
+                  color: AppColor.textSecondary,
+                ),
               ),
             ),
-          ),
-
-          const SizedBox(height: 20),
-        ],
+            const SizedBox(height: 20),
+          ],
+        ),
       ),
     );
   }

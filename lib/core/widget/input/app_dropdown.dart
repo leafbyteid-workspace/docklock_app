@@ -109,7 +109,7 @@ class _DropdownFieldState<T> extends State<_DropdownField<T>> {
     super.dispose();
   }
 
-  void _openDropdown() {
+  void _bukaDropdown() {
     if (!widget.enabled || widget.readOnly) {
       return;
     }
@@ -259,7 +259,7 @@ class _DropdownFieldState<T> extends State<_DropdownField<T>> {
     );
   }
 
-  String _displayLabel() {
+  String _tampilanLabel() {
     final item = widget.items
         .where(
           (e) => e.value == widget.value,
@@ -271,7 +271,7 @@ class _DropdownFieldState<T> extends State<_DropdownField<T>> {
 
   @override
   Widget build(BuildContext context) {
-    final label = _displayLabel();
+    final label = _tampilanLabel();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -291,7 +291,7 @@ class _DropdownFieldState<T> extends State<_DropdownField<T>> {
           color: Colors.transparent,
           child: InkWell(
             borderRadius: BorderRadius.circular(12),
-            onTap: _openDropdown,
+            onTap: _bukaDropdown,
             child: IgnorePointer(
               child: InputDecorator(
                 isEmpty: label.isEmpty,

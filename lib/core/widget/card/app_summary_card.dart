@@ -4,7 +4,7 @@ import '../../constants/app_color.dart';
 import '../../constants/app_typography.dart';
 
 class AppSummaryCard extends StatelessWidget {
-  final List<AppSummaryItem> items;
+  final List<AppItemRingkasan> items;
 
   const AppSummaryCard({
     super.key,
@@ -145,13 +145,13 @@ class AppSummaryCard extends StatelessWidget {
   }
 }
 
-class AppSummaryItem {
+class AppItemRingkasan {
   final IconData icon;
   final String count;
   final String title;
   final String subtitle;
 
-  const AppSummaryItem({
+  const AppItemRingkasan({
     required this.icon,
     required this.count,
     required this.title,

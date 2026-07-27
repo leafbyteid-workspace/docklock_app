@@ -34,7 +34,7 @@ class IndexBerandaView extends GetView<IndexBerandaController> {
               children: [
                 Expanded(
                   child: AppFeatureCard(
-                    layout: AppFeatureCardLayout.horizontal,
+                    layout: AppTataLetakKartuFitur.horizontal,
                     label: 'Keamanan',
                     title: 'Enkripsi',
                     description:
@@ -47,7 +47,7 @@ class IndexBerandaView extends GetView<IndexBerandaController> {
                 const SizedBox(width: 16),
                 Expanded(
                   child: AppFeatureCard(
-                    layout: AppFeatureCardLayout.horizontal,
+                    layout: AppTataLetakKartuFitur.horizontal,
                     label: 'Akses Data',
                     title: 'Dekripsi',
                     description:
@@ -69,19 +69,19 @@ class IndexBerandaView extends GetView<IndexBerandaController> {
             const SizedBox(height: 8),
             const AppSummaryCard(
               items: [
-                AppSummaryItem(
+                AppItemRingkasan(
                   icon: Symbols.lock,
                   count: "24",
                   title: "Enkripsi",
                   subtitle: "Total",
                 ),
-                AppSummaryItem(
+                AppItemRingkasan(
                   icon: Symbols.folder,
                   count: "18",
                   title: "Dokumen",
                   subtitle: "Tersimpan",
                 ),
-                AppSummaryItem(
+                AppItemRingkasan(
                   icon: Symbols.lock_open,
                   count: "6",
                   title: "Dekripsi",

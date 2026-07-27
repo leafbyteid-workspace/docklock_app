@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../constants/app_color.dart';
 import '../../constants/app_typography.dart';
 
-enum AppButtonType {
+enum AppTipeTombol {
   primary,
   secondary,
   tertiary,
@@ -13,7 +13,7 @@ enum AppButtonType {
 class AppButton extends StatelessWidget {
   final String text;
   final VoidCallback? onPressed;
-  final AppButtonType type;
+  final AppTipeTombol type;
   final String? iconAsset;
   final double iconSize;
   final bool isLoading;
@@ -25,7 +25,7 @@ class AppButton extends StatelessWidget {
     super.key,
     required this.text,
     required this.onPressed,
-    this.type = AppButtonType.primary,
+    this.type = AppTipeTombol.primary,
     this.iconAsset,
     this.iconSize = 20,
     this.isLoading = false,
@@ -87,7 +87,7 @@ class AppButton extends StatelessWidget {
 
   Widget _buildButton(bool isDisabled, Widget child) {
     switch (type) {
-      case AppButtonType.primary:
+      case AppTipeTombol.primary:
         return FilledButton(
           onPressed: isDisabled ? null : onPressed,
           style: FilledButton.styleFrom(
@@ -105,7 +105,7 @@ class AppButton extends StatelessWidget {
           child: child,
         );
 
-      case AppButtonType.secondary:
+      case AppTipeTombol.secondary:
         return OutlinedButton(
           onPressed: isDisabled ? null : onPressed,
           style: OutlinedButton.styleFrom(
@@ -125,7 +125,7 @@ class AppButton extends StatelessWidget {
           child: child,
         );
 
-      case AppButtonType.tertiary:
+      case AppTipeTombol.tertiary:
         return TextButton(
           onPressed: isDisabled ? null : onPressed,
           style: TextButton.styleFrom(
@@ -139,7 +139,7 @@ class AppButton extends StatelessWidget {
           child: child,
         );
 
-      case AppButtonType.danger:
+      case AppTipeTombol.danger:
         return FilledButton(
           onPressed: isDisabled ? null : onPressed,
           style: FilledButton.styleFrom(
@@ -163,12 +163,12 @@ class AppButton extends StatelessWidget {
     if (isDisabled) return AppColor.disabledText;
 
     switch (type) {
-      case AppButtonType.primary:
+      case AppTipeTombol.primary:
         return AppColor.onPrimary;
-      case AppButtonType.secondary:
-      case AppButtonType.tertiary:
+      case AppTipeTombol.secondary:
+      case AppTipeTombol.tertiary:
         return AppColor.primary;
-      case AppButtonType.danger:
+      case AppTipeTombol.danger:
         return AppColor.onSemantic;
     }
   }

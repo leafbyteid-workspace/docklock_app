@@ -3,13 +3,13 @@ import 'package:material_symbols_icons/symbols.dart';
 import '../../constants/app_color.dart';
 import '../../constants/app_typography.dart';
 
-enum AppFeatureCardLayout {
+enum AppTataLetakKartuFitur {
   vertical,
   horizontal,
 }
 
 class AppFeatureCard extends StatelessWidget {
-  final AppFeatureCardLayout layout;
+  final AppTataLetakKartuFitur layout;
   final String label;
   final String title;
   final String description;
@@ -21,7 +21,7 @@ class AppFeatureCard extends StatelessWidget {
   final Color accentColor;
 
   const AppFeatureCard({
-    this.layout = AppFeatureCardLayout.vertical,
+    this.layout = AppTataLetakKartuFitur.vertical,
     super.key,
     required this.label,
     required this.title,
@@ -36,7 +36,7 @@ class AppFeatureCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool isHorizontal = layout == AppFeatureCardLayout.horizontal;
+    final bool isHorizontal = layout == AppTataLetakKartuFitur.horizontal;
     final double padding = isHorizontal ? 16 : 20;
     return Container(
       width: double.infinity,
@@ -184,13 +184,13 @@ class AppFeatureCard extends StatelessWidget {
 // import '../../constants/app_color.dart';
 // import '../../constants/app_typography.dart';
 
-// enum AppFeatureCardLayout {
+// enum AppTataLetakKartuFitur {
 //   vertical,
 //   horizontal,
 // }
 
 // class AppFeatureCard extends StatelessWidget {
-//   final AppFeatureCardLayout layout;
+//   final AppTataLetakKartuFitur layout;
 //   final String label;
 //   final String title;
 //   final String description;
@@ -202,7 +202,7 @@ class AppFeatureCard extends StatelessWidget {
 //   final Color accentColor;
 
 //   const AppFeatureCard({
-//     this.layout = AppFeatureCardLayout.vertical,
+//     this.layout = AppTataLetakKartuFitur.vertical,
 //     super.key,
 //     required this.label,
 //     required this.title,
@@ -217,7 +217,7 @@ class AppFeatureCard extends StatelessWidget {
 
 //   @override
 //   Widget build(BuildContext context) {
-//     final bool isHorizontal = layout == AppFeatureCardLayout.horizontal;
+//     final bool isHorizontal = layout == AppTataLetakKartuFitur.horizontal;
 //     final double padding = isHorizontal ? 16 : 20;
 //     return Container(
 //       width: double.infinity,

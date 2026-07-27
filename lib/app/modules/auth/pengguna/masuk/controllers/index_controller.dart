@@ -1,36 +1,48 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../../../../core/errors/app_snackbar.dart';
+import '../../../../../../core/utils/security/app_password_hasher.dart';
+import '../../../../../data/local/isar/repository/akun_repository.dart';
+import '../../../../../data/local/isar/repository/pengguna_repository.dart';
+import '../../../../../data/local/isar/services/auth/sesi_service.dart';
+import '../../../../../routes/app_pages.dart';
+
 class IndexMasukPenggunaController extends GetxController {
+  IndexMasukPenggunaController({
+    RepositoriAkun? repositoriAkun,
+    RepositoriPengguna? repositoriPengguna,
+    SesiService? sesiService,
+  })  : _repositoriAkun = repositoriAkun ?? RepositoriAkun(),
+        _repositoriPengguna = repositoriPengguna ?? RepositoriPengguna(),
+        _sesiService = sesiService ?? SesiService();
+
+  final RepositoriAkun _repositoriAkun;
+  final RepositoriPengguna _repositoriPengguna;
+  final SesiService _sesiService;
+
   final formKey = GlobalKey<FormState>();
+
   final isLoading = false.obs;
-  final selectedGender = Rxn<String>();
-  final namaLengkapController = TextEditingController();
+  final obscurePassword = true.obs;
+
   final emailController = TextEditingController();
   final kataSandiController = TextEditingController();
-  final konfirmasiKataSandiController = TextEditingController();
-
-  @override
-  void onInit() {
-    super.onInit();
-  }
 
   @override
   void onClose() {
-    namaLengkapController.dispose();
     emailController.dispose();
     kataSandiController.dispose();
-    konfirmasiKataSandiController.dispose();
     super.onClose();
   }
 
   String? validasiEmail(String? value) {
     if (value == null || value.trim().isEmpty) {
-      return "Email wajib diisi";
+      return "Email wajib diisi.";
     }
 
     if (!GetUtils.isEmail(value.trim())) {
-      return "Format email tidak valid";
+      return "Format email tidak valid.";
     }
 
     return null;
@@ -38,41 +50,69 @@ class IndexMasukPenggunaController extends GetxController {
 
   String? validasiKataSandi(String? value) {
     if (value == null || value.isEmpty) {
-      return "Kata sandi wajib diisi";
+      return "Kata sandi wajib diisi.";
     }
 
     if (value.length < 8) {
-      return "Minimal 8 karakter";
+      return "Minimal 8 karakter.";
     }
 
     return null;
   }
 
-
   Future<void> masukPengguna() async {
-    if (!formKey.currentState!.validate()) return;
-
-    if (selectedGender.value == null) {
-      Get.snackbar(
-        "Peringatan",
-        "Silakan pilih jenis kelamin.",
-      );
+    if (!formKey.currentState!.validate()) {
       return;
     }
 
     isLoading.value = true;
 
     try {
-      await Future.delayed(const Duration(seconds: 2));
+      final email = emailController.text.trim();
+      final password = kataSandiController.text;
+      final akun = await _repositoriAkun.berdasarkanEmail(email);
 
-      Get.snackbar(
-        "Berhasil",
-        "Pendaftaran berhasil.",
+      if (akun == null) {
+        AppSnackbar.gagal(
+          title: "Login Gagal",
+          message: "Email tidak terdaftar.",
+        );
+        return;
+      }
+
+      final valid = PasswordHasher.verify(
+        password: password,
+        hashedPassword: akun.kataSandi,
       );
+
+      if (!valid) {
+        AppSnackbar.gagal(
+          title: "Login Gagal",
+          message: "Password salah.",
+        );
+        return;
+      }
+      final pengguna =
+          await _repositoriPengguna.berdasarkanId(akun.idPengguna!);
+
+      if (pengguna == null) {
+        AppSnackbar.gagal(
+          title: "Login Gagal",
+          message: "Data pengguna tidak ditemukan.",
+        );
+        return;
+      }
+      await _sesiService.masuk(
+        idAkun: akun.id,
+      );
+      emailController.clear();
+      kataSandiController.clear();
+
+      Get.offAllNamed(Routes.mainNavigasiPengguna);
     } catch (e) {
-      Get.snackbar(
-        "Gagal",
-        e.toString(),
+      AppSnackbar.gagal(
+        title: "Terjadi Kesalahan",
+        message: e.toString(),
       );
     } finally {
       isLoading.value = false;

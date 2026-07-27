@@ -63,7 +63,6 @@ class IndexDaftarPenggunaView extends GetView<IndexDaftarPenggunaController> {
                           label: "Nama Lengkap",
                           hint: "Masukkan Nama Lengkap...",
                           type: AppTextFieldType.text,
-                          required: true,
                           validator: controller.validasiNamaLengkap,
                           textInputAction: TextInputAction.next,
                           prefix: const Icon(Icons.person_outline_rounded),
@@ -72,11 +71,10 @@ class IndexDaftarPenggunaView extends GetView<IndexDaftarPenggunaController> {
                           height: 16,
                         ),
                         AppTextField(
-                          controller: controller.namaLengkapController,
+                          controller: controller.namaPenggunaController,
                           label: "Nama Pengguna",
                           hint: "Masukkan Nama Pengguna...",
                           type: AppTextFieldType.text,
-                          required: true,
                           validator: controller.validasiNamaPengguna,
                           textInputAction: TextInputAction.next,
                           prefix: const Icon(Icons.person_outline_rounded),
@@ -89,7 +87,6 @@ class IndexDaftarPenggunaView extends GetView<IndexDaftarPenggunaController> {
                           label: "Email",
                           hint: "Masukkan Email...",
                           type: AppTextFieldType.email,
-                          required: true,
                           validator: controller.validasiEmail,
                           textInputAction: TextInputAction.next,
                         ),
@@ -101,7 +98,6 @@ class IndexDaftarPenggunaView extends GetView<IndexDaftarPenggunaController> {
                           label: "Kata Sandi",
                           hint: "Masukkan Kata Sandi...",
                           type: AppTextFieldType.password,
-                          required: true,
                           validator: controller.validasiKataSandi,
                           textInputAction: TextInputAction.next,
                         ),
@@ -113,12 +109,8 @@ class IndexDaftarPenggunaView extends GetView<IndexDaftarPenggunaController> {
                           label: "Ulangi Kata Sandi",
                           hint: "Masukkan Ulang Kata Sandi...",
                           type: AppTextFieldType.password,
-                          required: true,
                           validator: controller.validasiKonfirmasiKataSandi,
                           textInputAction: TextInputAction.done,
-                          onSubmitted: (_) {
-                            controller.daftarPengguna();
-                          },
                         ),
                         const SizedBox(
                           height: 56,
@@ -130,7 +122,7 @@ class IndexDaftarPenggunaView extends GetView<IndexDaftarPenggunaController> {
                             width: double.infinity,
                             height: 48,
                             child: AppButton(
-                              type: AppButtonType.primary,
+                              type: AppTipeTombol.primary,
                               text: isLoading ? "Memproses..." : "Daftar",
                               onPressed: isLoading
                                   ? null
@@ -145,7 +137,7 @@ class IndexDaftarPenggunaView extends GetView<IndexDaftarPenggunaController> {
                           width: double.infinity,
                           height: 48,
                           child: AppButton(
-                            type: AppButtonType.secondary,
+                            type: AppTipeTombol.secondary,
                             text: "Sudah Punya Akun?",
                             onPressed: () {
                               Get.back();

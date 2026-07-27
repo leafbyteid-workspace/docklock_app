@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 
 import 'package:get/get.dart';
 
+import 'app/data/local/isar/services/main/isar_service.dart';
 import 'app/routes/app_pages.dart';
 import 'core/widget/action/app_button.dart';
 import 'core/constants/app_color.dart';
@@ -29,7 +30,9 @@ Future<void> main() async {
   }, (error, stackTrace) {});
 }
 
-Future<void> _initializeApp() async {}
+Future<void> _initializeApp() async {
+  await IsarService.instance.init();
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -121,7 +124,7 @@ class MyApp extends StatelessWidget {
                             width: double.infinity,
                             child: AppButton(
                               text: 'Kembali Ke Beranda',
-                              type: AppButtonType.primary,
+                              type: AppTipeTombol.primary,
                               height: 48,
                               onPressed: () {
                                 Navigator.of(context).maybePop();

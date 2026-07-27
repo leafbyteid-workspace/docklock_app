@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 
 import '../../../../../../core/constants/app_color.dart';
 import '../../../../../../core/constants/app_typography.dart';
+import '../../../../../../core/errors/app_toast.dart';
 import '../../../../../../core/widget/action/app_button.dart';
 import '../../../../../../core/widget/input/app_textfield.dart';
 import '../../../../../routes/app_pages.dart';
@@ -63,7 +64,6 @@ class IndexMasukPenggunaView extends GetView<IndexMasukPenggunaController> {
                         label: "Email",
                         hint: "Masukkan Email...",
                         type: AppTextFieldType.email,
-                        required: true,
                         validator: controller.validasiEmail,
                         textInputAction: TextInputAction.next,
                       ),
@@ -73,9 +73,8 @@ class IndexMasukPenggunaView extends GetView<IndexMasukPenggunaController> {
                         label: "Kata Sandi",
                         hint: "Masukkan Kata Sandi...",
                         type: AppTextFieldType.password,
-                        required: true,
                         validator: controller.validasiKataSandi,
-                        textInputAction: TextInputAction.next,
+                        textInputAction: TextInputAction.done,
                       ),
                       const SizedBox(height: 32),
                       Obx(() {
@@ -84,7 +83,7 @@ class IndexMasukPenggunaView extends GetView<IndexMasukPenggunaController> {
                         return SizedBox(
                           height: 48,
                           child: AppButton(
-                            type: AppButtonType.primary,
+                            type: AppTipeTombol.primary,
                             text: isLoading ? "Memproses..." : "Masuk",
                             onPressed:
                                 isLoading ? null : controller.masukPengguna,
@@ -95,12 +94,18 @@ class IndexMasukPenggunaView extends GetView<IndexMasukPenggunaController> {
                       SizedBox(
                         height: 48,
                         child: AppButton(
-                          type: AppButtonType.secondary,
+                          type: AppTipeTombol.secondary,
                           text: "Belum Punya Akun?",
-                          onPressed: () {
-                            Get.toNamed(
+                          onPressed: () async {
+                            final result = await Get.toNamed(
                               Routes.indexDaftarPengguna,
                             );
+
+                            if (result == true) {
+                              AppToast.sukses(
+                                title: "Pendaftaraan berhasil",
+                              );
+                            }
                           },
                         ),
                       ),
