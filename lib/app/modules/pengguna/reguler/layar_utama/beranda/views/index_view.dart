@@ -8,6 +8,7 @@ import '../../../../../../../core/widget/card/app_feature_card.dart';
 import '../../../../../../../core/widget/card/app_summary_card.dart';
 import '../../../../../../../core/widget/list/app_listile.dart';
 import '../../../../../../../core/widget/navigation/app_appbar.dart';
+import '../../../../../../routes/app_pages.dart';
 import '../controllers/index_controller.dart';
 
 class IndexBerandaView extends GetView<IndexBerandaController> {
@@ -36,12 +37,14 @@ class IndexBerandaView extends GetView<IndexBerandaController> {
                   child: AppFeatureCard(
                     layout: AppTataLetakKartuFitur.horizontal,
                     label: 'Keamanan',
-                    title: 'Enkripsi',
+                    title: 'Kunci Berkas',
                     description:
                         'Ubah dokumen menjadi data terenkripsi agar hanya dapat diakses oleh pihak yang memiliki kunci.',
                     backgroundIcon: Symbols.lock,
                     actionText: 'Mulai Enkripsi',
-                    onTap: () {},
+                    onTap: () {
+                      Get.toNamed(Routes.indexKunciBerkas);
+                    },
                   ),
                 ),
                 const SizedBox(width: 16),
@@ -49,12 +52,14 @@ class IndexBerandaView extends GetView<IndexBerandaController> {
                   child: AppFeatureCard(
                     layout: AppTataLetakKartuFitur.horizontal,
                     label: 'Akses Data',
-                    title: 'Dekripsi',
+                    title: 'Buka Berkas',
                     description:
                         'Pulihkan dokumen terenkripsi kembali ke bentuk aslinya menggunakan kunci yang valid.',
                     backgroundIcon: Symbols.lock_open,
                     actionText: 'Mulai Dekripsi',
-                    onTap: () {},
+                    onTap: () {
+                      Get.toNamed(Routes.indexBukaKunciBerkas);
+                    },
                   ),
                 ),
               ],

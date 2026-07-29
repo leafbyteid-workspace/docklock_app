@@ -1,3 +1,4 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
@@ -15,6 +16,7 @@ enum AppTextFieldType {
   url,
   search,
   multiline,
+  file,
 }
 
 class AppTextField extends StatefulWidget {
@@ -42,12 +44,13 @@ class AppTextField extends StatefulWidget {
   final VoidCallback? onTap;
 
   final TextInputAction? textInputAction;
+  final PlatformFile? file;
+  final ValueChanged<PlatformFile?>? onFileChanged;
 
   final ValueChanged<String>? onChanged;
   final ValueChanged<String>? onSubmitted;
 
   final FormFieldValidator<String>? validator;
-
   final List<TextInputFormatter>? inputFormatters;
 
   const AppTextField({
@@ -65,6 +68,8 @@ class AppTextField extends StatefulWidget {
     this.maxLength,
     this.maxLines = 1,
     this.minLines,
+    this.file,
+    this.onFileChanged,
     this.prefix,
     this.suffix,
     this.onTap,
@@ -83,6 +88,19 @@ class _AppTextFieldState extends State<AppTextField> {
   bool obscure = true;
 
   bool get isPassword => widget.type == AppTextFieldType.password;
+
+  bool get isFile => widget.type == AppTextFieldType.file;
+
+  Future<void> _pilihBerkas() async {
+    final result = await FilePicker.platform.pickFiles(
+      allowMultiple: false,
+      type: FileType.any,
+    );
+
+    if (result != null) {
+      widget.onFileChanged?.call(result.files.first);
+    }
+  }
 
   TextInputType get keyboardType {
     switch (widget.type) {
@@ -126,6 +144,9 @@ class _AppTextFieldState extends State<AppTextField> {
       case AppTextFieldType.url:
         return const Icon(Symbols.link_rounded);
 
+      case AppTextFieldType.file:
+        return const Icon(Symbols.attach_file_rounded);
+
       default:
         return null;
     }
@@ -133,6 +154,120 @@ class _AppTextFieldState extends State<AppTextField> {
 
   @override
   Widget build(BuildContext context) {
+    if (isFile) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (widget.label != null) ...[
+            RichText(
+              text: TextSpan(
+                text: widget.label!,
+                style: AppTypography.subhead().copyWith(
+                  color: widget.enabled
+                      ? AppColor.textPrimary
+                      : AppColor.disabledText,
+                  fontWeight: AppTypography.semiBold,
+                ),
+                children: [
+                  if (widget.required)
+                    const TextSpan(
+                      text: " *",
+                      style: TextStyle(
+                        color: AppColor.danger,
+                        fontWeight: AppTypography.bold,
+                      ),
+                    ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 6),
+          ],
+          InkWell(
+            borderRadius: BorderRadius.circular(12),
+            onTap: widget.enabled ? _pilihBerkas : null,
+            child: Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 14,
+              ),
+              decoration: BoxDecoration(
+                color: widget.enabled
+                    ? AppColor.surface
+                    : AppColor.disabledBackground,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: AppColor.borderDefault,
+                ),
+              ),
+              child: Row(
+                children: [
+                  const Icon(Symbols.attach_file_rounded),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: widget.file == null
+                        ? Text(
+                            widget.hint ?? "Pilih file",
+                            style: AppTypography.bodyPrimary().copyWith(
+                              color: AppColor.textMuted,
+                            ),
+                          )
+                        : Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                widget.file!.name,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: AppTypography.bodyPrimary(),
+                              ),
+                              const SizedBox(height: 2),
+                              Text(
+                                "${(widget.file!.size / 1024).toStringAsFixed(1)} KB",
+                                style: AppTypography.helper.copyWith(
+                                  color: AppColor.textSecondary,
+                                ),
+                              ),
+                            ],
+                          ),
+                  ),
+                  if (widget.file == null)
+                    const Icon(Symbols.upload_file_rounded)
+                  else
+                    IconButton(
+                      splashRadius: 20,
+                      icon: const Icon(
+                        Symbols.close_rounded,
+                        color: AppColor.danger,
+                      ),
+                      onPressed: () {
+                        widget.onFileChanged?.call(null);
+                      },
+                    ),
+                ],
+              ),
+            ),
+          ),
+          if (widget.helperText != null) ...[
+            const SizedBox(height: 4),
+            Text(
+              widget.helperText!,
+              style: AppTypography.helper.copyWith(
+                color: AppColor.textSecondary,
+              ),
+            ),
+          ],
+          if (widget.errorText != null) ...[
+            const SizedBox(height: 4),
+            Text(
+              widget.errorText!,
+              style: AppTypography.error.copyWith(
+                color: AppColor.danger,
+              ),
+            ),
+          ],
+        ],
+      );
+    }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,

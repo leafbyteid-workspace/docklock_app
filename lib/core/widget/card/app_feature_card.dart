@@ -38,140 +38,143 @@ class AppFeatureCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final bool isHorizontal = layout == AppTataLetakKartuFitur.horizontal;
     final double padding = isHorizontal ? 16 : 20;
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: backgroundColor,
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: Colors.white.withOpacity(.08),
-        ),
-        image: backgroundImage != null
-            ? DecorationImage(
-                image: AssetImage(backgroundImage!),
-                alignment: Alignment.bottomRight,
-                fit: BoxFit.none,
-                scale: isHorizontal ? 1.8 : 1.2,
-              )
-            : null,
-        boxShadow: [
-          BoxShadow(
-            color: AppColor.overlay.withOpacity(0.04),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
+        child: Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: backgroundColor,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: Colors.white.withOpacity(.08),
+            ),
+            image: backgroundImage != null
+                ? DecorationImage(
+                    image: AssetImage(backgroundImage!),
+                    alignment: Alignment.bottomRight,
+                    fit: BoxFit.none,
+                    scale: isHorizontal ? 1.8 : 1.2,
+                  )
+                : null,
+            boxShadow: [
+              BoxShadow(
+                color: AppColor.overlay.withOpacity(0.04),
+                blurRadius: 12,
+                offset: const Offset(0, 4),
+              ),
+            ],
           ),
-        ],
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(8),
-        child: Stack(
-          children: [
-            Positioned(
-              right: isHorizontal ? -16 : -24,
-              bottom: isHorizontal ? -16 : -24,
-              child: IgnorePointer(
-                child: Transform.rotate(
-                  angle: -.3,
-                  child: Icon(
-                    backgroundIcon,
-                    size: isHorizontal ? 130 : 190,
-                    color: Colors.white.withOpacity(.08),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(16),
+            child: Stack(
+              children: [
+                Positioned(
+                  right: isHorizontal ? -16 : -24,
+                  bottom: isHorizontal ? -16 : -24,
+                  child: IgnorePointer(
+                    child: Transform.rotate(
+                      angle: -.3,
+                      child: Icon(
+                        backgroundIcon,
+                        size: isHorizontal ? 130 : 190,
+                        color: Colors.white.withOpacity(.08),
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.all(padding),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 6,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(.14),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Text(
-                      label.toUpperCase(),
-                      style: AppTypography.badge.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w700,
-                        letterSpacing: 1,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  SizedBox(
-                    width: double.infinity,
-                    child: Text(
-                      title,
-                      style: AppTypography.title2().copyWith(
-                        color: AppColor.textInverse,
-                        fontWeight: AppTypography.bold,
-                      ),
-                      maxLines: isHorizontal ? 1 : 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  SizedBox(
-                    width: double.infinity,
-                    child: Text(
-                      description,
-                      style: AppTypography.bodySmall().copyWith(
-                        color: AppColor.textInverse.withOpacity(.82),
-                        height: 1.4,
-                      ),
-                      maxLines: isHorizontal ? 2 : 3,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  InkWell(
-                    onTap: onTap,
-                    borderRadius: BorderRadius.circular(8),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 2.0),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                actionText,
-                                style: AppTypography.subhead().copyWith(
-                                  color: Colors.white,
-                                  fontWeight: AppTypography.semiBold,
-                                ),
-                              ),
-                              const SizedBox(width: 4),
-                              const Icon(
-                                Symbols.arrow_forward_rounded,
-                                size: 16,
-                                color: Colors.white,
-                              ),
-                            ],
+                Padding(
+                  padding: EdgeInsets.all(padding),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 6,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(.14),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          label.toUpperCase(),
+                          style: AppTypography.badge.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: 1,
                           ),
-                          const SizedBox(height: 2),
-                          Container(
-                            height: 1.5,
-                            width: isHorizontal ? 72 : 85,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      SizedBox(
+                        width: double.infinity,
+                        child: Text(
+                          title,
+                          style: AppTypography.title2().copyWith(
                             color: AppColor.textInverse,
+                            fontWeight: AppTypography.bold,
                           ),
-                        ],
+                          maxLines: isHorizontal ? 2 : 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
-                    ),
+                      const SizedBox(height: 8),
+                      SizedBox(
+                        width: double.infinity,
+                        child: Text(
+                          description,
+                          style: AppTypography.bodySmall().copyWith(
+                            color: AppColor.textInverse.withOpacity(.82),
+                            height: 1.4,
+                          ),
+                          maxLines: isHorizontal ? 2 : 3,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      const SizedBox(height: 24),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 2.0),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  actionText,
+                                  style: AppTypography.subhead().copyWith(
+                                    color: Colors.white,
+                                    fontWeight: AppTypography.semiBold,
+                                  ),
+                                ),
+                                const SizedBox(width: 4),
+                                const Icon(
+                                  Symbols.arrow_forward_rounded,
+                                  size: 16,
+                                  color: Colors.white,
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 2),
+                            Container(
+                              height: 1.5,
+                              width: isHorizontal ? 72 : 85,
+                              color: AppColor.textInverse,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

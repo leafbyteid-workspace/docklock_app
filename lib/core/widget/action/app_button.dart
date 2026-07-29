@@ -14,7 +14,7 @@ class AppButton extends StatelessWidget {
   final String text;
   final VoidCallback? onPressed;
   final AppTipeTombol type;
-  final String? iconAsset;
+  final IconData? icon;
   final double iconSize;
   final bool isLoading;
   final bool enabled;
@@ -26,7 +26,7 @@ class AppButton extends StatelessWidget {
     required this.text,
     required this.onPressed,
     this.type = AppTipeTombol.primary,
-    this.iconAsset,
+    this.icon,
     this.iconSize = 20,
     this.isLoading = false,
     this.enabled = true,
@@ -64,12 +64,11 @@ class AppButton extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        if (iconAsset != null) ...[
-          Image.asset(
-            iconAsset!,
-            width: iconSize,
-            height: iconSize,
-            fit: BoxFit.contain,
+        if (icon != null) ...[
+          Icon(
+            icon,
+            size: iconSize,
+            color: _foregroundColor(isDisabled),
           ),
           const SizedBox(width: 8),
         ],

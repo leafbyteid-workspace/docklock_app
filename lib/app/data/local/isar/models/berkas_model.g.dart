@@ -47,39 +47,34 @@ const BerkasModelSchema = CollectionSchema(
       name: r'kodeUnik',
       type: IsarType.string,
     ),
-    r'lokasiBerkas': PropertySchema(
-      id: 6,
-      name: r'lokasiBerkas',
-      type: IsarType.string,
-    ),
     r'namaBerkasAsli': PropertySchema(
-      id: 7,
+      id: 6,
       name: r'namaBerkasAsli',
       type: IsarType.string,
     ),
     r'namaBerkasEnkripsi': PropertySchema(
-      id: 8,
+      id: 7,
       name: r'namaBerkasEnkripsi',
       type: IsarType.string,
     ),
     r'statusBerkas': PropertySchema(
-      id: 9,
+      id: 8,
       name: r'statusBerkas',
       type: IsarType.byte,
       enumMap: _BerkasModelstatusBerkasEnumValueMap,
     ),
     r'ukuranBerkas': PropertySchema(
-      id: 10,
+      id: 9,
       name: r'ukuranBerkas',
       type: IsarType.long,
     ),
     r'waktuTerbuka': PropertySchema(
-      id: 11,
+      id: 10,
       name: r'waktuTerbuka',
       type: IsarType.dateTime,
     ),
     r'waktuTerkunci': PropertySchema(
-      id: 12,
+      id: 11,
       name: r'waktuTerkunci',
       type: IsarType.dateTime,
     )
@@ -133,7 +128,6 @@ int _berkasModelEstimateSize(
   var bytesCount = offsets.last;
   bytesCount += 3 + object.ekstensiBerkas.length * 3;
   bytesCount += 3 + object.kodeUnik.length * 3;
-  bytesCount += 3 + object.lokasiBerkas.length * 3;
   bytesCount += 3 + object.namaBerkasAsli.length * 3;
   bytesCount += 3 + object.namaBerkasEnkripsi.length * 3;
   return bytesCount;
@@ -151,13 +145,12 @@ void _berkasModelSerialize(
   writer.writeString(offsets[3], object.ekstensiBerkas);
   writer.writeLong(offsets[4], object.idPengguna);
   writer.writeString(offsets[5], object.kodeUnik);
-  writer.writeString(offsets[6], object.lokasiBerkas);
-  writer.writeString(offsets[7], object.namaBerkasAsli);
-  writer.writeString(offsets[8], object.namaBerkasEnkripsi);
-  writer.writeByte(offsets[9], object.statusBerkas.index);
-  writer.writeLong(offsets[10], object.ukuranBerkas);
-  writer.writeDateTime(offsets[11], object.waktuTerbuka);
-  writer.writeDateTime(offsets[12], object.waktuTerkunci);
+  writer.writeString(offsets[6], object.namaBerkasAsli);
+  writer.writeString(offsets[7], object.namaBerkasEnkripsi);
+  writer.writeByte(offsets[8], object.statusBerkas.index);
+  writer.writeLong(offsets[9], object.ukuranBerkas);
+  writer.writeDateTime(offsets[10], object.waktuTerbuka);
+  writer.writeDateTime(offsets[11], object.waktuTerkunci);
 }
 
 BerkasModel _berkasModelDeserialize(
@@ -174,15 +167,14 @@ BerkasModel _berkasModelDeserialize(
   object.id = id;
   object.idPengguna = reader.readLong(offsets[4]);
   object.kodeUnik = reader.readString(offsets[5]);
-  object.lokasiBerkas = reader.readString(offsets[6]);
-  object.namaBerkasAsli = reader.readString(offsets[7]);
-  object.namaBerkasEnkripsi = reader.readString(offsets[8]);
+  object.namaBerkasAsli = reader.readString(offsets[6]);
+  object.namaBerkasEnkripsi = reader.readString(offsets[7]);
   object.statusBerkas =
-      _BerkasModelstatusBerkasValueEnumMap[reader.readByteOrNull(offsets[9])] ??
+      _BerkasModelstatusBerkasValueEnumMap[reader.readByteOrNull(offsets[8])] ??
           StatusBerkas.terkunci;
-  object.ukuranBerkas = reader.readLong(offsets[10]);
-  object.waktuTerbuka = reader.readDateTimeOrNull(offsets[11]);
-  object.waktuTerkunci = reader.readDateTimeOrNull(offsets[12]);
+  object.ukuranBerkas = reader.readLong(offsets[9]);
+  object.waktuTerbuka = reader.readDateTimeOrNull(offsets[10]);
+  object.waktuTerkunci = reader.readDateTimeOrNull(offsets[11]);
   return object;
 }
 
@@ -210,16 +202,14 @@ P _berkasModelDeserializeProp<P>(
     case 7:
       return (reader.readString(offset)) as P;
     case 8:
-      return (reader.readString(offset)) as P;
-    case 9:
       return (_BerkasModelstatusBerkasValueEnumMap[
               reader.readByteOrNull(offset)] ??
           StatusBerkas.terkunci) as P;
-    case 10:
+    case 9:
       return (reader.readLong(offset)) as P;
-    case 11:
+    case 10:
       return (reader.readDateTimeOrNull(offset)) as P;
-    case 12:
+    case 11:
       return (reader.readDateTimeOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -1094,142 +1084,6 @@ extension BerkasModelQueryFilter
   }
 
   QueryBuilder<BerkasModel, BerkasModel, QAfterFilterCondition>
-      lokasiBerkasEqualTo(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'lokasiBerkas',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<BerkasModel, BerkasModel, QAfterFilterCondition>
-      lokasiBerkasGreaterThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'lokasiBerkas',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<BerkasModel, BerkasModel, QAfterFilterCondition>
-      lokasiBerkasLessThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'lokasiBerkas',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<BerkasModel, BerkasModel, QAfterFilterCondition>
-      lokasiBerkasBetween(
-    String lower,
-    String upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'lokasiBerkas',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<BerkasModel, BerkasModel, QAfterFilterCondition>
-      lokasiBerkasStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'lokasiBerkas',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<BerkasModel, BerkasModel, QAfterFilterCondition>
-      lokasiBerkasEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'lokasiBerkas',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<BerkasModel, BerkasModel, QAfterFilterCondition>
-      lokasiBerkasContains(String value, {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'lokasiBerkas',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<BerkasModel, BerkasModel, QAfterFilterCondition>
-      lokasiBerkasMatches(String pattern, {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'lokasiBerkas',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<BerkasModel, BerkasModel, QAfterFilterCondition>
-      lokasiBerkasIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'lokasiBerkas',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<BerkasModel, BerkasModel, QAfterFilterCondition>
-      lokasiBerkasIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'lokasiBerkas',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<BerkasModel, BerkasModel, QAfterFilterCondition>
       namaBerkasAsliEqualTo(
     String value, {
     bool caseSensitive = true,
@@ -1844,19 +1698,6 @@ extension BerkasModelQuerySortBy
     });
   }
 
-  QueryBuilder<BerkasModel, BerkasModel, QAfterSortBy> sortByLokasiBerkas() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'lokasiBerkas', Sort.asc);
-    });
-  }
-
-  QueryBuilder<BerkasModel, BerkasModel, QAfterSortBy>
-      sortByLokasiBerkasDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'lokasiBerkas', Sort.desc);
-    });
-  }
-
   QueryBuilder<BerkasModel, BerkasModel, QAfterSortBy> sortByNamaBerkasAsli() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'namaBerkasAsli', Sort.asc);
@@ -2025,19 +1866,6 @@ extension BerkasModelQuerySortThenBy
     });
   }
 
-  QueryBuilder<BerkasModel, BerkasModel, QAfterSortBy> thenByLokasiBerkas() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'lokasiBerkas', Sort.asc);
-    });
-  }
-
-  QueryBuilder<BerkasModel, BerkasModel, QAfterSortBy>
-      thenByLokasiBerkasDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'lokasiBerkas', Sort.desc);
-    });
-  }
-
   QueryBuilder<BerkasModel, BerkasModel, QAfterSortBy> thenByNamaBerkasAsli() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'namaBerkasAsli', Sort.asc);
@@ -2159,13 +1987,6 @@ extension BerkasModelQueryWhereDistinct
     });
   }
 
-  QueryBuilder<BerkasModel, BerkasModel, QDistinct> distinctByLokasiBerkas(
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'lokasiBerkas', caseSensitive: caseSensitive);
-    });
-  }
-
   QueryBuilder<BerkasModel, BerkasModel, QDistinct> distinctByNamaBerkasAsli(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -2249,12 +2070,6 @@ extension BerkasModelQueryProperty
   QueryBuilder<BerkasModel, String, QQueryOperations> kodeUnikProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'kodeUnik');
-    });
-  }
-
-  QueryBuilder<BerkasModel, String, QQueryOperations> lokasiBerkasProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'lokasiBerkas');
     });
   }
 

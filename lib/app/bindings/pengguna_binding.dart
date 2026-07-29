@@ -4,7 +4,9 @@ import '../../core/navigation/pengguna/main_navigasi_pengguna.dart';
 import '../modules/auth/pengguna/daftar/controllers/index_controller.dart';
 import '../modules/auth/pengguna/layar_sambutan/halaman_utama/controllers/index_controller.dart';
 import '../modules/auth/pengguna/masuk/controllers/index_controller.dart';
-import '../modules/pengguna/tamu/layar_utama/profil/controllers/index_controller.dart';
+import '../modules/pengguna/reguler/kunci_berkas/buka_berkas/controllers/index_controller.dart';
+import '../modules/pengguna/reguler/kunci_berkas/kunci_berkas/controllers/index_controller.dart';
+import '../modules/pengguna/reguler/layar_utama/profil/controllers/index_controller.dart';
 
 class PenggunaBinding extends Bindings {
   @override
@@ -35,6 +37,16 @@ class PenggunaBinding extends Bindings {
     );
     Get.lazyPut<IndexProfilPenggunaController>(
       () => IndexProfilPenggunaController(),
+      fenix: true,
+    );
+
+    // Kunci Berkas
+    Get.lazyPut<IndexKunciBerkasController>(
+      () => IndexKunciBerkasController(),
+      fenix: true,
+    );
+    Get.lazyPut<IndexBukaKunciBerkasController>(
+      () => IndexBukaKunciBerkasController(),
       fenix: true,
     );
   }

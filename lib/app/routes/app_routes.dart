@@ -12,6 +12,9 @@ abstract class Routes {
   // Main Pengguna
   static const indexHalamanUtamaPengguna = _Paths.indexHalamanUtamaPengguna;
   static const mainNavigasiPengguna = _Paths.mainNavigasiPengguna;
+  // Kunci Berkas
+  static const indexKunciBerkas = _Paths.indexKunciBerkas;
+  static const indexBukaKunciBerkas = _Paths.indexBukaKunciBerkas;
 }
 
 abstract class _Paths {
@@ -25,4 +28,7 @@ abstract class _Paths {
   // Main Pengguna
   static const indexHalamanUtamaPengguna = '/index-halaman-utama-pengguna';
   static const mainNavigasiPengguna = '/index-main-navigasi-pengguna';
+  // Kunci Berkas
+  static const indexKunciBerkas = '/index-kunci-berkas';
+  static const indexBukaKunciBerkas = '/index-buka-kunci-berkas';
 }

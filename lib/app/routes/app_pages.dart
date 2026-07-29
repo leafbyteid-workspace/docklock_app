@@ -8,6 +8,8 @@ import '../bindings/initial_binding.dart';
 import '../bindings/pengguna_binding.dart';
 import '../modules/auth/pengguna/layar_sambutan/halaman_utama/views/index_view.dart';
 import '../modules/auth/pengguna/masuk/views/index_view.dart';
+import '../modules/pengguna/reguler/kunci_berkas/buka_berkas/views/index_view.dart';
+import '../modules/pengguna/reguler/kunci_berkas/kunci_berkas/views/index_view.dart';
 
 part 'app_routes.dart';
 
@@ -44,6 +46,17 @@ class AppPages {
     GetPage(
       name: _Paths.mainNavigasiPengguna,
       page: () => const MainNavigasiPenggunaView(),
+      binding: PenggunaBinding(),
+    ),
+    // Kunci Berkas
+    GetPage(
+      name: _Paths.indexKunciBerkas,
+      page: () => const IndexKunciBerkasView(),
+      binding: PenggunaBinding(),
+    ),
+    GetPage(
+      name: _Paths.indexBukaKunciBerkas,
+      page: () => const IndexBukaKunciBerkasView(),
       binding: PenggunaBinding(),
     ),
   ];

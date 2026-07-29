@@ -21,8 +21,6 @@ class BerkasModel {
 
   late String namaBerkasEnkripsi;
 
-  late String lokasiBerkas;
-
   late int ukuranBerkas;
 
   late String ekstensiBerkas;

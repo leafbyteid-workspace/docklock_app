@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 
-import '../../../app/modules/pengguna/tamu/layar_utama/aktivitas/views/index_view.dart';
-import '../../../app/modules/pengguna/tamu/layar_utama/beranda/views/index_view.dart';
-import '../../../app/modules/pengguna/tamu/layar_utama/profil/views/index_view.dart';
+import '../../../app/modules/pengguna/reguler/layar_utama/aktivitas/views/index_view.dart';
+import '../../../app/modules/pengguna/reguler/layar_utama/beranda/views/index_view.dart';
+import '../../../app/modules/pengguna/reguler/layar_utama/profil/views/index_view.dart';
 import '../../constants/app_color.dart';
 import '../../constants/app_typography.dart';
 
