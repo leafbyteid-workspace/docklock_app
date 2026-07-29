@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-class MetadataEnkripsi {
+class EnkripsiMetadataModel {
   final String id;
   final String salt;
   final String nonce;
@@ -23,7 +23,7 @@ class MetadataEnkripsi {
   final String readableSize;
   final String passwordHash;
 
-  const MetadataEnkripsi({
+  const EnkripsiMetadataModel({
     required this.id,
     required this.salt,
     required this.nonce,
@@ -73,8 +73,8 @@ class MetadataEnkripsi {
     };
   }
 
-  factory MetadataEnkripsi.fromJson(Map<String, dynamic> json) {
-    return MetadataEnkripsi(
+  factory EnkripsiMetadataModel.fromJson(Map<String, dynamic> json) {
+    return EnkripsiMetadataModel(
       id: json["id"],
       salt: json["salt"],
       nonce: json["nonce"],
@@ -104,6 +104,6 @@ class MetadataEnkripsi {
 
   String encode() => jsonEncode(toJson());
 
-  factory MetadataEnkripsi.decode(String value) =>
-      MetadataEnkripsi.fromJson(jsonDecode(value));
+  factory EnkripsiMetadataModel.decode(String value) =>
+      EnkripsiMetadataModel.fromJson(jsonDecode(value));
 }

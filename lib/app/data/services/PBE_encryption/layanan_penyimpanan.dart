@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:path_provider/path_provider.dart';
 
-class PenyimpananService {
-  Future<Directory> encryptedDirectory() async {
+class LayananPenyimpanan {
+  Future<Directory> enkripsiDirektori() async {
     final dir = await getApplicationDocumentsDirectory();
 
     final folder = Directory(
@@ -17,7 +17,7 @@ class PenyimpananService {
     return folder;
   }
 
-  Future<Directory> decryptedDirectory() async {
+  Future<Directory> dekripsiDirektori() async {
     final dir = await getApplicationDocumentsDirectory();
 
     final folder = Directory(

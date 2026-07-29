@@ -2,10 +2,10 @@ import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
 
-class MetadataSignatureService {
-  const MetadataSignatureService();
+class LayananTandaTanganMetadata {
+  const LayananTandaTanganMetadata();
 
-  String sign({
+  String tandaTangan({
     required String json,
     required List<int> key,
   }) {

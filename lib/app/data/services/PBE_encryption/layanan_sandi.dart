@@ -1,10 +1,10 @@
 
 import 'package:crypto/crypto.dart';
 
-class PasswordService {
-  const PasswordService();
+class LayananSandi {
+  const LayananSandi();
 
-  String hashKey(List<int> keyBytes) {
+  String kunciHash(List<int> keyBytes) {
     return sha256.convert(keyBytes).toString();
   }
 }

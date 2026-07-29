@@ -8,7 +8,7 @@ import '../../../../../../../core/helper/date_helper/format_date.dart';
 import '../../../../../../../core/widget/action/app_button.dart';
 import '../../../../../../../core/widget/input/app_textfield.dart';
 import '../../../../../../../core/widget/navigation/app_appbar.dart';
-import '../../../../../../data/services/PBE_encryption/encrypted_metadata.dart';
+import '../../../../../../data/services/PBE_encryption/enkripsi_metadata.dart';
 import '../controllers/index_controller.dart';
 
 class IndexBukaKunciBerkasView extends GetView<IndexBukaKunciBerkasController> {
@@ -35,23 +35,21 @@ class IndexBukaKunciBerkasView extends GetView<IndexBukaKunciBerkasController> {
                       Obx(
                         () => AppTextField(
                           type: AppTextFieldType.file,
-                          label: "File Terenkripsi",
-                          hint: "Pilih file .dclock",
-                          file: controller.selectedPlatformFile.value,
-                          onFileChanged: controller.onFileChanged,
+                          label: "Berkas Terenkripsi",
+                          hint: "Pilih Berkas .dclock",
+                          file: controller.memilihPlatformBerkas.value,
+                          onFileChanged: controller.saatBerkasBerubah,
                         ),
                       ),
-
-                      const SizedBox(height: 20),
-
+                      const SizedBox(height: 16),
                       Obx(() {
                         final metadata = controller.metadata.value;
 
                         if (metadata == null) {
                           return const Column(
                             children: [
-                              DecryptionEmptyState(),
-                              SizedBox(height: 20),
+                              DekripsiKondisiKosong(),
+                              SizedBox(height: 16),
                             ],
                           );
                         }
@@ -60,46 +58,32 @@ class IndexBukaKunciBerkasView extends GetView<IndexBukaKunciBerkasController> {
                           duration: const Duration(milliseconds: 350),
                           child: Column(
                             children: [
-                              _buildMetadataCard(metadata),
+                              _membuatKartuMetadata(metadata),
                               const SizedBox(height: 16),
-                              _buildSecurityStatus(metadata),
+                              _membuatKartuRingkasan(),
                               const SizedBox(height: 16),
-                              _buildSummaryCard(),
-                              const SizedBox(height: 20),
                             ],
                           ),
                         );
                       }),
-
-                      ///===========================
-                      /// PASSWORD
-                      ///===========================
-
                       AppTextField(
-                        controller: controller.passwordController,
-                        label: "Password",
-                        hint: "Masukkan password...",
+                        controller: controller.kataSandiController,
+                        label: "Kata Sandi",
+                        hint: "Masukkan Kata Sandi...",
                         required: true,
                         type: AppTextFieldType.password,
                       ),
-
                       const SizedBox(height: 24),
-
                       Obx(
-                        () => DecryptionProgressBar(
+                        () => ProsesDekripsiBar(
                           isVisible: controller.isDecrypting.value,
-                          progress: controller.progress.value,
+                          progress: controller.proses.value,
                           title: "Membuka Kunci Berkas",
                           description: "Sedang melakukan proses dekripsi...",
                         ),
                       ),
-
-                      ///===========================
-                      /// RESULT
-                      ///===========================
-
                       Obx(() {
-                        final result = controller.decryptedResult.value;
+                        final result = controller.hasilDekripsi.value;
 
                         if (result == null) {
                           return const SizedBox();
@@ -110,11 +94,11 @@ class IndexBukaKunciBerkasView extends GetView<IndexBukaKunciBerkasController> {
                           child: Column(
                             children: [
                               const SizedBox(height: 24),
-                              _buildDecryptionResultCard(
+                              _membuatKartuHasilDekripsi(
                                 result: result,
-                                onOpen: controller.bukaFile,
-                                onShare: controller.shareFile,
-                                onDownload: controller.downloadFile,
+                                onOpen: controller.bukaBerkas,
+                                onShare: controller.bagikanBerkas,
+                                onDownload: controller.unduhBerkas,
                               ),
                             ],
                           ),
@@ -124,11 +108,11 @@ class IndexBukaKunciBerkasView extends GetView<IndexBukaKunciBerkasController> {
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 16),
               Obx(() {
                 final decrypting = controller.isDecrypting.value;
 
-                final finished = controller.decryptedResult.value != null;
+                final finished = controller.hasilDekripsi.value != null;
 
                 return SizedBox(
                   width: double.infinity,
@@ -152,7 +136,7 @@ class IndexBukaKunciBerkasView extends GetView<IndexBukaKunciBerkasController> {
                     onPressed: decrypting
                         ? null
                         : finished
-                            ? controller.resetForm
+                            ? controller.bersihkanFormulir
                             : controller.prosesDekripsi,
                   ),
                 );
@@ -165,8 +149,8 @@ class IndexBukaKunciBerkasView extends GetView<IndexBukaKunciBerkasController> {
   }
 }
 
-Widget _buildMetadataCard(
-  MetadataEnkripsi metadata,
+Widget _membuatKartuMetadata(
+  EnkripsiMetadataModel metadata,
 ) {
   return Container(
     width: double.infinity,
@@ -201,7 +185,7 @@ Widget _buildMetadataCard(
                 color: AppColor.primary,
               ),
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: 16),
             Expanded(
               child: Text(
                 "Informasi Berkas",
@@ -212,109 +196,54 @@ Widget _buildMetadataCard(
             ),
           ],
         ),
-        const SizedBox(height: 18),
+        const SizedBox(height: 16),
         const Divider(),
-        const SizedBox(height: 18),
-        _buildInfoRow(
-          "Nama File",
+        const SizedBox(height: 16),
+        _buatMenuInformasi(
+          "Nama Berkas",
           metadata.originalFileName,
         ),
-        const SizedBox(height: 10),
-        _buildInfoRow(
-          "Ukuran",
-          metadata.readableSize,
-        ),
-        const SizedBox(height: 10),
-        _buildInfoRow(
-          "Dibuat",
-          formatDate(
-            metadata.createdAt,
-          ),
-        ),
-        const SizedBox(height: 10),
-        _buildInfoRow(
-          "Algoritma",
-          metadata.algorithm,
-        ),
-        const SizedBox(height: 10),
-        _buildInfoRow(
-          "Versi",
-          metadata.formatVersion,
-        ),
-        const SizedBox(height: 10),
-        _buildInfoRow(
-          "Hint",
-          metadata.hint.isEmpty ? "-" : metadata.hint,
-        ),
-        const SizedBox(height: 10),
-        _buildInfoRow(
+        const SizedBox(height: 8),
+        _buatMenuInformasi(
           "Deskripsi",
           metadata.description.isEmpty ? "-" : metadata.description,
         ),
-        const SizedBox(height: 10),
-        _buildInfoRow(
+        const SizedBox(height: 8),
+        _buatMenuInformasi(
+          "Petunjuk Sandi",
+          metadata.hint.isEmpty ? "-" : metadata.hint,
+        ),
+        const SizedBox(height: 8),
+        _buatMenuInformasi(
+          "Dibuat Pada",
+          formatDate(metadata.createdAt),
+        ),
+        const SizedBox(height: 8),
+        _buatMenuInformasi(
+          "Ukuran",
+          metadata.readableSize,
+        ),
+        const SizedBox(height: 8),
+        _buatMenuInformasi(
           "Tipe",
           metadata.mimeType,
         ),
-        const SizedBox(height: 10),
-        _buildInfoRow(
-          "Ekstensi",
+        const SizedBox(height: 8),
+        _buatMenuInformasi(
+          "Enkstensi",
           metadata.originalExtension,
         ),
-      ],
-    ),
-  );
-}
-
-Widget _buildSecurityStatus(
-  MetadataEnkripsi metadata,
-) {
-  return Container(
-    width: double.infinity,
-    padding: const EdgeInsets.all(16),
-    decoration: BoxDecoration(
-      color: AppColor.surface,
-      borderRadius: BorderRadius.circular(16),
-      border: Border.all(
-        color: AppColor.borderSubtle,
-      ),
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          "Status Keamanan",
-          style: AppTypography.title3(
-            fontWeight: AppTypography.semiBold,
-          ),
-        ),
-        const SizedBox(height: 18),
-        _buildStatusItem(
-          Icons.verified_user,
-          "Signature",
-          true,
-        ),
-        _buildStatusItem(
-          Icons.key,
-          metadata.algorithm,
-          true,
-        ),
-        _buildStatusItem(
-          Icons.verified,
-          "Integrity Protected",
-          metadata.integrityProtected,
-        ),
-        _buildStatusItem(
-          Icons.password,
-          "PBKDF2 ${metadata.iteration}",
-          true,
+        const SizedBox(height: 8),
+        _buatMenuInformasi(
+          "Versi",
+          metadata.formatVersion,
         ),
       ],
     ),
   );
 }
 
-Widget _buildSummaryCard() {
+Widget _membuatKartuRingkasan() {
   return Container(
     width: double.infinity,
     padding: const EdgeInsets.all(16),
@@ -326,14 +255,14 @@ Widget _buildSummaryCard() {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Icon(
-          Icons.shield,
+          Symbols.shield,
           color: Colors.green,
         ),
-        const SizedBox(width: 14),
+        const SizedBox(width: 16),
         Expanded(
           child: Text(
             "Berkas ini menggunakan AES-256-GCM dengan PBKDF2. "
-            "Integritas file akan diverifikasi sebelum hasil dekripsi disimpan.",
+            "Integritas Berkas akan diverifikasi sebelum hasil dekripsi disimpan.",
             style: AppTypography.bodyPrimary(),
           ),
         ),
@@ -342,39 +271,7 @@ Widget _buildSummaryCard() {
   );
 }
 
-Widget _buildStatusItem(
-  IconData icon,
-  String title,
-  bool status,
-) {
-  return Padding(
-    padding: const EdgeInsets.only(
-      bottom: 12,
-    ),
-    child: Row(
-      children: [
-        Icon(
-          icon,
-          color: status ? AppColor.success : AppColor.danger,
-          size: 20,
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Text(
-            title,
-            style: AppTypography.subhead(),
-          ),
-        ),
-        Icon(
-          status ? Icons.check_circle : Icons.cancel,
-          color: status ? AppColor.success : AppColor.danger,
-        ),
-      ],
-    ),
-  );
-}
-
-Widget _buildDecryptionResultCard({
+Widget _membuatKartuHasilDekripsi({
   required dynamic result,
   required VoidCallback onOpen,
   required VoidCallback onShare,
@@ -399,8 +296,6 @@ Widget _buildDecryptionResultCard({
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        /// HEADER
-
         Row(
           children: [
             Container(
@@ -410,12 +305,12 @@ Widget _buildDecryptionResultCard({
                 shape: BoxShape.circle,
               ),
               child: const Icon(
-                Icons.lock_open_rounded,
+                Symbols.lock_open_rounded,
                 color: AppColor.success,
                 size: 22,
               ),
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: 16),
             Expanded(
               child: Text(
                 "Berkas Berhasil Dibuka",
@@ -426,45 +321,31 @@ Widget _buildDecryptionResultCard({
             ),
           ],
         ),
-
         const SizedBox(height: 16),
-
         const Divider(),
-
         const SizedBox(height: 16),
-
-        _buildInfoRow(
-          "Nama File",
+        _buatMenuInformasi(
+          "Nama Berkas",
           result.originalName,
         ),
-
         const SizedBox(height: 8),
-
-        _buildInfoRow(
+        _buatMenuInformasi(
           "Sumber",
           result.encryptedName,
         ),
-
         const SizedBox(height: 8),
-
-        _buildInfoRow(
+        _buatMenuInformasi(
           "Ukuran",
           result.size,
         ),
-
         const SizedBox(height: 8),
-
-        _buildInfoRow(
-          "Tanggal",
+        _buatMenuInformasi(
+          "Tanggal Dikunci",
           formatDate(
             result.encryptedAt,
           ),
         ),
-
         const SizedBox(height: 24),
-
-        /// OPEN + SHARE
-
         Row(
           children: [
             Expanded(
@@ -483,7 +364,7 @@ Widget _buildDecryptionResultCard({
                   ),
                 ),
                 icon: const Icon(
-                  Icons.folder_open_rounded,
+                  Symbols.folder_open_rounded,
                   size: 18,
                 ),
                 label: const Text(
@@ -492,7 +373,7 @@ Widget _buildDecryptionResultCard({
                 ),
               ),
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: 16),
             Expanded(
               child: OutlinedButton.icon(
                 onPressed: onShare,
@@ -511,7 +392,7 @@ Widget _buildDecryptionResultCard({
                   ),
                 ),
                 icon: const Icon(
-                  Icons.share_outlined,
+                  Symbols.share_rounded,
                   size: 18,
                 ),
                 label: const Text(
@@ -522,9 +403,7 @@ Widget _buildDecryptionResultCard({
             ),
           ],
         ),
-
-        const SizedBox(height: 12),
-
+        const SizedBox(height: 16),
         SizedBox(
           width: double.infinity,
           child: ElevatedButton.icon(
@@ -543,10 +422,10 @@ Widget _buildDecryptionResultCard({
               ),
             ),
             icon: const Icon(
-              Icons.file_download_outlined,
+              Symbols.file_download_rounded,
             ),
             label: const Text(
-              "Download",
+              "Unduh Berkas",
               style: AppTypography.buttonPrimary,
             ),
           ),
@@ -556,7 +435,7 @@ Widget _buildDecryptionResultCard({
   );
 }
 
-Widget _buildInfoRow(
+Widget _buatMenuInformasi(
   String label,
   String value,
 ) {
@@ -592,8 +471,8 @@ Widget _buildInfoRow(
   );
 }
 
-class DecryptionEmptyState extends StatelessWidget {
-  const DecryptionEmptyState({
+class DekripsiKondisiKosong extends StatelessWidget {
+  const DekripsiKondisiKosong({
     super.key,
   });
 
@@ -622,21 +501,21 @@ class DecryptionEmptyState extends StatelessWidget {
               shape: BoxShape.circle,
             ),
             child: const Icon(
-              Icons.lock_open_rounded,
+              Symbols.lock_open_rounded,
               size: 34,
               color: AppColor.primary,
             ),
           ),
-          const SizedBox(height: 18),
+          const SizedBox(height: 16),
           Text(
-            "Belum Ada File",
+            "Belum Ada Berkas",
             style: AppTypography.title3(
               fontWeight: AppTypography.semiBold,
             ),
           ),
           const SizedBox(height: 8),
           Text(
-            "Silakan pilih file .dclock terlebih dahulu untuk melihat informasi berkas dan melakukan proses dekripsi.",
+            "Silakan pilih Berkas .dclock terlebih dahulu untuk melihat informasi berkas dan melakukan proses dekripsi.",
             textAlign: TextAlign.center,
             style: AppTypography.bodyPrimary().copyWith(
               color: AppColor.textSecondary,
@@ -648,17 +527,17 @@ class DecryptionEmptyState extends StatelessWidget {
   }
 }
 
-class DecryptionProgressBar extends StatelessWidget {
+class ProsesDekripsiBar extends StatelessWidget {
   final double progress;
   final bool isVisible;
   final String title;
   final String? description;
 
-  const DecryptionProgressBar({
+  const ProsesDekripsiBar({
     super.key,
     required this.progress,
     required this.isVisible,
-    this.title = 'Mendekripsi Data',
+    this.title = 'Mendekripsi Berkas',
     this.description = 'Mohon tunggu, proses sedang berlangsung...',
   });
 
@@ -704,12 +583,12 @@ class DecryptionProgressBar extends StatelessWidget {
                           borderRadius: BorderRadius.circular(14),
                         ),
                         child: Icon(
-                          Icons.lock_outline_rounded,
+                          Symbols.lock_outline_rounded,
                           color: theme.colorScheme.primary,
                           size: 25,
                         ),
                       ),
-                      const SizedBox(width: 14),
+                      const SizedBox(width: 16),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -720,7 +599,7 @@ class DecryptionProgressBar extends StatelessWidget {
                                 fontWeight: FontWeight.w700,
                               ),
                             ),
-                            const SizedBox(height: 3),
+                            const SizedBox(height: 8),
                             Text(
                               description ?? '',
                               maxLines: 1,
@@ -733,7 +612,7 @@ class DecryptionProgressBar extends StatelessWidget {
                           ],
                         ),
                       ),
-                      const SizedBox(width: 12),
+                      const SizedBox(width: 16),
                       Text(
                         '$percentage%',
                         style: theme.textTheme.titleMedium?.copyWith(
@@ -743,7 +622,7 @@ class DecryptionProgressBar extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 24),
                   ClipRRect(
                     borderRadius: BorderRadius.circular(10),
                     child: TweenAnimationBuilder<double>(
@@ -768,7 +647,7 @@ class DecryptionProgressBar extends StatelessWidget {
                       },
                     ),
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 16),
                   Text(
                     safeProgress >= 1
                         ? 'Dekripsi berhasil diselesaikan'

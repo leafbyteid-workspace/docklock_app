@@ -1,13 +1,13 @@
 import 'dart:io';
 
-class EncryptionResult {
+class HasilEnkripsi {
   final File file;
   final String originalName;
   final String encryptedName;
   final String size;
   final DateTime encryptedAt;
 
-  const EncryptionResult({
+  const HasilEnkripsi({
     required this.file,
     required this.originalName,
     required this.encryptedName,

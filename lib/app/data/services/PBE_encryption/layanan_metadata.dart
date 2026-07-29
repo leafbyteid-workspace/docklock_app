@@ -1,8 +1,8 @@
 import 'package:archive/archive.dart';
 
-class MetadataService {
+class LayananMetadata {
 
-  ArchiveFile createMetadata(
+  ArchiveFile membuatMetadata(
       String json,
       ) {
 

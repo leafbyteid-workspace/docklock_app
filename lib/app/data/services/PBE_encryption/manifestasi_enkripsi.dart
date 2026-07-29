@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-class ManifestEnkripsi {
+class ManifestasiEnkripsi {
   final String signature;
 
   final String application;
@@ -9,7 +9,7 @@ class ManifestEnkripsi {
 
   final DateTime createdAt;
 
-  const ManifestEnkripsi({
+  const ManifestasiEnkripsi({
     required this.signature,
     required this.application,
     required this.formatVersion,
@@ -25,9 +25,8 @@ class ManifestEnkripsi {
     };
   }
 
-  factory ManifestEnkripsi.fromJson(
-      Map<String, dynamic> json) {
-    return ManifestEnkripsi(
+  factory ManifestasiEnkripsi.fromJson(Map<String, dynamic> json) {
+    return ManifestasiEnkripsi(
       signature: json["signature"],
       application: json["application"],
       formatVersion: json["formatVersion"],
@@ -37,8 +36,8 @@ class ManifestEnkripsi {
 
   String encode() => jsonEncode(toJson());
 
-  factory ManifestEnkripsi.decode(String value) =>
-      ManifestEnkripsi.fromJson(
+  factory ManifestasiEnkripsi.decode(String value) =>
+      ManifestasiEnkripsi.fromJson(
         jsonDecode(value),
       );
 }

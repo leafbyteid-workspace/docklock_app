@@ -36,16 +36,15 @@ class IndexKunciBerkasView extends GetView<IndexKunciBerkasController> {
                           type: AppTextFieldType.file,
                           label: "Pilih Berkas",
                           hint: "Pilih Berkas",
-                          file: controller.selectedPlatformFile.value,
-                          onFileChanged: controller.onFileChanged,
+                          file: controller.memilihPlatformBerkas.value,
+                          onFileChanged: controller.saatBerkasBerubah,
                         );
                       }),
 
                       const SizedBox(height: 16),
 
-                      /// NAMA FILE
                       AppTextField(
-                        controller: controller.fileNameController,
+                        controller: controller.namaBerkasController,
                         label: "Nama Berkas",
                         type: AppTextFieldType.text,
                         hint: "Nama Berkas...",
@@ -56,9 +55,8 @@ class IndexKunciBerkasView extends GetView<IndexKunciBerkasController> {
 
                       const SizedBox(height: 16),
 
-                      /// PASSWORD
                       AppTextField(
-                        controller: controller.passwordController,
+                        controller: controller.kataSandiController,
                         label: "Kata Sandi",
                         type: AppTextFieldType.password,
                         required: true,
@@ -67,9 +65,8 @@ class IndexKunciBerkasView extends GetView<IndexKunciBerkasController> {
 
                       const SizedBox(height: 16),
 
-                      /// KONFIRMASI PASSWORD
                       AppTextField(
-                        controller: controller.confirmPasswordController,
+                        controller: controller.konfirmasiKataSandiController,
                         label: "Konfirmasi Kata Sandi",
                         type: AppTextFieldType.password,
                         required: true,
@@ -78,9 +75,8 @@ class IndexKunciBerkasView extends GetView<IndexKunciBerkasController> {
 
                       const SizedBox(height: 16),
 
-                      /// HINT
                       AppTextField(
-                        controller: controller.hintController,
+                        controller: controller.petunjukSandiController,
                         label: "Petunjuk Kata Sandi",
                         hint: "Petunjuk untuk mengingat kata sandi",
                         prefix: const Icon(
@@ -90,9 +86,8 @@ class IndexKunciBerkasView extends GetView<IndexKunciBerkasController> {
 
                       const SizedBox(height: 16),
 
-                      /// DESKRIPSI
                       AppTextField(
-                        controller: controller.descriptionController,
+                        controller: controller.deskripsiController,
                         label: "Deskripsi",
                         hint: "Tambahkan deskripsi berkas...",
                         type: AppTextFieldType.multiline,
@@ -106,9 +101,9 @@ class IndexKunciBerkasView extends GetView<IndexKunciBerkasController> {
                       const SizedBox(height: 24),
 
                       Obx(
-                        () => EncryptionProgressBar(
+                        () => EnkripsiProsesBar(
                           isVisible: controller.isEncrypting.value,
-                          progress: controller.progress.value,
+                          progress: controller.proses.value,
                           title: 'Mengenkripsi Data',
                           description:
                               'File sedang diamankan menggunakan enkripsi',
@@ -116,7 +111,7 @@ class IndexKunciBerkasView extends GetView<IndexKunciBerkasController> {
                       ),
 
                       Obx(() {
-                        final result = controller.encryptedResult.value;
+                        final result = controller.hasilEnkripsi.value;
 
                         if (result == null) {
                           return const SizedBox();
@@ -125,11 +120,11 @@ class IndexKunciBerkasView extends GetView<IndexKunciBerkasController> {
                         return Column(
                           children: [
                             const SizedBox(height: 24),
-                            _buildEncryptedResultCard(
+                            _buatKartuHasilEnkripsi(
                               result: result,
-                              onOpen: controller.bukaFile,
-                              onShare: controller.shareFile,
-                              onDownload: controller.downloadFile,
+                              onOpen: controller.bukaBerkas,
+                              onShare: controller.bagikanBerkas,
+                              onDownload: controller.unduhBerkas,
                             ),
                           ],
                         );
@@ -138,11 +133,11 @@ class IndexKunciBerkasView extends GetView<IndexKunciBerkasController> {
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 24),
               Obx(() {
                 final isEncrypting = controller.isEncrypting.value;
                 final hasEncryptedResult =
-                    controller.encryptedResult.value != null;
+                    controller.hasilEnkripsi.value != null;
 
                 return SizedBox(
                   width: double.infinity,
@@ -166,7 +161,7 @@ class IndexKunciBerkasView extends GetView<IndexKunciBerkasController> {
                     onPressed: isEncrypting
                         ? null
                         : hasEncryptedResult
-                            ? controller.resetFormulir
+                            ? controller.bersihkanFormulir
                             : controller.prosesKunciBerkas,
                   ),
                 );
@@ -179,7 +174,7 @@ class IndexKunciBerkasView extends GetView<IndexKunciBerkasController> {
   }
 }
 
-Widget _buildEncryptedResultCard({
+Widget _buatKartuHasilEnkripsi({
   required dynamic result,
   required VoidCallback onOpen,
   required VoidCallback onShare,
@@ -219,7 +214,7 @@ Widget _buildEncryptedResultCard({
                 size: 20,
               ),
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: 16),
             Expanded(
               child: Text(
                 "Berkas Berhasil Dikunci",
@@ -232,41 +227,32 @@ Widget _buildEncryptedResultCard({
             ),
           ],
         ),
-
         const SizedBox(height: 16),
-
         const Divider(
           color: AppColor.divider,
           height: 1,
         ),
-
         const SizedBox(height: 16),
-
-        _buildInfoRow(
+        _buatMenuInformasi(
           label: "Nama Asli",
           value: result.originalName,
         ),
         const SizedBox(height: 8),
-
-        _buildInfoRow(
+        _buatMenuInformasi(
           label: "Nama File",
           value: result.encryptedName,
         ),
         const SizedBox(height: 8),
-
-        _buildInfoRow(
+        _buatMenuInformasi(
           label: "Ukuran",
           value: result.size,
         ),
         const SizedBox(height: 8),
-
-        _buildInfoRow(
+        _buatMenuInformasi(
           label: "Tanggal",
           value: result.encryptedAt.toString(),
         ),
-
         const SizedBox(height: 24),
-
         Row(
           children: [
             Expanded(
@@ -296,7 +282,7 @@ Widget _buildEncryptedResultCard({
                 ),
               ),
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: 16),
             Expanded(
               child: OutlinedButton.icon(
                 onPressed: onShare,
@@ -326,10 +312,7 @@ Widget _buildEncryptedResultCard({
             ),
           ],
         ),
-
-        const SizedBox(height: 12),
-
-        /// TOMBOL DOWNLOAD
+        const SizedBox(height: 16),
         SizedBox(
           width: double.infinity,
           child: ElevatedButton.icon(
@@ -350,7 +333,7 @@ Widget _buildEncryptedResultCard({
               size: 20,
             ),
             label: Text(
-              "Download",
+              "Unduh Berkas",
               style: AppTypography.buttonPrimary.copyWith(
                 color: AppColor.onPrimary,
               ),
@@ -362,7 +345,7 @@ Widget _buildEncryptedResultCard({
   );
 }
 
-Widget _buildInfoRow({required String label, required String value}) {
+Widget _buatMenuInformasi({required String label, required String value}) {
   return Row(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -394,13 +377,13 @@ Widget _buildInfoRow({required String label, required String value}) {
   );
 }
 
-class EncryptionProgressBar extends StatelessWidget {
+class EnkripsiProsesBar extends StatelessWidget {
   final double progress;
   final bool isVisible;
   final String title;
   final String? description;
 
-  const EncryptionProgressBar({
+  const EnkripsiProsesBar({
     super.key,
     required this.progress,
     required this.isVisible,
@@ -455,7 +438,7 @@ class EncryptionProgressBar extends StatelessWidget {
                           size: 25,
                         ),
                       ),
-                      const SizedBox(width: 14),
+                      const SizedBox(width: 16),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -466,7 +449,7 @@ class EncryptionProgressBar extends StatelessWidget {
                                 fontWeight: FontWeight.w700,
                               ),
                             ),
-                            const SizedBox(height: 3),
+                            const SizedBox(height: 8),
                             Text(
                               description ?? '',
                               maxLines: 1,
@@ -479,7 +462,7 @@ class EncryptionProgressBar extends StatelessWidget {
                           ],
                         ),
                       ),
-                      const SizedBox(width: 12),
+                      const SizedBox(width: 16),
                       Text(
                         '$percentage%',
                         style: theme.textTheme.titleMedium?.copyWith(
@@ -489,7 +472,7 @@ class EncryptionProgressBar extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 24),
                   ClipRRect(
                     borderRadius: BorderRadius.circular(10),
                     child: TweenAnimationBuilder<double>(
@@ -514,7 +497,7 @@ class EncryptionProgressBar extends StatelessWidget {
                       },
                     ),
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 16),
                   Text(
                     safeProgress >= 1
                         ? 'Enkripsi berhasil diselesaikan'

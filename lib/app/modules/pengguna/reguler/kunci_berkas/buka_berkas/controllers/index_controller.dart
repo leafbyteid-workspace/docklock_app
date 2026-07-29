@@ -4,6 +4,7 @@ import 'dart:typed_data';
 
 import 'package:archive/archive.dart';
 import 'package:cryptography/cryptography.dart';
+import 'package:doclock_app/core/errors/app_snackbar.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_file_dialog/flutter_file_dialog.dart';
@@ -12,37 +13,33 @@ import 'package:get/get.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:share_plus/share_plus.dart';
 
-import '../../../../../../data/services/PBE_encryption/checksum_service.dart';
-import '../../../../../../data/services/PBE_encryption/encrypted_metadata.dart';
-import '../../../../../../data/services/PBE_encryption/encryption_constant.dart';
-import '../../../../../../data/services/PBE_encryption/encryption_result.dart';
-import '../../../../../../data/services/PBE_encryption/encryption_service.dart';
-import '../../../../../../data/services/PBE_encryption/manifest_enkripsi.dart';
-import '../../../../../../data/services/PBE_encryption/password_service.dart';
-import '../../../../../../data/services/PBE_encryption/storage_service.dart';
+import '../../../../../../../core/errors/app_toast.dart';
+import '../../../../../../data/services/PBE_encryption/layanan_checksum.dart';
+import '../../../../../../data/services/PBE_encryption/enkripsi_metadata.dart';
+import '../../../../../../data/services/PBE_encryption/enkripsi_konstan.dart';
+import '../../../../../../data/services/PBE_encryption/hasil_enkripsi.dart';
+import '../../../../../../data/services/PBE_encryption/layanan_enkripsi.dart';
+import '../../../../../../data/services/PBE_encryption/manifestasi_enkripsi.dart';
+import '../../../../../../data/services/PBE_encryption/layanan_sandi.dart';
+import '../../../../../../data/services/PBE_encryption/layanan_penyimpanan.dart';
 
 class IndexBukaKunciBerkasController extends GetxController {
-  final EnkripsiService encryptionService = EnkripsiService();
-  final PenyimpananService storageService = PenyimpananService();
-  final ChecksumService checksumService = const ChecksumService();
-  final PasswordService passwordService = const PasswordService();
+  final LayananEnkripsi layananEnkripsi = LayananEnkripsi();
+  final LayananPenyimpanan layananPenyimpanan = LayananPenyimpanan();
+  final LayananChecksum layananChecksum = const LayananChecksum();
+  final LayananSandi layananSandi = const LayananSandi();
 
-  final selectedFile = Rxn<File>();
-  final selectedPlatformFile = Rxn<PlatformFile>();
-
-  final manifest = Rxn<ManifestEnkripsi>();
-  final metadata = Rxn<MetadataEnkripsi>();
-
-  final decryptedResult = Rxn<EncryptionResult>();
+  final memilihBerkas = Rxn<File>();
+  final memilihPlatformBerkas = Rxn<PlatformFile>();
+  final kataSandiController = TextEditingController();
+  final manifest = Rxn<ManifestasiEnkripsi>();
+  final metadata = Rxn<EnkripsiMetadataModel>();
+  final hasilDekripsi = Rxn<HasilEnkripsi>();
 
   final isDecrypting = false.obs;
-
-  final progress = 0.0.obs;
-
-  final passwordController = TextEditingController();
+  final proses = 0.0.obs;
 
   Archive? archive;
-
   Uint8List? cipherBytes;
 
   Future<void> pilihBerkas() async {
@@ -55,17 +52,17 @@ class IndexBukaKunciBerkasController extends GetxController {
 
     if (result == null) return;
 
-    selectedFile.value = File(
+    memilihBerkas.value = File(
       result.files.single.path!,
     );
 
-    await bacaArchive();
+    await bacaArsip();
   }
 
-  void onFileChanged(PlatformFile? file) async {
+  void saatBerkasBerubah(PlatformFile? file) async {
     if (file == null) {
-      selectedPlatformFile.value = null;
-      selectedFile.value = null;
+      memilihPlatformBerkas.value = null;
+      memilihBerkas.value = null;
       manifest.value = null;
       metadata.value = null;
       cipherBytes = null;
@@ -73,21 +70,21 @@ class IndexBukaKunciBerkasController extends GetxController {
       return;
     }
 
-    selectedPlatformFile.value = file;
-    selectedFile.value = File(file.path!);
+    memilihPlatformBerkas.value = file;
+    memilihBerkas.value = File(file.path!);
 
-    await bacaArchive();
+    await bacaArsip();
   }
 
-  Future<void> bacaArchive() async {
+  Future<void> bacaArsip() async {
     try {
-      progress.value = 0.1;
+      proses.value = 0.1;
 
-      final bytes = await selectedFile.value!.readAsBytes();
+      final bytes = await memilihBerkas.value!.readAsBytes();
 
       archive = ZipDecoder().decodeBytes(bytes);
 
-      progress.value = 0.2;
+      proses.value = 0.2;
 
       final manifestFile = archive!.findFile(
         "manifest.json",
@@ -103,17 +100,17 @@ class IndexBukaKunciBerkasController extends GetxController {
 
       if (manifestFile == null || metadataFile == null || cipherFile == null) {
         throw Exception(
-          "Format file tidak valid",
+          "Format berkas tidak valid",
         );
       }
 
-      manifest.value = ManifestEnkripsi.decode(
+      manifest.value = ManifestasiEnkripsi.decode(
         utf8.decode(
           manifestFile.content,
         ),
       );
 
-      metadata.value = MetadataEnkripsi.decode(
+      metadata.value = EnkripsiMetadataModel.decode(
         utf8.decode(
           metadataFile.content,
         ),
@@ -123,46 +120,45 @@ class IndexBukaKunciBerkasController extends GetxController {
         cipherFile.content,
       );
 
-      validasiManifest();
-
+      validasiManifestasi();
       validasiMetadata();
 
-      progress.value = 1;
+      proses.value = 1;
     } on SecretBoxAuthenticationError {
-      Get.snackbar(
-        "Kata Sandi Salah",
-        "Kata Sandi yang dimasukkan tidak sesuai.",
+      AppSnackbar.gagal(
+        title: "Kata Sandi Salah",
+        message: "Kata Sandi yang dimasukkan tidak sesuai.",
       );
     } catch (e) {
-      Get.snackbar(
-        "Error",
-        e.toString(),
+      AppSnackbar.gagal(
+        title: "Terjadi Kesalahan",
+        message: "terjadi kesalahan, silahkan coba lagi",
       );
     }
   }
 
-  bool validasiManifest() {
+  bool validasiManifestasi() {
     final data = manifest.value;
 
     if (data == null) {
-      throw Exception("Manifest tidak ditemukan");
+      throw Exception("Manifestasi tidak ditemukan");
     }
 
-    if (data.signature != EncryptionConstant.signature) {
+    if (data.signature != EnkripsiKonstan.signature) {
       throw Exception(
         "Signature tidak valid",
       );
     }
 
-    if (data.application != EncryptionConstant.appName) {
+    if (data.application != EnkripsiKonstan.appName) {
       throw Exception(
-        "File bukan berasal dari DocLock",
+        "Berkas bukan berasal dari DocLock",
       );
     }
 
-    if (data.formatVersion != EncryptionConstant.formatVersion) {
+    if (data.formatVersion != EnkripsiKonstan.formatVersion) {
       throw Exception(
-        "Versi file tidak didukung",
+        "Versi Berkas tidak didukung",
       );
     }
 
@@ -178,7 +174,7 @@ class IndexBukaKunciBerkasController extends GetxController {
       );
     }
 
-    if (data.algorithm != EncryptionConstant.algorithm) {
+    if (data.algorithm != EnkripsiKonstan.algorithm) {
       throw Exception(
         "Algoritma tidak sesuai",
       );
@@ -193,17 +189,17 @@ class IndexBukaKunciBerkasController extends GetxController {
     return true;
   }
 
-  Future<bool> validasiPassword() async {
+  Future<bool> validasiSandi() async {
     final data = metadata.value!;
 
-    final key = await encryptionService.deriveKeyBytes(
-      passwordController.text,
+    final key = await layananEnkripsi.ambilKunciByte(
+      kataSandiController.text,
       base64Decode(
         data.salt,
       ),
     );
 
-    final hash = passwordService.hashKey(
+    final hash = layananSandi.kunciHash(
       key,
     );
 
@@ -211,40 +207,38 @@ class IndexBukaKunciBerkasController extends GetxController {
   }
 
   Future<void> prosesDekripsi() async {
-    if (selectedFile.value == null) {
-      Get.snackbar(
-        "Error",
-        "Silakan pilih file.",
+    if (memilihBerkas.value == null) {
+      AppSnackbar.gagal(
+        title: "Terjadi Kesalahan",
+        message: "Silahkan Pilih Berkas Anda!",
       );
       return;
     }
 
-    if (passwordController.text.isEmpty) {
-      Get.snackbar(
-        "Password",
-        "Masukkan password.",
+    if (kataSandiController.text.isEmpty) {
+      AppSnackbar.gagal(
+        title: "Terjadi Kesalahan",
+        message: "Masukkan Kata Sandi Anda!",
       );
       return;
     }
 
     try {
       isDecrypting.value = true;
-
-      progress.value = 0.1;
-
+      proses.value = 0.1;
       final data = metadata.value!;
 
-      final plainBytes = await encryptionService.decrypt(
+      final plainBytes = await layananEnkripsi.dekripsi(
         cipher: cipherBytes!,
-        password: passwordController.text,
+        password: kataSandiController.text,
         salt: base64Decode(data.salt),
         nonce: base64Decode(data.nonce),
         mac: base64Decode(data.mac),
       );
 
-      progress.value = 0.6;
+      proses.value = 0.6;
 
-      final valid = checksumService.verify(
+      final valid = layananChecksum.verifikasi(
         bytes: plainBytes,
         expectedChecksum: data.checksum,
       );
@@ -255,64 +249,61 @@ class IndexBukaKunciBerkasController extends GetxController {
         );
       }
 
-      progress.value = 0.8;
+      proses.value = 0.8;
 
-      final output = await saveDecryptedFile(
+      final output = await simpanBerkasDekripsi(
         plainBytes,
       );
 
-      progress.value = 0.95;
+      proses.value = 0.95;
 
-      decryptedResult.value = EncryptionResult(
+      hasilDekripsi.value = HasilEnkripsi(
         file: output,
         originalName: data.originalFileName,
         encryptedName: path.basename(
-          selectedFile.value!.path,
+          memilihBerkas.value!.path,
         ),
         size: data.readableSize,
         encryptedAt: DateTime.now(),
       );
 
-      progress.value = 1;
+      proses.value = 1;
 
-      Get.snackbar(
-        "Berhasil",
-        "File berhasil didekripsi.",
-      );
+      AppToast.sukses(title: "Berkas Berhasil Di Dekripsi");
     } catch (e) {
-      Get.snackbar(
-        "Dekripsi Gagal",
-        e.toString(),
+      AppSnackbar.gagal(
+        title: "Terjadi Kesalahan",
+        message: "Gagal melakukan dekripsi, silahkan coba lagi nanti!",
       );
     } finally {
       isDecrypting.value = false;
     }
   }
 
-  Future<void> bukaFile() async {
-    if (decryptedResult.value == null) return;
+  Future<void> bukaBerkas() async {
+    if (hasilDekripsi.value == null) return;
 
     await OpenFilex.open(
-      decryptedResult.value!.file.path,
+      hasilDekripsi.value!.file.path,
     );
   }
 
-  Future<void> shareFile() async {
-    if (decryptedResult.value == null) return;
+  Future<void> bagikanBerkas() async {
+    if (hasilDekripsi.value == null) return;
 
     await Share.shareXFiles([
       XFile(
-        decryptedResult.value!.file.path,
+        hasilDekripsi.value!.file.path,
       ),
     ]);
   }
 
-  Future<void> downloadFile() async {
-    if (decryptedResult.value == null) return;
+  Future<void> unduhBerkas() async {
+    if (hasilDekripsi.value == null) return;
 
     final params = SaveFileDialogParams(
-      sourceFilePath: decryptedResult.value!.file.path,
-      fileName: decryptedResult.value!.originalName,
+      sourceFilePath: hasilDekripsi.value!.file.path,
+      fileName: hasilDekripsi.value!.originalName,
     );
 
     await FlutterFileDialog.saveFile(
@@ -320,35 +311,31 @@ class IndexBukaKunciBerkasController extends GetxController {
     );
   }
 
-  Future<File> saveDecryptedFile(
+  Future<File> simpanBerkasDekripsi(
     Uint8List bytes,
   ) async {
-    final folder = await storageService.decryptedDirectory();
-
+    final folder = await layananPenyimpanan.dekripsiDirektori();
     final file = File(
       "${folder.path}/${metadata.value!.originalFileName}",
     );
-
     await file.writeAsBytes(bytes);
-
     return file;
   }
 
-  void resetForm() {
-    selectedFile.value = null;
+  void bersihkanFormulir() {
+    memilihBerkas.value = null;
     manifest.value = null;
     metadata.value = null;
-    decryptedResult.value = null;
+    hasilDekripsi.value = null;
     archive = null;
     cipherBytes = null;
-    passwordController.clear();
-    progress.value = 0;
+    kataSandiController.clear();
+    proses.value = 0;
   }
 
   @override
   void onClose() {
-    passwordController.dispose();
-
+    kataSandiController.dispose();
     super.onClose();
   }
 }

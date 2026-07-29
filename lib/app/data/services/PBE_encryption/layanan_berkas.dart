@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:path_provider/path_provider.dart';
 
-class BerkasService {
-  Future<Directory> encryptedDirectory() async {
+class LayananBerkas {
+  Future<Directory> enkripsiDirektori() async {
     final dir = await getApplicationDocumentsDirectory();
 
     final folder = Directory("${dir.path}/encrypted");

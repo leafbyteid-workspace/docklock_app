@@ -4,9 +4,9 @@ import 'dart:typed_data';
 
 import 'package:cryptography/cryptography.dart';
 
-import 'encryption_constant.dart';
+import 'enkripsi_konstan.dart';
 
-class EnkripsiService {
+class LayananEnkripsi {
   final AesGcm aes = AesGcm.with256bits();
 
   Future<SecretKey> deriveKey(
@@ -15,7 +15,7 @@ class EnkripsiService {
   ) async {
     final pbkdf = Pbkdf2(
       macAlgorithm: Hmac.sha256(),
-      iterations: EncryptionConstant.pbkdf2Iteration,
+      iterations: EnkripsiKonstan.pbkdf2Iteration,
       bits: 256,
     );
 
@@ -36,7 +36,7 @@ class EnkripsiService {
     );
   }
 
-  Future<Map<String, dynamic>> encrypt({
+  Future<Map<String, dynamic>> enkripsi({
     required Uint8List bytes,
     required String password,
   }) async {
@@ -63,7 +63,7 @@ class EnkripsiService {
     };
   }
 
-  Future<List<int>> deriveKeyBytes(
+  Future<List<int>> ambilKunciByte(
     String password,
     List<int> salt,
   ) async {
@@ -75,7 +75,7 @@ class EnkripsiService {
     return await key.extractBytes();
   }
 
-  Future<Uint8List> decrypt({
+  Future<Uint8List> dekripsi({
     required Uint8List cipher,
     required String password,
     required List<int> salt,

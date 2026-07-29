@@ -2,18 +2,18 @@ import 'dart:typed_data';
 
 import 'package:crypto/crypto.dart' as crypto;
 
-class ChecksumService {
-  const ChecksumService();
+class LayananChecksum {
+  const LayananChecksum();
 
-  String generate(Uint8List bytes) {
+  String membuat(Uint8List bytes) {
     return crypto.sha256.convert(bytes).toString();
   }
 
-  bool verify({
+  bool verifikasi({
     required Uint8List bytes,
     required String expectedChecksum,
   }) {
-    final current = generate(bytes);
+    final current = membuat(bytes);
 
     return current == expectedChecksum;
   }
