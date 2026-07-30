@@ -6,6 +6,7 @@ import '../modules/auth/pengguna/layar_sambutan/halaman_utama/controllers/index_
 import '../modules/auth/pengguna/masuk/controllers/index_controller.dart';
 import '../modules/pengguna/reguler/kunci_berkas/buka_berkas/controllers/index_controller.dart';
 import '../modules/pengguna/reguler/kunci_berkas/kunci_berkas/controllers/index_controller.dart';
+import '../modules/pengguna/reguler/layar_utama/beranda/controllers/index_controller.dart';
 import '../modules/pengguna/reguler/layar_utama/profil/controllers/index_controller.dart';
 
 class PenggunaBinding extends Bindings {
@@ -27,6 +28,10 @@ class PenggunaBinding extends Bindings {
     );
 
     // Main Pengguna
+    Get.lazyPut<IndexBerandaController>(
+      () => IndexBerandaController(),
+      fenix: true,
+    );
     Get.lazyPut<IndexHalamanUtamaController>(
       () => IndexHalamanUtamaController(),
       fenix: true,

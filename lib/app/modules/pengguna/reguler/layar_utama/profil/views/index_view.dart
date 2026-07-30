@@ -141,7 +141,7 @@ class IndexProfilPenggunaView extends GetView<IndexProfilPenggunaController> {
             const SizedBox(height: 10),
             Center(
               child: Text(
-                "SIMPEG Mobile\nVersi 1.0.0",
+                "Doclock\nVersi 1.0.0",
                 textAlign: TextAlign.center,
                 style: AppTypography.footnote().copyWith(
                   color: AppColor.textSecondary,

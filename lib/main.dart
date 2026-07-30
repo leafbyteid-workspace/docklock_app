@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 
 import 'app/data/local/isar/services/main/isar_service.dart';
 import 'app/routes/app_pages.dart';
+import 'core/service/app/open_file_service.dart';
 import 'core/widget/action/app_button.dart';
 import 'core/constants/app_color.dart';
 import 'core/constants/app_typography.dart';
@@ -25,6 +26,13 @@ Future<void> main() async {
     };
 
     await _initializeApp();
+
+    OpenFileService.listen((uri) async {
+      Get.toNamed(
+        Routes.indexBukaKunciBerkas,
+        arguments: uri,
+      );
+    });
 
     runApp(const MyApp());
   }, (error, stackTrace) {});

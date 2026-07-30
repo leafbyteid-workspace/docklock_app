@@ -5,6 +5,7 @@ import 'package:material_symbols_icons/material_symbols_icons.dart';
 
 import '../../../../../../../core/constants/app_color.dart';
 import '../../../../../../../core/constants/app_typography.dart';
+import '../../../../../../../core/helper/date_helper/format_date.dart';
 import '../../../../../../../core/widget/input/app_textfield.dart';
 import '../../../../../../../core/widget/navigation/app_appbar.dart';
 import '../controllers/index_controller.dart';
@@ -104,9 +105,9 @@ class IndexKunciBerkasView extends GetView<IndexKunciBerkasController> {
                         () => EnkripsiProsesBar(
                           isVisible: controller.isEncrypting.value,
                           progress: controller.proses.value,
-                          title: 'Mengenkripsi Data',
+                          title: 'Mengunci Berkas',
                           description:
-                              'File sedang diamankan menggunakan enkripsi',
+                              'Berkas sedang diamankan menggunakan enkripsi',
                         ),
                       ),
 
@@ -249,8 +250,8 @@ Widget _buatKartuHasilEnkripsi({
         ),
         const SizedBox(height: 8),
         _buatMenuInformasi(
-          label: "Tanggal",
-          value: result.encryptedAt.toString(),
+          label: "Tanggal Dikunci",
+          value: formatTanggal(result.encryptedAt),
         ),
         const SizedBox(height: 24),
         Row(

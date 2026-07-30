@@ -216,7 +216,7 @@ Widget _membuatKartuMetadata(
         const SizedBox(height: 8),
         _buatMenuInformasi(
           "Dibuat Pada",
-          formatDate(metadata.createdAt),
+          formatTanggal(metadata.createdAt),
         ),
         const SizedBox(height: 8),
         _buatMenuInformasi(
@@ -341,7 +341,7 @@ Widget _membuatKartuHasilDekripsi({
         const SizedBox(height: 8),
         _buatMenuInformasi(
           "Tanggal Dikunci",
-          formatDate(
+          formatTanggal(
             result.encryptedAt,
           ),
         ),

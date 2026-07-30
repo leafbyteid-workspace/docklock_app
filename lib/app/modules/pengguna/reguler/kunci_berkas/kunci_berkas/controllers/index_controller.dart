@@ -16,6 +16,9 @@ import 'package:share_plus/share_plus.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../../../../../core/errors/app_snackbar.dart';
+import '../../../../../../data/local/isar/models/riwayat_aktivitas_model.dart';
+import '../../../../../../data/local/isar/repository/riwayat_aktivitas_repository.dart';
+import '../../../../../../data/local/isar/repository/sesi_repository.dart';
 import '../../../../../../data/services/PBE_encryption/layanan_checksum.dart';
 import '../../../../../../data/services/PBE_encryption/enkripsi_konstan.dart';
 import '../../../../../../data/services/PBE_encryption/hasil_enkripsi.dart';
@@ -26,6 +29,10 @@ import '../../../../../../data/services/PBE_encryption/layanan_sandi.dart';
 import '../../../../../../data/services/PBE_encryption/layanan_penyimpanan.dart';
 
 class IndexKunciBerkasController extends GetxController {
+  final RepositoriSesi repositoriSesi = RepositoriSesi();
+  final RepositoriRiwayatAktivitas repositoriRiwayat =
+      RepositoriRiwayatAktivitas();
+
   final LayananEnkripsi layananEnkripsi = LayananEnkripsi();
   final LayananPenyimpanan layananPenyimpanan = LayananPenyimpanan();
   final LayananChecksum layananChecksum = const LayananChecksum();
@@ -269,11 +276,36 @@ class IndexKunciBerkasController extends GetxController {
       proses.value = 1;
 
       AppToast.sukses(title: "Berkas Berhasil Di Kunci!");
+
+      final sesi = await repositoriSesi.dapatkanSesiAktif();
+
+      if (sesi != null) {
+        await repositoriRiwayat.tambah(
+          idAkun: sesi.idAkun,
+          judulAktivitas: "Enkripsi Dokumen",
+          deskripsi: path.basename(memilihBerkas.value!.path),
+          alamatIp: "-",
+          namaPerangkat: Platform.operatingSystem,
+          status: StatusAktivitas.berhasil,
+        );
+      }
     } catch (e) {
       AppSnackbar.gagal(
         title: "Terjadi Kesalahan",
         message: "Silahkan coba lagi nanti!",
       );
+      final sesi = await repositoriSesi.dapatkanSesiAktif();
+
+      if (sesi != null) {
+        await repositoriRiwayat.tambah(
+          idAkun: sesi.idAkun,
+          judulAktivitas: "Enkripsi Dokumen",
+          deskripsi: path.basename(memilihBerkas.value!.path),
+          alamatIp: "-",
+          namaPerangkat: Platform.operatingSystem,
+          status: StatusAktivitas.gagal,
+        );
+      }
     } finally {
       isEncrypting.value = false;
     }
