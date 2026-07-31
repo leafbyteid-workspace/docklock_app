@@ -15,15 +15,10 @@ class IndexProfilPenggunaView extends GetView<IndexProfilPenggunaController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBarPengguna(
+      appBar: const AppBarPengguna(
         showBackButton: false,
-        title: "Profil",
+        title: "Profil Saya",
         subtitle: "Kelola informasi akun dan pengaturan aplikasi",
-        actionIcon1: Symbols.more_vert_rounded,
-        onAction1: () {},
-        onBackPressed: () {
-          Get.back();
-        },
       ),
       body: RefreshIndicator(
         onRefresh: () async {

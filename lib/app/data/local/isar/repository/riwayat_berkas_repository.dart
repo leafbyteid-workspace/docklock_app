@@ -9,50 +9,40 @@ class RepositoriRiwayatBerkas {
 
   final Isar _isar;
 
-  //==========================================================
-  // CREATE
-  //==========================================================
+  Future<int> tambah({
+    required int idBerkas,
+    required int idPengguna,
+    required String judul,
+    required String keterangan,
+    required StatusRiwayatBerkas status,
+  }) async {
+    final data = RiwayatBerkasModel()
+      ..idBerkas = idBerkas
+      ..idPengguna = idPengguna
+      ..judul = judul
+      ..keterangan = keterangan
+      ..statusRiwayatBerkas = status;
+
+    return simpan(data);
+  }
 
   Future<int> simpan(
-    RiwayatBerkasModel riwayat,
+    RiwayatBerkasModel data,
   ) async {
-    return await _isar.writeTxn(() async {
-      riwayat.dibuatPada = DateTime.now();
-      riwayat.diperbaruiPada = DateTime.now();
+    data.diperbaruiPada = DateTime.now();
 
-      return await _isar.riwayatBerkasModels.put(riwayat);
-    });
+    return await _isar.writeTxn(
+      () async => await _isar.riwayatBerkasModels.put(data),
+    );
   }
 
-  //==========================================================
-  // UPDATE
-  //==========================================================
-
-  Future<void> perbarui(
-    RiwayatBerkasModel riwayat,
-  ) async {
-    await _isar.writeTxn(() async {
-      riwayat.diperbaruiPada = DateTime.now();
-
-      await _isar.riwayatBerkasModels.put(riwayat);
-    });
-  }
-
-  //==========================================================
-  // GET BY ID
-  //==========================================================
-
-  Future<RiwayatBerkasModel?> getById(
+  Future<RiwayatBerkasModel?> berdasarkanId(
     int id,
   ) async {
     return await _isar.riwayatBerkasModels.get(id);
   }
 
-  //==========================================================
-  // GET BY BERKAS
-  //==========================================================
-
-  Future<List<RiwayatBerkasModel>> getByBerkas(
+  Future<List<RiwayatBerkasModel>> berdasarkanBerkas(
     int idBerkas,
   ) async {
     return await _isar.riwayatBerkasModels
@@ -62,11 +52,7 @@ class RepositoriRiwayatBerkas {
         .findAll();
   }
 
-  //==========================================================
-  // GET BY USER
-  //==========================================================
-
-  Future<List<RiwayatBerkasModel>> getByPengguna(
+  Future<List<RiwayatBerkasModel>> berdasarkanPengguna(
     int idPengguna,
   ) async {
     return await _isar.riwayatBerkasModels
@@ -76,34 +62,81 @@ class RepositoriRiwayatBerkas {
         .findAll();
   }
 
-  //==========================================================
-  // GET ALL
-  //==========================================================
-
-  Future<List<RiwayatBerkasModel>> getSemua() async {
+  Future<List<RiwayatBerkasModel>> semuaPengguna(
+    int idPengguna,
+  ) async {
     return await _isar.riwayatBerkasModels
-        .where()
+        .filter()
+        .idPenggunaEqualTo(idPengguna)
         .sortByDibuatPadaDesc()
         .findAll();
   }
 
-  //==========================================================
-  // DELETE
-  //==========================================================
+  Future<List<RiwayatBerkasModel>> berdasarkanStatus(
+    int idPengguna,
+    StatusRiwayatBerkas status,
+  ) async {
+    return await _isar.riwayatBerkasModels
+        .filter()
+        .idPenggunaEqualTo(idPengguna)
+        .and()
+        .statusRiwayatBerkasEqualTo(status)
+        .sortByDibuatPadaDesc()
+        .findAll();
+  }
 
-  Future<void> hapus(int id) async {
+  Future<List<RiwayatBerkasModel>> cari(
+    int idPengguna,
+    String keyword,
+  ) async {
+    final kataKunci = keyword.trim();
+
+    if (kataKunci.isEmpty) {
+      return semuaPengguna(idPengguna);
+    }
+
+    return await _isar.riwayatBerkasModels
+        .filter()
+        .idPenggunaEqualTo(idPengguna)
+        .and()
+        .group((q) => q
+            .judulContains(
+              kataKunci,
+              caseSensitive: false,
+            )
+            .or()
+            .keteranganContains(
+              kataKunci,
+              caseSensitive: false,
+            ))
+        .sortByDibuatPadaDesc()
+        .findAll();
+  }
+
+  Future<bool> hapus(int id) async {
+    return await _isar.writeTxn(
+      () async => await _isar.riwayatBerkasModels.delete(id),
+    );
+  }
+
+  Future<void> hapusSemuaBerkas(
+    int idBerkas,
+  ) async {
+    final data = await berdasarkanBerkas(idBerkas);
+
     await _isar.writeTxn(() async {
-      await _isar.riwayatBerkasModels.delete(id);
+      for (final item in data) {
+        await _isar.riwayatBerkasModels.delete(item.id);
+      }
     });
   }
 
-  //==========================================================
-  // CLEAR
-  //==========================================================
-
-  Future<void> hapusSemua() async {
-    await _isar.writeTxn(() async {
-      await _isar.riwayatBerkasModels.clear();
-    });
+  Future<int> jumlahRiwayat(
+    int idPengguna,
+  ) async {
+    return await _isar.riwayatBerkasModels
+        .filter()
+        .idPenggunaEqualTo(idPengguna)
+        .count();
   }
 }

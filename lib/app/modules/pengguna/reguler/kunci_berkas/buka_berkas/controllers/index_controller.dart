@@ -15,6 +15,7 @@ import 'package:share_plus/share_plus.dart';
 
 import '../../../../../../../core/errors/app_toast.dart';
 import '../../../../../../data/local/isar/models/riwayat_aktivitas_model.dart';
+import '../../../../../../data/local/isar/repository/berkas_repository.dart';
 import '../../../../../../data/local/isar/repository/riwayat_aktivitas_repository.dart';
 import '../../../../../../data/local/isar/repository/sesi_repository.dart';
 import '../../../../../../data/services/PBE_encryption/layanan_checksum.dart';
@@ -28,6 +29,7 @@ import '../../../../../../data/services/PBE_encryption/layanan_penyimpanan.dart'
 
 class IndexBukaKunciBerkasController extends GetxController {
   final RepositoriSesi repositoriSesi = RepositoriSesi();
+  final RepositoriBerkas repositoriBerkas = RepositoriBerkas();
   final RepositoriRiwayatAktivitas repositoriRiwayat =
       RepositoriRiwayatAktivitas();
 
@@ -262,6 +264,8 @@ class IndexBukaKunciBerkasController extends GetxController {
         plainBytes,
       );
 
+      await simpanBasisDataDekripsi(output);
+
       proses.value = 0.95;
 
       hasilDekripsi.value = HasilEnkripsi(
@@ -312,6 +316,34 @@ class IndexBukaKunciBerkasController extends GetxController {
       isDecrypting.value = false;
     }
   }
+
+  Future<void> simpanBasisDataDekripsi(
+  File output,
+) async {
+  final sesi = await repositoriSesi.dapatkanSesiAktif();
+
+  if (sesi == null) {
+    return;
+  }
+
+  final data = metadata.value!;
+
+  await repositoriBerkas.simpanHasilDekripsi(
+    idPengguna: sesi.idAkun,
+    kodeUnik: data.id,
+    namaBerkasAsli: data.originalFileName,
+    namaBerkasEnkripsi: path.basename(
+      memilihBerkas.value!.path,
+    ),
+    ukuranBerkas: output.lengthSync(),
+    ekstensiBerkas: path.extension(
+      data.originalFileName,
+    ),
+    judulRiwayat: "Dekripsi Berkas",
+    keteranganRiwayat:
+        "Berkas ${data.originalFileName} berhasil didekripsi.",
+  );
+}
 
   Future<void> bukaBerkas() async {
     if (hasilDekripsi.value == null) return;

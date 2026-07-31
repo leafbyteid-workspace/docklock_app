@@ -16,8 +16,12 @@ import 'package:share_plus/share_plus.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../../../../../core/errors/app_snackbar.dart';
+import '../../../../../../data/local/isar/models/berkas_model.dart';
 import '../../../../../../data/local/isar/models/riwayat_aktivitas_model.dart';
+import '../../../../../../data/local/isar/models/riwayat_berkas_model.dart';
+import '../../../../../../data/local/isar/repository/berkas_repository.dart';
 import '../../../../../../data/local/isar/repository/riwayat_aktivitas_repository.dart';
+import '../../../../../../data/local/isar/repository/riwayat_berkas_repository.dart';
 import '../../../../../../data/local/isar/repository/sesi_repository.dart';
 import '../../../../../../data/services/PBE_encryption/layanan_checksum.dart';
 import '../../../../../../data/services/PBE_encryption/enkripsi_konstan.dart';
@@ -30,6 +34,9 @@ import '../../../../../../data/services/PBE_encryption/layanan_penyimpanan.dart'
 
 class IndexKunciBerkasController extends GetxController {
   final RepositoriSesi repositoriSesi = RepositoriSesi();
+  final RepositoriBerkas repositoriBerkas = RepositoriBerkas();
+  final RepositoriRiwayatBerkas repositoriRiwayatBerkas =
+      RepositoriRiwayatBerkas();
   final RepositoriRiwayatAktivitas repositoriRiwayat =
       RepositoriRiwayatAktivitas();
 
@@ -265,6 +272,10 @@ class IndexKunciBerkasController extends GetxController {
         archive,
       );
 
+      await simpanBasisDataEnkripsi(
+        fileEnkripsi: file,
+      );
+
       hasilEnkripsi.value = HasilEnkripsi(
         file: file,
         originalName: memilihBerkas.value!.path.split("/").last,
@@ -309,6 +320,44 @@ class IndexKunciBerkasController extends GetxController {
     } finally {
       isEncrypting.value = false;
     }
+  }
+
+  Future<void> simpanBasisDataEnkripsi({
+    required File fileEnkripsi,
+  }) async {
+    final sesi = await repositoriSesi.dapatkanSesiAktif();
+
+    if (sesi == null) {
+      return;
+    }
+
+    final kodeUnik = const Uuid().v4();
+
+    final idBerkas = await repositoriBerkas.tambahBerkas(
+      idPengguna: sesi.idAkun,
+      kodeUnik: kodeUnik,
+      namaBerkasAsli: path.basename(
+        memilihBerkas.value!.path,
+      ),
+      namaBerkasEnkripsi: path.basename(
+        fileEnkripsi.path,
+      ),
+      ukuranBerkas: fileEnkripsi.lengthSync(),
+      ekstensiBerkas: path.extension(
+        memilihBerkas.value!.path,
+      ),
+      status: StatusBerkas.terkunci,
+      waktuTerkunci: DateTime.now(),
+    );
+
+    await repositoriRiwayatBerkas.tambah(
+      idBerkas: idBerkas,
+      idPengguna: sesi.idAkun,
+      judul: "Enkripsi Berkas",
+      keterangan:
+          "Berkas ${path.basename(memilihBerkas.value!.path)} berhasil dikunci.",
+      status: StatusRiwayatBerkas.terkunci,
+    );
   }
 
   Future<void> bukaBerkas() async {

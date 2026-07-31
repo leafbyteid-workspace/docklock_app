@@ -4,9 +4,9 @@ import '../../constants/app_color.dart';
 import '../../constants/app_typography.dart';
 
 enum ActivityStatus {
-  success,
-  processing,
-  failed,
+  sukses,
+  diproses,
+  gagal,
 }
 
 class AppActivityTile extends StatelessWidget {
@@ -29,22 +29,22 @@ class AppActivityTile extends StatelessWidget {
 
   Color get statusColor {
     switch (status) {
-      case ActivityStatus.success:
+      case ActivityStatus.sukses:
         return Colors.green;
-      case ActivityStatus.processing:
+      case ActivityStatus.diproses:
         return Colors.orange;
-      case ActivityStatus.failed:
+      case ActivityStatus.gagal:
         return Colors.red;
     }
   }
 
   String get statusText {
     switch (status) {
-      case ActivityStatus.success:
+      case ActivityStatus.sukses:
         return "Berhasil";
-      case ActivityStatus.processing:
+      case ActivityStatus.diproses:
         return "Diproses";
-      case ActivityStatus.failed:
+      case ActivityStatus.gagal:
         return "Gagal";
     }
   }
@@ -86,6 +86,7 @@ class AppActivityTile extends StatelessWidget {
                 children: [
                   Text(
                     title,
+                    maxLines: 1,
                     style: AppTypography.subhead().copyWith(
                       fontWeight: FontWeight.w700,
                     ),

@@ -20,15 +20,10 @@ class IndexBerandaView extends GetView<IndexBerandaController> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColor.background,
-      appBar: AppBarPengguna(
+      appBar: const AppBarPengguna(
         showBackButton: false,
         title: "Beranda",
         subtitle: "Pusat pengelolaan keamanan dokumen Anda",
-        actionIcon1: Symbols.more_vert_rounded,
-        onAction1: () {},
-        onBackPressed: () {
-          Get.back();
-        },
       ),
       body: RefreshIndicator(
         onRefresh: () async {
@@ -48,7 +43,7 @@ class IndexBerandaView extends GetView<IndexBerandaController> {
                       description:
                           'Ubah dokumen menjadi data terenkripsi agar hanya dapat diakses oleh pihak yang memiliki kunci.',
                       backgroundIcon: Symbols.lock,
-                      actionText: 'Mulai Enkripsi',
+                      actionText: 'Mulai Kunci',
                       onTap: () {
                         Get.toNamed(Routes.indexKunciBerkas);
                       },
@@ -63,7 +58,7 @@ class IndexBerandaView extends GetView<IndexBerandaController> {
                       description:
                           'Pulihkan dokumen terenkripsi kembali ke bentuk aslinya menggunakan kunci yang valid.',
                       backgroundIcon: Symbols.lock_open,
-                      actionText: 'Mulai Dekripsi',
+                      actionText: 'Mulai Buka',
                       onTap: () {
                         Get.toNamed(Routes.indexBukaKunciBerkas);
                       },
@@ -135,8 +130,8 @@ class IndexBerandaView extends GetView<IndexBerandaController> {
                         ),
                         status: aktivitas.statusAktivitas ==
                                 StatusAktivitas.berhasil
-                            ? ActivityStatus.success
-                            : ActivityStatus.failed,
+                            ? ActivityStatus.sukses
+                            : ActivityStatus.gagal,
                       ),
                     );
                   }).toList(),
