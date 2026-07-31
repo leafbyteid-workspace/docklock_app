@@ -5,7 +5,7 @@ import '../../../../../../data/local/isar/models/berkas_model.dart';
 import '../../../../../../data/local/isar/models/riwayat_berkas_model.dart';
 import '../../../../../../data/local/isar/repository/berkas_repository.dart';
 import '../../../../../../data/local/isar/repository/riwayat_berkas_repository.dart';
-import '../../../../../../data/local/isar/services/auth/sesi_service.dart';
+import '../../../../../../data/local/isar/services/auth/pengguna/auth_service.dart';
 
 enum FilterAktivitas {
   semua,
@@ -14,9 +14,11 @@ enum FilterAktivitas {
 }
 
 class IndexAktivitasController extends GetxController {
+  final AuthServicePengguna _layananAutentikasi =
+      Get.find<AuthServicePengguna>();
+
   final RepositoriRiwayatBerkas repositoriRiwayat = RepositoriRiwayatBerkas();
   final RepositoriBerkas repositoriBerkas = RepositoriBerkas();
-  final SesiService sesiService = SesiService();
 
   final searchController = TextEditingController();
 
@@ -24,8 +26,8 @@ class IndexAktivitasController extends GetxController {
 
   final isLoading = false.obs;
 
+  final semuaRiwayat = <RiwayatBerkasModel>[].obs;
   final daftarRiwayat = <RiwayatBerkasModel>[].obs;
-
   final daftarBerkas = <int, BerkasModel>{}.obs;
 
   int? idPengguna;
@@ -41,7 +43,7 @@ class IndexAktivitasController extends GetxController {
     try {
       isLoading.value = true;
 
-      idPengguna = await sesiService.penggunaSaatIni();
+      idPengguna = await _layananAutentikasi.penggunaSaatIni();
 
       await memuatRiwayat();
     } finally {
@@ -85,6 +87,7 @@ class IndexAktivitasController extends GetxController {
     }
 
     daftarBerkas.assignAll(cache);
+    semuaRiwayat.assignAll(hasil);
     daftarRiwayat.assignAll(hasil);
   }
 
@@ -116,22 +119,32 @@ class IndexAktivitasController extends GetxController {
     await memuatRiwayat();
   }
 
-  Future<void> cari(String value) async {
-    if (idPengguna == null) return;
+  Future<void> cari(String keyword) async {
+    final key = keyword.trim().toLowerCase();
 
-    if (value.trim().isEmpty) {
-      await memuatRiwayat();
+    if (key.isEmpty) {
+      daftarRiwayat.assignAll(semuaRiwayat);
       return;
     }
 
-    final hasil = await repositoriRiwayat.cari(
-      idPengguna!,
-      value,
-    );
+    final hasil = semuaRiwayat.where((item) {
+      final berkas = daftarBerkas[item.idBerkas];
+
+      final namaFile = berkas?.namaBerkasAsli.toLowerCase() ?? "";
+
+      final judul = item.judul.toLowerCase();
+
+      final keterangan = item.keterangan.toLowerCase();
+
+      final status = item.statusRiwayatBerkas.name.toLowerCase();
+
+      return namaFile.contains(key) ||
+          judul.contains(key) ||
+          keterangan.contains(key) ||
+          status.contains(key);
+    }).toList();
 
     daftarRiwayat.assignAll(hasil);
-
-    await memuatBerkas();
   }
 
   BerkasModel? ambilBerkas(

@@ -18,8 +18,6 @@ class IndexKunciBerkasView extends GetView<IndexKunciBerkasController> {
       backgroundColor: AppColor.background,
       appBar: AppBarPengguna(
         title: "Kunci Berkas",
-        actionIcon1: Symbols.more_vert,
-        onAction1: () {},
         onBackPressed: () => Get.back(),
       ),
       body: SafeArea(

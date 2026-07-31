@@ -1,10 +1,12 @@
 import 'dart:math';
 
 import 'package:bcrypt/bcrypt.dart';
+import 'package:get/get.dart';
 
 import '../../models/sesi_model.dart';
 import '../../repository/akun_repository.dart';
 import '../../repository/sesi_repository.dart';
+import 'pengguna/auth_service.dart';
 
 class SesiService {
   SesiService({
@@ -65,6 +67,10 @@ class SesiService {
       final refreshed = await _pemulihanAksesToken(session);
 
       if (!refreshed) {
+        await keluar();
+
+        Get.find<AuthServicePengguna>().authenticated.value = false;
+
         throw Exception("Sesi tidak valid");
       }
     }
@@ -96,10 +102,18 @@ class SesiService {
     final refreshed = await _pemulihanAksesToken(session);
 
     if (!refreshed) {
+      await keluar();
+
+      Get.find<AuthServicePengguna>().authenticated.value = false;
+
       return null;
     }
 
     return (await _sesiSaatIni())?.tokenAkses;
+  }
+
+  Future<SesiModel?> sesiSaatIni() {
+    return _repositoriSesi.dapatkanSesiAktif();
   }
 
   bool _fungsiPengecekanTokenAksesValid(SesiModel session) {

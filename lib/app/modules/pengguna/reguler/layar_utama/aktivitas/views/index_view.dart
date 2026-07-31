@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 
 import '../../../../../../../core/constants/app_color.dart';
 import '../../../../../../../core/constants/app_typography.dart';
 import '../../../../../../../core/errors/app_empty_state.dart';
+import '../../../../../../../core/helper/date_helper/format_date.dart';
 import '../../../../../../../core/widget/action/app_filterChip.dart';
 import '../../../../../../../core/widget/input/app_searchfield.dart';
 import '../../../../../../../core/widget/list/app_listile.dart';
@@ -21,7 +22,7 @@ class IndexAktivitasView extends GetView<IndexAktivitasController> {
       appBar: const AppBarPengguna(
         showBackButton: false,
         title: "Aktivitas",
-        subtitle: "Riwayat Semua Proses Aktivitas Keamanan Dokumen",
+        subtitle: "Riwayat Proses Aktivitas Keamanan Dokumen",
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -80,8 +81,9 @@ class IndexAktivitasView extends GetView<IndexAktivitasController> {
             Expanded(
               child: Obx(() {
                 if (controller.isLoading.value) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
+                  return LoadingAnimationWidget.inkDrop(
+                    color: AppColor.primary,
+                    size: 32,
                   );
                 }
 
@@ -121,9 +123,7 @@ class IndexAktivitasView extends GetView<IndexAktivitasController> {
                                   : Symbols.lock_open_right_rounded,
                               title: berkas?.namaBerkasAsli ?? "-",
                               subtitle: riwayat.keterangan,
-                              date: DateFormat(
-                                "dd MMM yyyy • HH:mm",
-                              ).format(
+                              date: formatTanggal(
                                 riwayat.dibuatPada,
                               ),
                               status: ActivityStatus.sukses,

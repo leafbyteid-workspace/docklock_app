@@ -3,18 +3,18 @@ import 'package:get/get.dart';
 import '../../../../../../data/local/isar/models/pengguna_model.dart';
 import '../../../../../../data/local/isar/repository/akun_repository.dart';
 import '../../../../../../data/local/isar/repository/pengguna_repository.dart';
-import '../../../../../../data/local/isar/services/auth/sesi_service.dart';
+import '../../../../../../data/local/isar/services/auth/pengguna/auth_service.dart';
 
 class IndexProfilPenggunaController extends GetxController {
   IndexProfilPenggunaController({
-    SesiService? sesiService,
     RepositoriPengguna? repositoriPengguna,
     RepositoriAkun? repositoriAkun,
-  })  : _sesiService = sesiService ?? SesiService(),
-        _repositoriPengguna = repositoriPengguna ?? RepositoriPengguna(),
+  })  : _repositoriPengguna = repositoriPengguna ?? RepositoriPengguna(),
         _repositoriAkun = repositoriAkun ?? RepositoriAkun();
 
-  final SesiService _sesiService;
+  final AuthServicePengguna _layananAutentikasi =
+      Get.find<AuthServicePengguna>();
+
   final RepositoriPengguna _repositoriPengguna;
   final RepositoriAkun _repositoriAkun;
 
@@ -41,7 +41,7 @@ class IndexProfilPenggunaController extends GetxController {
     try {
       isLoading.value = true;
 
-      final idPengguna = await _sesiService.penggunaSaatIni();
+      final idPengguna = await _layananAutentikasi.penggunaSaatIni();
 
       final dataPengguna = await _repositoriPengguna.berdasarkanId(idPengguna);
 
@@ -58,9 +58,4 @@ class IndexProfilPenggunaController extends GetxController {
     }
   }
 
-  Future<void> keluar() async {
-    await _sesiService.keluar();
-
-    // Get.offAllNamed(Routes.login);
-  }
 }

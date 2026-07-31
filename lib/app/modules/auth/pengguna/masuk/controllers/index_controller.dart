@@ -5,21 +5,20 @@ import '../../../../../../core/errors/app_snackbar.dart';
 import '../../../../../../core/utils/security/app_password_hasher.dart';
 import '../../../../../data/local/isar/repository/akun_repository.dart';
 import '../../../../../data/local/isar/repository/pengguna_repository.dart';
-import '../../../../../data/local/isar/services/auth/sesi_service.dart';
+import '../../../../../data/local/isar/services/auth/pengguna/auth_service.dart';
 import '../../../../../routes/app_pages.dart';
 
 class IndexMasukPenggunaController extends GetxController {
   IndexMasukPenggunaController({
     RepositoriAkun? repositoriAkun,
     RepositoriPengguna? repositoriPengguna,
-    SesiService? sesiService,
   })  : _repositoriAkun = repositoriAkun ?? RepositoriAkun(),
-        _repositoriPengguna = repositoriPengguna ?? RepositoriPengguna(),
-        _sesiService = sesiService ?? SesiService();
+        _repositoriPengguna = repositoriPengguna ?? RepositoriPengguna();
 
   final RepositoriAkun _repositoriAkun;
   final RepositoriPengguna _repositoriPengguna;
-  final SesiService _sesiService;
+  final AuthServicePengguna _layananAutentikasi =
+      Get.find<AuthServicePengguna>();
 
   final formKey = GlobalKey<FormState>();
 
@@ -102,7 +101,7 @@ class IndexMasukPenggunaController extends GetxController {
         );
         return;
       }
-      await _sesiService.masuk(
+      await _layananAutentikasi.masuk(
         idAkun: akun.id,
       );
       emailController.clear();

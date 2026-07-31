@@ -19,8 +19,6 @@ class IndexBukaKunciBerkasView extends GetView<IndexBukaKunciBerkasController> {
       backgroundColor: AppColor.background,
       appBar: AppBarPengguna(
         title: "Buka Kunci Berkas",
-        actionIcon1: Symbols.more_vert,
-        onAction1: () {},
         onBackPressed: () => Get.back(),
       ),
       body: SafeArea(
@@ -59,8 +57,6 @@ class IndexBukaKunciBerkasView extends GetView<IndexBukaKunciBerkasController> {
                           child: Column(
                             children: [
                               _membuatKartuMetadata(metadata),
-                              const SizedBox(height: 16),
-                              _membuatKartuRingkasan(),
                               const SizedBox(height: 16),
                             ],
                           ),
@@ -237,34 +233,6 @@ Widget _membuatKartuMetadata(
         _buatMenuInformasi(
           "Versi",
           metadata.formatVersion,
-        ),
-      ],
-    ),
-  );
-}
-
-Widget _membuatKartuRingkasan() {
-  return Container(
-    width: double.infinity,
-    padding: const EdgeInsets.all(16),
-    decoration: BoxDecoration(
-      color: Colors.green.shade50,
-      borderRadius: BorderRadius.circular(16),
-    ),
-    child: Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Icon(
-          Symbols.shield,
-          color: Colors.green,
-        ),
-        const SizedBox(width: 16),
-        Expanded(
-          child: Text(
-            "Berkas ini menggunakan AES-256-GCM dengan PBKDF2. "
-            "Integritas Berkas akan diverifikasi sebelum hasil dekripsi disimpan.",
-            style: AppTypography.bodyPrimary(),
-          ),
         ),
       ],
     ),

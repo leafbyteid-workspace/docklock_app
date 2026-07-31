@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 
 import '../../../../../../../core/constants/app_color.dart';
@@ -71,27 +72,29 @@ class IndexBerandaView extends GetView<IndexBerandaController> {
                 title: "Ringkasan Aktivitas",
               ),
               const SizedBox(height: 8),
-              const AppSummaryCard(
-                items: [
-                  AppItemRingkasan(
-                    icon: Symbols.lock,
-                    count: "24",
-                    title: "Enkripsi",
-                    subtitle: "Total",
-                  ),
-                  AppItemRingkasan(
-                    icon: Symbols.folder,
-                    count: "18",
-                    title: "Dokumen",
-                    subtitle: "Tersimpan",
-                  ),
-                  AppItemRingkasan(
-                    icon: Symbols.lock_open,
-                    count: "6",
-                    title: "Dekripsi",
-                    subtitle: "Berhasil",
-                  ),
-                ],
+              Obx(
+                () => AppSummaryCard(
+                  items: [
+                    AppItemRingkasan(
+                      icon: Symbols.lock,
+                      count: controller.totalEnkripsi.value.toString(),
+                      title: "Terkunci",
+                      subtitle: "Total",
+                    ),
+                    AppItemRingkasan(
+                      icon: Symbols.folder,
+                      count: controller.totalDokumen.value.toString(),
+                      title: "Dokumen",
+                      subtitle: "Tersimpan",
+                    ),
+                    AppItemRingkasan(
+                      icon: Symbols.lock_open,
+                      count: controller.totalDekripsi.value.toString(),
+                      title: "Terbuka",
+                      subtitle: "Berhasil",
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(height: 24),
               const AppSectionHeader(
@@ -100,11 +103,9 @@ class IndexBerandaView extends GetView<IndexBerandaController> {
               const SizedBox(height: 8),
               Obx(() {
                 if (controller.loadingAktivitas.value) {
-                  return const Center(
-                    child: Padding(
-                      padding: EdgeInsets.all(20),
-                      child: CircularProgressIndicator(),
-                    ),
+                  return LoadingAnimationWidget.inkDrop(
+                    color: AppColor.primary,
+                    size: 32,
                   );
                 }
 

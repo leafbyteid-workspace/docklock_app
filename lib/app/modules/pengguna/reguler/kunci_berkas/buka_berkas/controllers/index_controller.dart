@@ -17,7 +17,7 @@ import '../../../../../../../core/errors/app_toast.dart';
 import '../../../../../../data/local/isar/models/riwayat_aktivitas_model.dart';
 import '../../../../../../data/local/isar/repository/berkas_repository.dart';
 import '../../../../../../data/local/isar/repository/riwayat_aktivitas_repository.dart';
-import '../../../../../../data/local/isar/repository/sesi_repository.dart';
+import '../../../../../../data/local/isar/services/auth/pengguna/auth_service.dart';
 import '../../../../../../data/services/PBE_encryption/layanan_checksum.dart';
 import '../../../../../../data/services/PBE_encryption/enkripsi_metadata.dart';
 import '../../../../../../data/services/PBE_encryption/enkripsi_konstan.dart';
@@ -28,7 +28,9 @@ import '../../../../../../data/services/PBE_encryption/layanan_sandi.dart';
 import '../../../../../../data/services/PBE_encryption/layanan_penyimpanan.dart';
 
 class IndexBukaKunciBerkasController extends GetxController {
-  final RepositoriSesi repositoriSesi = RepositoriSesi();
+  final AuthServicePengguna _layananAutentikasi =
+      Get.find<AuthServicePengguna>();
+
   final RepositoriBerkas repositoriBerkas = RepositoriBerkas();
   final RepositoriRiwayatAktivitas repositoriRiwayat =
       RepositoriRiwayatAktivitas();
@@ -235,6 +237,7 @@ class IndexBukaKunciBerkasController extends GetxController {
     try {
       isDecrypting.value = true;
       proses.value = 0.1;
+
       final data = metadata.value!;
 
       final plainBytes = await layananEnkripsi.dekripsi(
@@ -282,11 +285,11 @@ class IndexBukaKunciBerkasController extends GetxController {
 
       AppToast.sukses(title: "Berkas Berhasil Di Dekripsi");
 
-      final sesi = await repositoriSesi.dapatkanSesiAktif();
+      final idPengguna = await _layananAutentikasi.sesiSaatIni();
 
-      if (sesi != null) {
+      if (idPengguna != null) {
         await repositoriRiwayat.tambah(
-          idAkun: sesi.idAkun,
+          idAkun: idPengguna.idAkun,
           judulAktivitas: "Buka Kunci Berkas",
           deskripsi: path.basename(memilihBerkas.value!.path),
           alamatIp: "-",
@@ -294,56 +297,47 @@ class IndexBukaKunciBerkasController extends GetxController {
           status: StatusAktivitas.berhasil,
         );
       }
+    } on SecretBoxAuthenticationError {
+      AppSnackbar.gagal(
+        title: "Kata Sandi Salah",
+        message: "Kata sandi yang dimasukkan tidak sesuai.",
+      );
     } catch (e) {
       AppSnackbar.gagal(
         title: "Terjadi Kesalahan",
         message: "Gagal melakukan dekripsi, silahkan coba lagi nanti!",
       );
-
-      final sesi = await repositoriSesi.dapatkanSesiAktif();
-
-      if (sesi != null) {
-        await repositoriRiwayat.tambah(
-          idAkun: sesi.idAkun,
-          judulAktivitas: "Buka Kunci Berkas",
-          deskripsi: path.basename(memilihBerkas.value!.path),
-          alamatIp: "-",
-          namaPerangkat: Platform.operatingSystem,
-          status: StatusAktivitas.gagal,
-        );
-      }
     } finally {
       isDecrypting.value = false;
     }
   }
 
   Future<void> simpanBasisDataDekripsi(
-  File output,
-) async {
-  final sesi = await repositoriSesi.dapatkanSesiAktif();
+    File output,
+  ) async {
+    final idPengguna = await _layananAutentikasi.sesiSaatIni();
 
-  if (sesi == null) {
-    return;
+    if (idPengguna == null) {
+      return;
+    }
+
+    final data = metadata.value!;
+
+    await repositoriBerkas.simpanHasilDekripsi(
+      idPengguna: idPengguna.idAkun,
+      kodeUnik: data.id,
+      namaBerkasAsli: data.originalFileName,
+      namaBerkasEnkripsi: path.basename(
+        memilihBerkas.value!.path,
+      ),
+      ukuranBerkas: output.lengthSync(),
+      ekstensiBerkas: path.extension(
+        data.originalFileName,
+      ),
+      judulRiwayat: "Dekripsi Berkas",
+      keteranganRiwayat: "Berkas ${data.originalFileName} berhasil didekripsi.",
+    );
   }
-
-  final data = metadata.value!;
-
-  await repositoriBerkas.simpanHasilDekripsi(
-    idPengguna: sesi.idAkun,
-    kodeUnik: data.id,
-    namaBerkasAsli: data.originalFileName,
-    namaBerkasEnkripsi: path.basename(
-      memilihBerkas.value!.path,
-    ),
-    ukuranBerkas: output.lengthSync(),
-    ekstensiBerkas: path.extension(
-      data.originalFileName,
-    ),
-    judulRiwayat: "Dekripsi Berkas",
-    keteranganRiwayat:
-        "Berkas ${data.originalFileName} berhasil didekripsi.",
-  );
-}
 
   Future<void> bukaBerkas() async {
     if (hasilDekripsi.value == null) return;

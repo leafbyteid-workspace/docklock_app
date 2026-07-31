@@ -85,32 +85,52 @@ class RepositoriRiwayatBerkas {
         .findAll();
   }
 
-  Future<List<RiwayatBerkasModel>> cari(
-    int idPengguna,
-    String keyword,
-  ) async {
-    final kataKunci = keyword.trim();
+  Future<List<RiwayatBerkasModel>> cari({
+    required int idPengguna,
+    required String keyword,
+    StatusRiwayatBerkas? filterStatus,
+  }) async {
+    final kataKunci = keyword.trim().toLowerCase();
 
-    if (kataKunci.isEmpty) {
-      return semuaPengguna(idPengguna);
+    var query =
+        _isar.riwayatBerkasModels.filter().idPenggunaEqualTo(idPengguna);
+
+    if (filterStatus != null) {
+      query = query.and().statusRiwayatBerkasEqualTo(filterStatus);
     }
 
-    return await _isar.riwayatBerkasModels
-        .filter()
-        .idPenggunaEqualTo(idPengguna)
-        .and()
-        .group((q) => q
-            .judulContains(
-              kataKunci,
-              caseSensitive: false,
-            )
-            .or()
-            .keteranganContains(
-              kataKunci,
-              caseSensitive: false,
-            ))
-        .sortByDibuatPadaDesc()
-        .findAll();
+    final bool cariStatusTerkunci = "terkunci".contains(kataKunci);
+
+    final bool cariStatusTerbuka = "terbuka".contains(kataKunci);
+
+    query = query.and().group((q) {
+      var result = q
+          .judulContains(
+            kataKunci,
+            caseSensitive: false,
+          )
+          .or()
+          .keteranganContains(
+            kataKunci,
+            caseSensitive: false,
+          );
+
+      if (cariStatusTerkunci) {
+        result = result.or().statusRiwayatBerkasEqualTo(
+              StatusRiwayatBerkas.terkunci,
+            );
+      }
+
+      if (cariStatusTerbuka) {
+        result = result.or().statusRiwayatBerkasEqualTo(
+              StatusRiwayatBerkas.terbuka,
+            );
+      }
+
+      return result;
+    });
+
+    return await query.sortByDibuatPadaDesc().findAll();
   }
 
   Future<bool> hapus(int id) async {

@@ -57,7 +57,7 @@ class LayarPembukaView extends GetView<LayarPembukaController> {
                     ),
                   ),
                   const SizedBox(height: 40),
-                  LoadingAnimationWidget.waveDots(
+                  LoadingAnimationWidget.inkDrop(
                     color: Colors.white,
                     size: 48,
                   ),

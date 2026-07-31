@@ -57,6 +57,8 @@ class IndexKunciBerkasController extends GetxController {
   final petunjukSandiController = TextEditingController();
   final deskripsiController = TextEditingController();
 
+  static const int maxFileSize = 100 * 1024 * 1024;
+
   Future<void> pilihBerkas() async {
     final result = await FilePicker.platform.pickFiles(
       withData: false,
@@ -89,26 +91,80 @@ class IndexKunciBerkasController extends GetxController {
   bool validasiDataInput() {
     if (memilihBerkas.value == null) {
       AppSnackbar.gagal(
-        title: "Terjadi Kesalahan",
-        message: "Silahkan Pilih Berkas Anda!",
+        title: "Berkas Belum Dipilih",
+        message: "Silakan pilih berkas yang akan dikunci.",
       );
+      return false;
+    }
 
+    if (namaBerkasController.text.trim().isEmpty) {
+      AppSnackbar.gagal(
+        title: "Nama Berkas Kosong",
+        message: "Masukkan nama berkas.",
+      );
+      return false;
+    }
+
+    if (namaBerkasController.text.trim().length > 50) {
+      AppSnackbar.gagal(
+        title: "Nama Berkas Terlalu Panjang",
+        message: "Nama berkas maksimal 50 karakter.",
+      );
+      return false;
+    }
+
+    if (kataSandiController.text.isEmpty) {
+      AppSnackbar.gagal(
+        title: "Kata Sandi Kosong",
+        message: "Masukkan kata sandi.",
+      );
       return false;
     }
 
     if (kataSandiController.text.length < 8) {
       AppSnackbar.gagal(
-        title: "Terjadi Kesalahan",
-        message: "Kata Sandi Minimal 8 Karakter!",
+        title: "Kata Sandi Terlalu Pendek",
+        message: "Kata sandi minimal 8 karakter.",
       );
+      return false;
+    }
 
+    if (kataSandiController.text.length > 15) {
+      AppSnackbar.gagal(
+        title: "Kata Sandi Terlalu Panjang",
+        message: "Kata sandi maksimal 15 karakter.",
+      );
+      return false;
+    }
+
+    if (konfirmasiKataSandiController.text.isEmpty) {
+      AppSnackbar.gagal(
+        title: "Konfirmasi Kata Sandi Kosong",
+        message: "Masukkan konfirmasi kata sandi.",
+      );
       return false;
     }
 
     if (kataSandiController.text != konfirmasiKataSandiController.text) {
       AppSnackbar.gagal(
-        title: "Terjadi Kesalahan",
-        message: "Konfirmasi Sandi Tidak Sama!",
+        title: "Konfirmasi Tidak Sesuai",
+        message: "Konfirmasi kata sandi tidak sama.",
+      );
+      return false;
+    }
+
+    if (petunjukSandiController.text.length > 25) {
+      AppSnackbar.gagal(
+        title: "Petunjuk Terlalu Panjang",
+        message: "Petunjuk kata sandi maksimal 25 karakter.",
+      );
+      return false;
+    }
+
+    if (deskripsiController.text.length > 150) {
+      AppSnackbar.gagal(
+        title: "Deskripsi Terlalu Panjang",
+        message: "Deskripsi maksimal 150 karakter.",
       );
       return false;
     }
@@ -134,6 +190,25 @@ class IndexKunciBerkasController extends GetxController {
     }
 
     if (metadata.mac.isEmpty) {
+      return false;
+    }
+
+    return true;
+  }
+
+  bool validasiUkuranBerkas() {
+    final file = memilihPlatformBerkas.value;
+
+    if (file == null) {
+      return false;
+    }
+
+    if (file.size > maxFileSize) {
+      AppSnackbar.gagal(
+        title: "Ukuran Berkas Terlalu Besar",
+        message: "Unggah Berkas tidak boleh melebihi 100 MB.",
+      );
+
       return false;
     }
 
@@ -226,6 +301,7 @@ class IndexKunciBerkasController extends GetxController {
 
   Future<void> prosesKunciBerkas() async {
     if (!validasiDataInput()) return;
+    if (!validasiUkuranBerkas()) return;
 
     try {
       isEncrypting.value = true;

@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 
+import '../data/local/isar/services/auth/pengguna/auth_guard.dart';
 import '../modules/auth/pengguna/daftar/views/index_view.dart';
 import '../modules/auth/pengguna/layar_pembuka/views/index_view.dart';
 import '../../core/navigation/pengguna/main_navigasi_pengguna.dart';
@@ -42,22 +43,34 @@ class AppPages {
       name: _Paths.indexHalamanUtamaPengguna,
       page: () => const IndexHalamanUtamaView(),
       binding: PenggunaBinding(),
+      middlewares: [
+        AuthGuardPengguna(),
+      ],
     ),
     GetPage(
       name: _Paths.mainNavigasiPengguna,
       page: () => const MainNavigasiPenggunaView(),
       binding: PenggunaBinding(),
+      middlewares: [
+        AuthGuardPengguna(),
+      ],
     ),
     // Kunci Berkas
     GetPage(
       name: _Paths.indexKunciBerkas,
       page: () => const IndexKunciBerkasView(),
       binding: PenggunaBinding(),
+      middlewares: [
+        AuthGuardPengguna(),
+      ],
     ),
     GetPage(
       name: _Paths.indexBukaKunciBerkas,
       page: () => const IndexBukaKunciBerkasView(),
       binding: PenggunaBinding(),
+      middlewares: [
+        AuthGuardPengguna(),
+      ],
     ),
   ];
 }
