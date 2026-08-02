@@ -1,6 +1,6 @@
+import 'package:doclock_app/core/theme/app_theme_helper.dart';
 import 'package:flutter/material.dart';
 
-import '../../constants/app_color.dart';
 import '../../constants/app_typography.dart';
 
 enum ActivityStatus {
@@ -57,10 +57,10 @@ class AppActivityTile extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: AppColor.surface,
+          color: context.appTheme.surface,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: AppColor.borderSubtle,
+            color: context.appTheme.borderSubtle,
           ),
         ),
         child: Row(
@@ -70,12 +70,12 @@ class AppActivityTile extends StatelessWidget {
               width: 48,
               height: 48,
               decoration: BoxDecoration(
-                color: AppColor.primary.withOpacity(.08),
+                color: context.appTheme.primary.withOpacity(.08),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Icon(
                 icon,
-                color: AppColor.primary,
+                color: context.appTheme.primary,
                 size: 24,
               ),
             ),
@@ -97,7 +97,7 @@ class AppActivityTile extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: AppTypography.bodySmall().copyWith(
-                      color: AppColor.textSecondary,
+                      color: context.appTheme.textSecondary,
                     ),
                   ),
                 ],
@@ -128,7 +128,7 @@ class AppActivityTile extends StatelessWidget {
                 Text(
                   date,
                   style: AppTypography.caption1().copyWith(
-                    color: AppColor.textSecondary,
+                    color: context.appTheme.textSecondary,
                   ),
                 ),
               ],

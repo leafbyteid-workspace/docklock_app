@@ -1,6 +1,6 @@
+import 'package:doclock_app/core/theme/app_theme_helper.dart';
 import 'package:flutter/material.dart';
 
-import '../constants/app_color.dart';
 import '../constants/app_typography.dart';
 
 class AppSectionHeader extends StatelessWidget {
@@ -34,7 +34,7 @@ class AppSectionHeader extends StatelessWidget {
                   title,
                   style: AppTypography.headline().copyWith(
                     fontWeight: FontWeight.bold,
-                    color: AppColor.textPrimary,
+                    color: context.appTheme.textPrimary,
                   ),
                 ),
                 if (subtitle != null) ...[
@@ -42,7 +42,7 @@ class AppSectionHeader extends StatelessWidget {
                   Text(
                     subtitle!,
                     style: AppTypography.bodySmall().copyWith(
-                      color: AppColor.textSecondary,
+                      color: context.appTheme.textSecondary,
                     ),
                   ),
                 ],
@@ -59,12 +59,12 @@ class AppSectionHeader extends StatelessWidget {
                 ),
                 minimumSize: Size.zero,
                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                foregroundColor: AppColor.primary,
+                foregroundColor: context.appTheme.primary,
               ),
               child: Text(
                 actionText,
                 style: AppTypography.subhead().copyWith(
-                  color: AppColor.primary,
+                  color: context.appTheme.primary,
                   fontWeight: FontWeight.w600,
                 ),
               ),

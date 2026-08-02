@@ -1,7 +1,7 @@
+import 'package:doclock_app/core/theme/app_theme_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
-import '../../constants/app_color.dart';
 import '../../constants/app_typography.dart';
 
 class AppSearchField extends StatelessWidget {
@@ -47,19 +47,21 @@ class AppSearchField extends StatelessWidget {
           child: Container(
             height: 52,
             decoration: BoxDecoration(
-              color: enabled ? AppColor.surface : AppColor.disabledBackground,
+              color: enabled
+                  ? context.appTheme.surface
+                  : context.appTheme.disabledBackground,
               borderRadius: BorderRadius.circular(14),
               border: Border.all(
-                color: AppColor.borderDefault,
+                color: context.appTheme.borderDefault,
               ),
             ),
             child: Row(
               children: [
                 const SizedBox(width: 14),
-                const Icon(
+                Icon(
                   Symbols.search_rounded,
                   size: 22,
-                  color: AppColor.iconSecondary,
+                  color: context.appTheme.iconSecondary,
                 ),
                 const SizedBox(width: 10),
                 Expanded(
@@ -67,14 +69,14 @@ class AppSearchField extends StatelessWidget {
                     controller: controller,
                     enabled: enabled,
                     autofocus: autofocus,
-                    cursorColor: AppColor.primary,
+                    cursorColor: context.appTheme.primary,
                     style: AppTypography.bodyPrimary(),
                     decoration: InputDecoration(
                       isCollapsed: true,
                       border: InputBorder.none,
                       hintText: hint ?? "Cari...",
                       hintStyle: AppTypography.bodyPrimary().copyWith(
-                        color: AppColor.textMuted,
+                        color: context.appTheme.textMuted,
                       ),
                     ),
                     onChanged: onChanged,
@@ -107,7 +109,7 @@ class AppSearchField extends StatelessWidget {
                   width: 52,
                   height: 52,
                   decoration: BoxDecoration(
-                    color: AppColor.primary,
+                    color: context.appTheme.primary,
                     borderRadius: BorderRadius.circular(14),
                   ),
                   child: const Icon(
@@ -125,8 +127,8 @@ class AppSearchField extends StatelessWidget {
                         minHeight: 20,
                       ),
                       padding: const EdgeInsets.symmetric(horizontal: 5),
-                      decoration: const BoxDecoration(
-                        color: AppColor.danger,
+                      decoration: BoxDecoration(
+                        color: context.appTheme.danger,
                         shape: BoxShape.circle,
                       ),
                       alignment: Alignment.center,

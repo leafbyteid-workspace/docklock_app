@@ -1,17 +1,19 @@
+import 'package:doclock_app/core/theme/app_theme_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 
-import '../../../../../../../core/constants/app_color.dart';
-import '../../../../../../../core/constants/app_typography.dart';
 import '../../../../../../../core/errors/app_empty_state.dart';
+import '../../../../../../../core/errors/app_toast.dart';
 import '../../../../../../../core/helper/date_helper/format_date.dart';
 import '../../../../../../../core/widget/action/app_filterChip.dart';
 import '../../../../../../../core/widget/input/app_searchfield.dart';
 import '../../../../../../../core/widget/list/app_listile.dart';
 import '../../../../../../../core/widget/navigation/app_appbar.dart';
+import '../../../../../../../localization/locale_keys.dart';
 import '../../../../../../data/local/isar/models/riwayat_berkas_model.dart';
+import '../../../../../../routes/app_pages.dart';
 import '../controllers/index_controller.dart';
 
 class IndexAktivitasView extends GetView<IndexAktivitasController> {
@@ -19,10 +21,10 @@ class IndexAktivitasView extends GetView<IndexAktivitasController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const AppBarPengguna(
+      appBar: AppBarPengguna(
         showBackButton: false,
-        title: "Aktivitas",
-        subtitle: "Riwayat Proses Aktivitas Keamanan Dokumen",
+        title: LocaleKeys.activity.tr,
+        subtitle: LocaleKeys.activityDesc.tr,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -30,7 +32,7 @@ class IndexAktivitasView extends GetView<IndexAktivitasController> {
           children: [
             AppSearchField(
               controller: controller.searchController,
-              hint: "Cari dokumen...",
+              hint: LocaleKeys.searchDocument.tr,
               onChanged: controller.cari,
             ),
             const SizedBox(height: 16),
@@ -39,7 +41,7 @@ class IndexAktivitasView extends GetView<IndexAktivitasController> {
                 children: [
                   Expanded(
                     child: AppFilterChip(
-                      title: 'Semua',
+                      title: LocaleKeys.all.tr,
                       icon: Symbols.grid_view_rounded,
                       selected:
                           controller.filter.value == FilterAktivitas.semua,
@@ -53,7 +55,7 @@ class IndexAktivitasView extends GetView<IndexAktivitasController> {
                   const SizedBox(width: 8),
                   Expanded(
                     child: AppFilterChip(
-                      title: 'Terkunci',
+                      title: LocaleKeys.locked.tr,
                       icon: Symbols.lock_rounded,
                       selected:
                           controller.filter.value == FilterAktivitas.terkunci,
@@ -65,7 +67,7 @@ class IndexAktivitasView extends GetView<IndexAktivitasController> {
                   const SizedBox(width: 8),
                   Expanded(
                     child: AppFilterChip(
-                      title: 'Terbuka',
+                      title: LocaleKeys.unlocked.tr,
                       icon: Symbols.lock_open,
                       selected:
                           controller.filter.value == FilterAktivitas.terbuka,
@@ -81,9 +83,11 @@ class IndexAktivitasView extends GetView<IndexAktivitasController> {
             Expanded(
               child: Obx(() {
                 if (controller.isLoading.value) {
-                  return LoadingAnimationWidget.inkDrop(
-                    color: AppColor.primary,
-                    size: 32,
+                  return Center(
+                    child: LoadingAnimationWidget.inkDrop(
+                      color: context.appTheme.primary,
+                      size: 32,
+                    ),
                   );
                 }
 
@@ -94,12 +98,11 @@ class IndexAktivitasView extends GetView<IndexAktivitasController> {
                           physics: const AlwaysScrollableScrollPhysics(),
                           child: SizedBox(
                             height: MediaQuery.of(context).size.height * 0.65,
-                            child: const Center(
+                            child: Center(
                               child: EmptyState(
                                 icon: Symbols.history,
-                                title: "Belum Ada Aktivitas",
-                                subtitle:
-                                    "Riwayat Enkripsi dan Dekripsi akan muncul di sini.",
+                                title: LocaleKeys.noActivity.tr,
+                                subtitle: LocaleKeys.noActivityDesc.tr,
                               ),
                             ),
                           ),
@@ -127,7 +130,20 @@ class IndexAktivitasView extends GetView<IndexAktivitasController> {
                                 riwayat.dibuatPada,
                               ),
                               status: ActivityStatus.sukses,
-                              onTap: () {},
+                              onTap: () async {
+                                final result = await Get.toNamed(
+                                  Routes.detailBerkas,
+                                  arguments: riwayat.idBerkas,
+                                );
+
+                                if (result == true) {
+                                  AppToast.sukses(
+                                    title: LocaleKeys.fileDeletedSuccess.tr,
+                                  );
+
+                                  await controller.refreshData();
+                                }
+                              },
                             );
                           },
                         ),
@@ -135,68 +151,6 @@ class IndexAktivitasView extends GetView<IndexAktivitasController> {
               }),
             ),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-class _FilterChipAktivitas extends StatelessWidget {
-  const _FilterChipAktivitas({
-    required this.title,
-    required this.selected,
-    required this.onTap,
-  });
-
-  final String title;
-  final bool selected;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 200),
-      curve: Curves.easeInOut,
-      decoration: BoxDecoration(
-        color: selected ? AppColor.primary : AppColor.surfaceVariant,
-        borderRadius: BorderRadius.circular(100),
-        border: Border.all(
-          color: selected ? AppColor.primary : AppColor.borderDefault,
-          width: 1.0,
-        ),
-        boxShadow: selected
-            ? [
-                BoxShadow(
-                  color: AppColor.primary.withOpacity(0.25),
-                  blurRadius: 8,
-                  offset: const Offset(0, 2),
-                ),
-              ]
-            : null,
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(100),
-          highlightColor:
-              selected ? AppColor.hover.withOpacity(0.2) : AppColor.hover,
-          splashColor:
-              selected ? AppColor.pressed.withOpacity(0.2) : AppColor.pressed,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 16.0,
-              vertical: 8.0,
-            ),
-            child: Text(
-              title,
-              style: AppTypography.chip.copyWith(
-                color: selected ? AppColor.onPrimary : AppColor.textSecondary,
-                fontWeight:
-                    selected ? AppTypography.semiBold : AppTypography.medium,
-              ),
-            ),
-          ),
         ),
       ),
     );

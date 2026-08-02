@@ -1,9 +1,9 @@
+import 'package:doclock_app/core/theme/app_theme_helper.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 
-import '../../constants/app_color.dart';
 import '../../constants/app_typography.dart';
 
 enum AppTextFieldType {
@@ -164,16 +164,16 @@ class _AppTextFieldState extends State<AppTextField> {
                 text: widget.label!,
                 style: AppTypography.subhead().copyWith(
                   color: widget.enabled
-                      ? AppColor.textPrimary
-                      : AppColor.disabledText,
+                      ? context.appTheme.textPrimary
+                      : context.appTheme.disabledText,
                   fontWeight: AppTypography.semiBold,
                 ),
                 children: [
                   if (widget.required)
-                    const TextSpan(
+                    TextSpan(
                       text: " *",
                       style: TextStyle(
-                        color: AppColor.danger,
+                        color: context.appTheme.danger,
                         fontWeight: AppTypography.bold,
                       ),
                     ),
@@ -192,11 +192,11 @@ class _AppTextFieldState extends State<AppTextField> {
               ),
               decoration: BoxDecoration(
                 color: widget.enabled
-                    ? AppColor.surface
-                    : AppColor.disabledBackground,
+                    ? context.appTheme.surface
+                    : context.appTheme.disabledBackground,
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: AppColor.borderDefault,
+                  color: context.appTheme.borderDefault,
                 ),
               ),
               child: Row(
@@ -208,7 +208,7 @@ class _AppTextFieldState extends State<AppTextField> {
                         ? Text(
                             widget.hint ?? "Pilih file",
                             style: AppTypography.bodyPrimary().copyWith(
-                              color: AppColor.textMuted,
+                              color: context.appTheme.textMuted,
                             ),
                           )
                         : Column(
@@ -224,7 +224,7 @@ class _AppTextFieldState extends State<AppTextField> {
                               Text(
                                 "${(widget.file!.size / 1024).toStringAsFixed(1)} KB",
                                 style: AppTypography.helper.copyWith(
-                                  color: AppColor.textSecondary,
+                                  color: context.appTheme.textSecondary,
                                 ),
                               ),
                             ],
@@ -235,9 +235,9 @@ class _AppTextFieldState extends State<AppTextField> {
                   else
                     IconButton(
                       splashRadius: 20,
-                      icon: const Icon(
+                      icon: Icon(
                         Symbols.close_rounded,
-                        color: AppColor.danger,
+                        color: context.appTheme.danger,
                       ),
                       onPressed: () {
                         widget.onFileChanged?.call(null);
@@ -252,7 +252,7 @@ class _AppTextFieldState extends State<AppTextField> {
             Text(
               widget.helperText!,
               style: AppTypography.helper.copyWith(
-                color: AppColor.textSecondary,
+                color: context.appTheme.textSecondary,
               ),
             ),
           ],
@@ -261,7 +261,7 @@ class _AppTextFieldState extends State<AppTextField> {
             Text(
               widget.errorText!,
               style: AppTypography.error.copyWith(
-                color: AppColor.danger,
+                color: context.appTheme.danger,
               ),
             ),
           ],
@@ -278,16 +278,16 @@ class _AppTextFieldState extends State<AppTextField> {
               text: widget.label!,
               style: AppTypography.subhead().copyWith(
                 color: widget.enabled
-                    ? AppColor.textPrimary
-                    : AppColor.disabledText,
+                    ? context.appTheme.textPrimary
+                    : context.appTheme.disabledText,
                 fontWeight: AppTypography.semiBold,
               ),
               children: [
                 if (widget.required)
-                  const TextSpan(
+                  TextSpan(
                     text: " *",
                     style: TextStyle(
-                      color: AppColor.danger,
+                      color: context.appTheme.danger,
                       fontWeight: AppTypography.bold,
                     ),
                   ),
@@ -300,8 +300,8 @@ class _AppTextFieldState extends State<AppTextField> {
           data: Theme.of(context).copyWith(
             iconTheme: IconThemeData(
               color: widget.enabled
-                  ? AppColor.iconSecondary
-                  : AppColor.disabledIcon,
+                  ? context.appTheme.iconSecondary
+                  : context.appTheme.disabledIcon,
               size: 20,
             ),
           ),
@@ -323,31 +323,32 @@ class _AppTextFieldState extends State<AppTextField> {
             onFieldSubmitted: widget.onSubmitted,
             textInputAction: widget.textInputAction,
             style: AppTypography.bodyPrimary().copyWith(
-              color:
-                  widget.enabled ? AppColor.textPrimary : AppColor.disabledText,
+              color: widget.enabled
+                  ? context.appTheme.textPrimary
+                  : context.appTheme.disabledText,
             ),
-            cursorColor: AppColor.primary,
+            cursorColor: context.appTheme.primary,
             cursorWidth: 1.8,
             decoration: InputDecoration(
               hintText: widget.hint,
               hintStyle: AppTypography.bodyPrimary().copyWith(
-                color: AppColor.textMuted,
+                color: context.appTheme.textMuted,
               ),
               helperText: widget.helperText,
               helperStyle: AppTypography.helper.copyWith(
-                color: AppColor.textSecondary,
+                color: context.appTheme.textSecondary,
               ),
               errorText: widget.errorText,
               errorStyle: AppTypography.error.copyWith(
-                color: AppColor.danger,
+                color: context.appTheme.danger,
               ),
               errorMaxLines: 2,
               filled: true,
               fillColor: widget.enabled
                   ? (widget.readOnly
-                      ? AppColor.surfaceVariant
-                      : AppColor.surface)
-                  : AppColor.disabledBackground,
+                      ? context.appTheme.surfaceVariant
+                      : context.appTheme.surface)
+                  : context.appTheme.disabledBackground,
               prefixIcon: widget.prefix ?? defaultPrefix,
               suffixIcon: isPassword
                   ? IconButton(
@@ -363,7 +364,7 @@ class _AppTextFieldState extends State<AppTextField> {
                         obscure
                             ? Symbols.visibility_off_rounded
                             : Symbols.visibility_rounded,
-                        color: AppColor.iconSecondary,
+                        color: context.appTheme.iconSecondary,
                         size: 20,
                       ),
                     )
@@ -374,42 +375,42 @@ class _AppTextFieldState extends State<AppTextField> {
               ),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(
-                  color: AppColor.borderDefault,
+                borderSide: BorderSide(
+                  color: context.appTheme.borderDefault,
                 ),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(
-                  color: AppColor.borderDefault,
+                borderSide: BorderSide(
+                  color: context.appTheme.borderDefault,
                   width: 1.0,
                 ),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(
-                  color: AppColor.borderFocus,
+                borderSide: BorderSide(
+                  color: context.appTheme.borderFocus,
                   width: 1.8,
                 ),
               ),
               disabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(
-                  color: AppColor.disabledBorder,
+                borderSide: BorderSide(
+                  color: context.appTheme.disabledBorder,
                   width: 1.0,
                 ),
               ),
               errorBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(
-                  color: AppColor.danger,
+                borderSide: BorderSide(
+                  color: context.appTheme.danger,
                   width: 1.0,
                 ),
               ),
               focusedErrorBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(
-                  color: AppColor.danger,
+                borderSide: BorderSide(
+                  color: context.appTheme.danger,
                   width: 1.8,
                 ),
               ),

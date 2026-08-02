@@ -67,15 +67,17 @@ class RepositoriAkun {
     required int id,
     required String passwordBaru,
   }) async {
-    final akun = await berdasarkanId(id);
+    await _isar.writeTxn(() async {
+      final akun = await _isar.akunModels.get(id);
 
-    if (akun == null) {
-      throw Exception("Akun tidak ditemukan.");
-    }
+      if (akun == null) {
+        throw Exception("Akun tidak ditemukan.");
+      }
 
-    akun.kataSandi = passwordBaru;
-    akun.diperbaruiPada = DateTime.now();
+      akun.kataSandi = passwordBaru;
+      akun.diperbaruiPada = DateTime.now();
 
-    await simpan(akun);
+      await _isar.akunModels.put(akun);
+    });
   }
 }

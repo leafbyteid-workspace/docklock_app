@@ -1,6 +1,6 @@
+import 'package:doclock_app/core/theme/app_theme_helper.dart';
 import 'package:flutter/material.dart';
 
-import '../../constants/app_color.dart';
 import '../../constants/app_typography.dart';
 
 enum FilterChipIconPosition {
@@ -31,12 +31,13 @@ class AppFilterChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final backgroundColor =
-        selected ? AppColor.primary : AppColor.surfaceVariant;
+        selected ? context.appTheme.primary : context.appTheme.surfaceVariant;
 
-    final borderColor = selected ? AppColor.primary : AppColor.borderDefault;
+    final borderColor =
+        selected ? context.appTheme.primary : context.appTheme.borderDefault;
 
     final foregroundColor =
-        selected ? AppColor.onPrimary : AppColor.textSecondary;
+        selected ? context.appTheme.onPrimary : context.appTheme.textSecondary;
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 200),
@@ -51,7 +52,7 @@ class AppFilterChip extends StatelessWidget {
         boxShadow: selected
             ? [
                 BoxShadow(
-                  color: AppColor.primary.withOpacity(0.25),
+                  color: context.appTheme.primary.withOpacity(0.25),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
@@ -64,10 +65,12 @@ class AppFilterChip extends StatelessWidget {
         child: InkWell(
           onTap: onTap,
           borderRadius: BorderRadius.circular(100),
-          highlightColor:
-              selected ? AppColor.hover.withOpacity(0.2) : AppColor.hover,
-          splashColor:
-              selected ? AppColor.pressed.withOpacity(0.2) : AppColor.pressed,
+          highlightColor: selected
+              ? context.appTheme.hover.withOpacity(0.2)
+              : context.appTheme.hover,
+          splashColor: selected
+              ? context.appTheme.pressed.withOpacity(0.2)
+              : context.appTheme.pressed,
           child: Padding(
             padding: const EdgeInsets.symmetric(
               horizontal: 16,

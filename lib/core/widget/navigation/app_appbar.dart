@@ -1,3 +1,4 @@
+import 'package:doclock_app/core/theme/app_theme_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -15,14 +16,14 @@ class AppBarPengguna extends StatelessWidget implements PreferredSizeWidget {
     this.onAction1,
     this.actionIcon2,
     this.onAction2,
-    this.backgroundColor = AppColor.primary,
+    this.backgroundColor,
   });
 
   final String title;
 
   final String? subtitle;
 
-  final Color backgroundColor;
+  final Color? backgroundColor;
 
   final bool showBackButton;
   final VoidCallback? onBackPressed;
@@ -39,27 +40,36 @@ class AppBarPengguna extends StatelessWidget implements PreferredSizeWidget {
       );
   @override
   Widget build(BuildContext context) {
+    final theme = context.appTheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     final bool hasBackButton = showBackButton;
     final bool hasAction = actionIcon1 != null || actionIcon2 != null;
-
     final bool hasSubtitle = subtitle != null;
 
     final bool centerTitle = (!hasBackButton && !hasAction) ||
         (hasBackButton && hasAction && hasSubtitle);
 
     return Material(
+      color: Colors.transparent,
       elevation: 0,
       child: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [
-              Color(0xFF3F2B96),
-              Color(0xFF5A3FD9),
-              Color(0xFF1E1B4B),
-            ],
-            stops: [0.0, 0.40, 1.0],
+            colors: isDark
+                ? const [
+                    Color(0xFF39445B),
+                    Color(0xFF313B50),
+                    Color(0xFF283142),
+                  ]
+                : const [
+                    Color(0xFF3F2B96),
+                    Color(0xFF5A3FD9),
+                    Color(0xFF1E1B4B),
+                  ],
+            stops: const [0.0, 0.40, 1.0],
           ),
         ),
         child: SafeArea(
@@ -78,7 +88,7 @@ class AppBarPengguna extends StatelessWidget implements PreferredSizeWidget {
                           splashRadius: 24,
                           icon: const Icon(
                             Icons.arrow_back_ios_new_rounded,
-                            color: AppColor.iconInverse,
+                            color: AppColor.textInverse,
                           ),
                           onPressed: onBackPressed ??
                               () {
@@ -103,7 +113,7 @@ class AppBarPengguna extends StatelessWidget implements PreferredSizeWidget {
                               visualDensity: VisualDensity.compact,
                               icon: Icon(
                                 actionIcon1,
-                                color: AppColor.iconInverse,
+                                color: theme.iconInverse,
                               ),
                             ),
                           if (actionIcon2 != null) const SizedBox(width: 4),
@@ -119,7 +129,7 @@ class AppBarPengguna extends StatelessWidget implements PreferredSizeWidget {
                               visualDensity: VisualDensity.compact,
                               icon: Icon(
                                 actionIcon2,
-                                color: AppColor.iconInverse,
+                                color: theme.iconInverse,
                               ),
                             ),
                         ],

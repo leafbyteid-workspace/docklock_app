@@ -1,9 +1,9 @@
+import 'package:doclock_app/core/theme/app_theme_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 
-import '../../../../../../../core/constants/app_color.dart';
 import '../../../../../../../core/errors/app_empty_state.dart';
 import '../../../../../../../core/helper/date_helper/format_date.dart';
 import '../../../../../../../core/layout/app_section_header.dart';
@@ -11,6 +11,7 @@ import '../../../../../../../core/widget/card/app_feature_card.dart';
 import '../../../../../../../core/widget/card/app_summary_card.dart';
 import '../../../../../../../core/widget/list/app_listile.dart';
 import '../../../../../../../core/widget/navigation/app_appbar.dart';
+import '../../../../../../../localization/locale_keys.dart';
 import '../../../../../../data/local/isar/models/riwayat_aktivitas_model.dart';
 import '../../../../../../routes/app_pages.dart';
 import '../controllers/index_controller.dart';
@@ -20,11 +21,12 @@ class IndexBerandaView extends GetView<IndexBerandaController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColor.background,
-      appBar: const AppBarPengguna(
+      backgroundColor: context.appTheme.background,
+      appBar: AppBarPengguna(
+        backgroundColor: context.appTheme.primary,
         showBackButton: false,
-        title: "Beranda",
-        subtitle: "Pusat pengelolaan keamanan dokumen Anda",
+        title: LocaleKeys.home.tr,
+        subtitle: LocaleKeys.homeDesc.tr,
       ),
       body: RefreshIndicator(
         onRefresh: () async {
@@ -39,12 +41,11 @@ class IndexBerandaView extends GetView<IndexBerandaController> {
                   Expanded(
                     child: AppFeatureCard(
                       layout: AppTataLetakKartuFitur.horizontal,
-                      label: 'Keamanan',
-                      title: 'Kunci Berkas',
-                      description:
-                          'Ubah dokumen menjadi data terenkripsi agar hanya dapat diakses oleh pihak yang memiliki kunci.',
+                      label: LocaleKeys.security.tr,
+                      title: LocaleKeys.lockFiles.tr,
+                      description: LocaleKeys.lockFilesDesc.tr,
                       backgroundIcon: Symbols.lock,
-                      actionText: 'Mulai Kunci',
+                      actionText: LocaleKeys.startlockFiles.tr,
                       onTap: () {
                         Get.toNamed(Routes.indexKunciBerkas);
                       },
@@ -54,12 +55,11 @@ class IndexBerandaView extends GetView<IndexBerandaController> {
                   Expanded(
                     child: AppFeatureCard(
                       layout: AppTataLetakKartuFitur.horizontal,
-                      label: 'Akses Data',
-                      title: 'Buka Berkas',
-                      description:
-                          'Pulihkan dokumen terenkripsi kembali ke bentuk aslinya menggunakan kunci yang valid.',
+                      label: LocaleKeys.dataAccess.tr,
+                      title: LocaleKeys.unlockFiles.tr,
+                      description: LocaleKeys.unlockFilesDesc.tr,
                       backgroundIcon: Symbols.lock_open,
-                      actionText: 'Mulai Buka',
+                      actionText: LocaleKeys.startunlockFiles.tr,
                       onTap: () {
                         Get.toNamed(Routes.indexBukaKunciBerkas);
                       },
@@ -68,8 +68,8 @@ class IndexBerandaView extends GetView<IndexBerandaController> {
                 ],
               ),
               const SizedBox(height: 24),
-              const AppSectionHeader(
-                title: "Ringkasan Aktivitas",
+              AppSectionHeader(
+                title: LocaleKeys.activitySummary.tr,
               ),
               const SizedBox(height: 8),
               Obx(
@@ -78,43 +78,44 @@ class IndexBerandaView extends GetView<IndexBerandaController> {
                     AppItemRingkasan(
                       icon: Symbols.lock,
                       count: controller.totalEnkripsi.value.toString(),
-                      title: "Terkunci",
-                      subtitle: "Total",
+                      title: LocaleKeys.locked.tr,
+                      subtitle: LocaleKeys.total.tr,
                     ),
                     AppItemRingkasan(
                       icon: Symbols.folder,
                       count: controller.totalDokumen.value.toString(),
-                      title: "Dokumen",
-                      subtitle: "Tersimpan",
+                      title: LocaleKeys.documents.tr,
+                      subtitle: LocaleKeys.stored.tr,
                     ),
                     AppItemRingkasan(
                       icon: Symbols.lock_open,
                       count: controller.totalDekripsi.value.toString(),
-                      title: "Terbuka",
-                      subtitle: "Berhasil",
+                      title: LocaleKeys.unlocked.tr,
+                      subtitle: LocaleKeys.successful.tr,
                     ),
                   ],
                 ),
               ),
               const SizedBox(height: 24),
-              const AppSectionHeader(
-                title: "Aktivitas Terbaru",
+              AppSectionHeader(
+                title: LocaleKeys.latestActivity.tr,
               ),
               const SizedBox(height: 8),
               Obx(() {
                 if (controller.loadingAktivitas.value) {
-                  return LoadingAnimationWidget.inkDrop(
-                    color: AppColor.primary,
-                    size: 32,
+                  return Center(
+                    child: LoadingAnimationWidget.inkDrop(
+                      color: context.appTheme.primary,
+                      size: 32,
+                    ),
                   );
                 }
 
                 if (controller.aktivitasTerbaru.isEmpty) {
-                  return const EmptyState(
+                  return EmptyState(
                     icon: Symbols.history,
-                    title: 'Belum Ada Aktivitas',
-                    subtitle:
-                        'Aktivitas terbaru akan ditampilkan di sini setelah Anda menambahkan data.',
+                    title: LocaleKeys.noActivity.tr,
+                    subtitle: LocaleKeys.noActivityDesc.tr,
                   );
                 }
 

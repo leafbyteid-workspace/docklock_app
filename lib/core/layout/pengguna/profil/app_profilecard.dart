@@ -1,7 +1,7 @@
+import 'package:doclock_app/core/theme/app_theme_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 
-import '../../../constants/app_color.dart';
 import '../../../constants/app_typography.dart';
 
 class AppProfileCard extends StatelessWidget {
@@ -27,7 +27,7 @@ class AppProfileCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Colors.transparent,
+      color: context.appTheme.surface,
       elevation: 0,
       borderRadius: BorderRadius.circular(16),
       child: InkWell(
@@ -35,14 +35,14 @@ class AppProfileCard extends StatelessWidget {
         onTap: onTap,
         child: Ink(
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: context.appTheme.surface,
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: Colors.black.withOpacity(.1),
+              color: context.appTheme.borderSubtle,
             ),
           ),
           child: Padding(
-            padding: const EdgeInsets.all(18),
+            padding: const EdgeInsets.all(16),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -50,15 +50,15 @@ class AppProfileCard extends StatelessWidget {
                   tag: title,
                   child: CircleAvatar(
                     radius: 24,
-                    backgroundColor: AppColor.primary.withOpacity(.08),
+                    backgroundColor: context.appTheme.primary.withOpacity(.08),
                     backgroundImage: (photoUrl != null && photoUrl!.isNotEmpty)
                         ? NetworkImage(photoUrl!)
                         : null,
                     child: (photoUrl == null || photoUrl!.isEmpty)
-                        ? const Icon(
+                        ? Icon(
                             Symbols.person_rounded,
                             size: 26,
-                            color: AppColor.primary,
+                            color: context.appTheme.primary,
                           )
                         : null,
                   ),
@@ -74,7 +74,7 @@ class AppProfileCard extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         style: AppTypography.subhead().copyWith(
                           fontWeight: AppTypography.bold,
-                          color: AppColor.textPrimary,
+                          color: context.appTheme.textPrimary,
                         ),
                       ),
                       const SizedBox(height: 4),
@@ -83,7 +83,7 @@ class AppProfileCard extends StatelessWidget {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: AppTypography.footnote().copyWith(
-                          color: AppColor.textSecondary,
+                          color: context.appTheme.textSecondary,
                           height: 1.4,
                         ),
                       ),
@@ -117,16 +117,10 @@ class AppProfileCard extends StatelessWidget {
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Icon(
-                          Symbols.person_rounded,
-                          size: 14,
-                          color: AppColor.primary,
-                        ),
-                        const SizedBox(width: 4),
                         Text(
                           caption,
                           style: AppTypography.badge.copyWith(
-                            color: AppColor.primary,
+                            color: context.appTheme.primary,
                             fontWeight: AppTypography.semiBold,
                           ),
                         ),

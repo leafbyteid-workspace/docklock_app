@@ -1,6 +1,6 @@
+import 'package:doclock_app/core/theme/app_theme_helper.dart';
 import 'package:flutter/material.dart';
 
-import '../../../constants/app_color.dart';
 import '../../../constants/app_typography.dart';
 
 class AppProfileMenuSection extends StatelessWidget {
@@ -28,7 +28,7 @@ class AppProfileMenuSection extends StatelessWidget {
             child: Text(
               title.toUpperCase(),
               style: AppTypography.badge.copyWith(
-                color: AppColor.textSecondary,
+                color: context.appTheme.textSecondary,
                 letterSpacing: 1,
                 fontWeight: FontWeight.bold,
               ),
@@ -36,7 +36,6 @@ class AppProfileMenuSection extends StatelessWidget {
           ),
           Container(
             decoration: BoxDecoration(
-              color: Colors.white,
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
                 color: Colors.black.withOpacity(.05),

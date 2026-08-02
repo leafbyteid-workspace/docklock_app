@@ -1,0 +1,18 @@
+import 'package:flutter/material.dart';
+
+class LanguageItem {
+  final String code;
+
+  final String name;
+
+  final String flag;
+
+  final Locale locale;
+
+  const LanguageItem({
+    required this.code,
+    required this.name,
+    required this.flag,
+    required this.locale,
+  });
+}

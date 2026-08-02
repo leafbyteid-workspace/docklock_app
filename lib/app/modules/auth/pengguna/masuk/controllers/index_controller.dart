@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../../../../core/errors/app_snackbar.dart';
+import '../../../../../../core/theme/theme_controller.dart';
 import '../../../../../../core/utils/security/app_password_hasher.dart';
 import '../../../../../data/local/isar/repository/akun_repository.dart';
 import '../../../../../data/local/isar/repository/pengguna_repository.dart';
@@ -14,6 +15,8 @@ class IndexMasukPenggunaController extends GetxController {
     RepositoriPengguna? repositoriPengguna,
   })  : _repositoriAkun = repositoriAkun ?? RepositoriAkun(),
         _repositoriPengguna = repositoriPengguna ?? RepositoriPengguna();
+
+  final ThemeController _themeController = Get.find<ThemeController>();
 
   final RepositoriAkun _repositoriAkun;
   final RepositoriPengguna _repositoriPengguna;
@@ -73,7 +76,7 @@ class IndexMasukPenggunaController extends GetxController {
 
       if (akun == null) {
         AppSnackbar.gagal(
-          title: "Login Gagal",
+          title: "Masuk Gagal",
           message: "Email tidak terdaftar.",
         );
         return;
@@ -86,7 +89,7 @@ class IndexMasukPenggunaController extends GetxController {
 
       if (!valid) {
         AppSnackbar.gagal(
-          title: "Login Gagal",
+          title: "Masuk Gagal",
           message: "Password salah.",
         );
         return;
@@ -96,7 +99,7 @@ class IndexMasukPenggunaController extends GetxController {
 
       if (pengguna == null) {
         AppSnackbar.gagal(
-          title: "Login Gagal",
+          title: "Masuk Gagal",
           message: "Data pengguna tidak ditemukan.",
         );
         return;
@@ -106,6 +109,9 @@ class IndexMasukPenggunaController extends GetxController {
       );
       emailController.clear();
       kataSandiController.clear();
+
+      await _themeController.load(akun.id);
+
 
       Get.offAllNamed(Routes.mainNavigasiPengguna);
     } catch (e) {

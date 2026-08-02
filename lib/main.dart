@@ -6,13 +6,19 @@ import 'package:flutter/services.dart';
 
 import 'package:get/get.dart';
 
+import 'app/bindings/initial_binding.dart';
 import 'app/data/local/isar/services/auth/pengguna/auth_service.dart';
 import 'app/data/local/isar/services/main/isar_service.dart';
 import 'app/routes/app_pages.dart';
+import 'core/theme/app_dark_theme.dart';
+import 'core/theme/app_light_theme.dart';
 import 'core/service/app/open_file_service.dart';
+import 'core/theme/app_theme_service.dart';
 import 'core/widget/action/app_button.dart';
 import 'core/constants/app_color.dart';
 import 'core/constants/app_typography.dart';
+import 'localization/app_translations.dart';
+import 'localization/localization_service.dart';
 
 Future<void> main() async {
   runZonedGuarded(() async {
@@ -33,14 +39,23 @@ Future<void> main() async {
       permanent: true,
     );
 
+    await Get.putAsync<AppThemeService>(
+      () => AppThemeService().init(),
+      permanent: true,
+    );
+
+    await Get.putAsync<LocalizationService>(
+      () => LocalizationService().init(),
+      permanent: true,
+    );
+
     OpenFileService.listen((uri) async {
       Get.toNamed(
         Routes.indexBukaKunciBerkas,
         arguments: uri,
       );
     });
-
-    runApp(const MyApp());
+    runApp(Doclock());
   }, (error, stackTrace) {});
 }
 
@@ -48,16 +63,23 @@ Future<void> _initializeApp() async {
   await IsarService.instance.init();
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class Doclock extends StatelessWidget {
+  Doclock({super.key});
+
+  final themeService = Get.find<AppThemeService>();
 
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
       title: 'Application',
       initialRoute: AppPages.initial,
+      initialBinding: InitialBinding(),
       getPages: AppPages.routes,
-      themeMode: ThemeMode.system,
+      theme: AppLightTheme.theme,
+      darkTheme: AppDarkTheme.theme,
+      themeMode: themeService.themeMode,
+      translations: AppTranslations(),
+      locale: LocalizationService.to.currentLocale.value,
       debugShowCheckedModeBanner: false,
       defaultTransition: Transition.noTransition,
       transitionDuration: Duration.zero,

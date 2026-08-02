@@ -1,6 +1,7 @@
+import 'package:doclock_app/core/theme/app_theme_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
-import '../../constants/app_color.dart';
+
 import '../../constants/app_typography.dart';
 
 enum AppTataLetakKartuFitur {
@@ -16,13 +17,15 @@ class AppFeatureCard extends StatelessWidget {
   final String? backgroundImage;
   final String actionText;
   final VoidCallback? onTap;
-  final Color backgroundColor;
   final IconData backgroundIcon;
-  final Color accentColor;
+
+  final Color? backgroundColor;
+
+  final Color? accentColor;
 
   const AppFeatureCard({
-    this.layout = AppTataLetakKartuFitur.vertical,
     super.key,
+    this.layout = AppTataLetakKartuFitur.vertical,
     required this.label,
     required this.title,
     required this.description,
@@ -30,14 +33,43 @@ class AppFeatureCard extends StatelessWidget {
     required this.backgroundIcon,
     this.actionText = 'Learn more',
     this.onTap,
-    this.backgroundColor = const Color(0xFF2563EB),
-    this.accentColor = const Color(0xFFF8FAFC),
+    this.backgroundColor,
+    this.accentColor,
   });
 
   @override
   Widget build(BuildContext context) {
-    final bool isHorizontal = layout == AppTataLetakKartuFitur.horizontal;
-    final double padding = isHorizontal ? 16 : 20;
+    final theme = context.appTheme;
+
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
+    final isHorizontal = layout == AppTataLetakKartuFitur.horizontal;
+
+    final padding = isHorizontal ? 16.0 : 20.0;
+
+    final cardBackground =
+        isDarkMode ? theme.surface : (backgroundColor ?? theme.primary);
+
+    final foregroundColor = isDarkMode ? theme.textPrimary : Colors.white;
+
+    final descriptionColor = isDarkMode
+        ? theme.textPrimary.withOpacity(.82)
+        : Colors.white.withOpacity(.82);
+
+    final badgeBackground = isDarkMode
+        ? theme.textPrimary.withOpacity(.14)
+        : Colors.white.withOpacity(.14);
+
+    final decorativeIconColor = isDarkMode
+        ? theme.textPrimary.withOpacity(.08)
+        : Colors.white.withOpacity(.08);
+
+    final borderColor =
+        isDarkMode ? theme.borderSubtle : Colors.white.withOpacity(.08);
+
+    final cardAccent =
+        accentColor ?? (isDarkMode ? theme.primary : Colors.white);
+
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -46,22 +78,14 @@ class AppFeatureCard extends StatelessWidget {
         child: Container(
           width: double.infinity,
           decoration: BoxDecoration(
-            color: backgroundColor,
+            color: cardBackground,
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: Colors.white.withOpacity(.08),
+              color: borderColor,
             ),
-            image: backgroundImage != null
-                ? DecorationImage(
-                    image: AssetImage(backgroundImage!),
-                    alignment: Alignment.bottomRight,
-                    fit: BoxFit.none,
-                    scale: isHorizontal ? 1.8 : 1.2,
-                  )
-                : null,
             boxShadow: [
               BoxShadow(
-                color: AppColor.overlay.withOpacity(0.04),
+                color: theme.overlay.withOpacity(.04),
                 blurRadius: 12,
                 offset: const Offset(0, 4),
               ),
@@ -71,6 +95,36 @@ class AppFeatureCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(16),
             child: Stack(
               children: [
+                if (backgroundImage != null)
+                  Positioned.fill(
+                    child: Image.asset(
+                      backgroundImage!,
+                      alignment: Alignment.bottomRight,
+                      fit: BoxFit.none,
+                      scale: isHorizontal ? 1.8 : 1.2,
+                    ),
+                  ),
+                if (!isDarkMode)
+                  Positioned.fill(
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [
+                            cardBackground.withOpacity(.98),
+                            cardBackground.withOpacity(.88),
+                            cardBackground.withOpacity(.68),
+                          ],
+                          stops: const [
+                            0.0,
+                            0.55,
+                            1.0,
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
                 Positioned(
                   right: isHorizontal ? -16 : -24,
                   bottom: isHorizontal ? -16 : -24,
@@ -80,7 +134,7 @@ class AppFeatureCard extends StatelessWidget {
                       child: Icon(
                         backgroundIcon,
                         size: isHorizontal ? 130 : 190,
-                        color: Colors.white.withOpacity(.08),
+                        color: decorativeIconColor,
                       ),
                     ),
                   ),
@@ -91,83 +145,25 @@ class AppFeatureCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 6,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(.14),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Text(
-                          label.toUpperCase(),
-                          style: AppTypography.badge.copyWith(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w700,
-                            letterSpacing: 1,
-                          ),
-                        ),
+                      _buildLabel(
+                        foregroundColor: foregroundColor,
+                        backgroundColor: badgeBackground,
                       ),
                       const SizedBox(height: 16),
-                      SizedBox(
-                        width: double.infinity,
-                        child: Text(
-                          title,
-                          style: AppTypography.title2().copyWith(
-                            color: AppColor.textInverse,
-                            fontWeight: AppTypography.bold,
-                          ),
-                          maxLines: isHorizontal ? 2 : 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
+                      _buildTitle(
+                        color: foregroundColor,
+                        isHorizontal: isHorizontal,
                       ),
                       const SizedBox(height: 8),
-                      SizedBox(
-                        width: double.infinity,
-                        child: Text(
-                          description,
-                          style: AppTypography.bodySmall().copyWith(
-                            color: AppColor.textInverse.withOpacity(.82),
-                            height: 1.4,
-                          ),
-                          maxLines: isHorizontal ? 2 : 3,
-                          overflow: TextOverflow.ellipsis,
-                        ),
+                      _buildDescription(
+                        color: descriptionColor,
+                        isHorizontal: isHorizontal,
                       ),
                       const SizedBox(height: 24),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 2.0),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  actionText,
-                                  style: AppTypography.subhead().copyWith(
-                                    color: Colors.white,
-                                    fontWeight: AppTypography.semiBold,
-                                  ),
-                                ),
-                                const SizedBox(width: 4),
-                                const Icon(
-                                  Symbols.arrow_forward_rounded,
-                                  size: 16,
-                                  color: Colors.white,
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 2),
-                            Container(
-                              height: 1.5,
-                              width: isHorizontal ? 72 : 85,
-                              color: AppColor.textInverse,
-                            ),
-                          ],
-                        ),
+                      _buildAction(
+                        foregroundColor: foregroundColor,
+                        accentColor: cardAccent,
+                        isHorizontal: isHorizontal,
                       ),
                     ],
                   ),
@@ -179,7 +175,111 @@ class AppFeatureCard extends StatelessWidget {
       ),
     );
   }
+
+  Widget _buildLabel({
+    required Color foregroundColor,
+    required Color backgroundColor,
+  }) {
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 12,
+        vertical: 6,
+      ),
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Text(
+        label.toUpperCase(),
+        style: AppTypography.badge.copyWith(
+          color: foregroundColor,
+          fontWeight: FontWeight.w700,
+          letterSpacing: 1,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTitle({
+    required Color color,
+    required bool isHorizontal,
+  }) {
+    return SizedBox(
+      width: double.infinity,
+      child: Text(
+        title,
+        style: AppTypography.title2().copyWith(
+          color: color,
+          fontWeight: AppTypography.bold,
+        ),
+        maxLines: 2,
+        overflow: TextOverflow.ellipsis,
+      ),
+    );
+  }
+
+  Widget _buildDescription({
+    required Color color,
+    required bool isHorizontal,
+  }) {
+    return SizedBox(
+      width: double.infinity,
+      child: Text(
+        description,
+        style: AppTypography.bodySmall().copyWith(
+          color: color,
+          height: 1.4,
+        ),
+        maxLines: isHorizontal ? 2 : 3,
+        overflow: TextOverflow.ellipsis,
+      ),
+    );
+  }
+
+  Widget _buildAction({
+    required Color foregroundColor,
+    required Color accentColor,
+    required bool isHorizontal,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        vertical: 2,
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                actionText,
+                style: AppTypography.subhead().copyWith(
+                  color: foregroundColor,
+                  fontWeight: AppTypography.semiBold,
+                ),
+              ),
+              const SizedBox(width: 4),
+              Icon(
+                Symbols.arrow_forward_rounded,
+                size: 16,
+                color: foregroundColor,
+              ),
+            ],
+          ),
+          const SizedBox(height: 2),
+          Container(
+            height: 1.5,
+            width: isHorizontal ? 72 : 85,
+            color: accentColor,
+          ),
+        ],
+      ),
+    );
+  }
 }
+
+
 
 // White
 // import 'package:flutter/material.dart';

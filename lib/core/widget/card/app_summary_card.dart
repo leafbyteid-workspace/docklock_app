@@ -1,6 +1,6 @@
+import 'package:doclock_app/core/theme/app_theme_helper.dart';
 import 'package:flutter/material.dart';
 
-import '../../constants/app_color.dart';
 import '../../constants/app_typography.dart';
 
 class AppSummaryCard extends StatelessWidget {
@@ -18,21 +18,21 @@ class AppSummaryCard extends StatelessWidget {
     return Container(
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
-        color: AppColor.surface,
+        color: context.appTheme.surface,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: AppColor.borderSubtle,
+          color: context.appTheme.borderSubtle,
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: AppColor.neutral900.withOpacity(0.03),
+            color: context.appTheme.surfaceVariant.withOpacity(0.03),
             blurRadius: 16,
             spreadRadius: 0,
             offset: const Offset(0, 6),
           ),
           BoxShadow(
-            color: AppColor.neutral900.withOpacity(0.02),
+            color: context.appTheme.surfaceVariant.withOpacity(0.02),
             blurRadius: 4,
             spreadRadius: 0,
             offset: const Offset(0, 2),
@@ -73,13 +73,14 @@ class AppSummaryCard extends StatelessWidget {
                                     width: isCompact ? 42 : 48,
                                     height: isCompact ? 42 : 48,
                                     decoration: BoxDecoration(
-                                      color: AppColor.primary.withOpacity(0.08),
+                                      color: context.appTheme.primary
+                                          .withOpacity(0.08),
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                     child: Center(
                                       child: Icon(
                                         item.icon,
-                                        color: AppColor.primary,
+                                        color: context.appTheme.primary,
                                         size: isCompact ? 20 : 22,
                                       ),
                                     ),
@@ -92,7 +93,7 @@ class AppSummaryCard extends StatelessWidget {
                                       style: AppTypography.title2(
                                         fontWeight: AppTypography.bold,
                                       ).copyWith(
-                                        color: AppColor.textPrimary,
+                                        color: context.appTheme.textPrimary,
                                         letterSpacing: -0.5,
                                       ),
                                     ),
@@ -103,7 +104,7 @@ class AppSummaryCard extends StatelessWidget {
                                     style: AppTypography.subhead(
                                       fontWeight: AppTypography.semiBold,
                                     ).copyWith(
-                                      color: AppColor.textPrimary,
+                                      color: context.appTheme.textPrimary,
                                     ),
                                     textAlign: TextAlign.center,
                                     maxLines: 1,
@@ -115,7 +116,7 @@ class AppSummaryCard extends StatelessWidget {
                                     style: AppTypography.caption1(
                                       fontWeight: AppTypography.regular,
                                     ).copyWith(
-                                      color: AppColor.textSecondary,
+                                      color: context.appTheme.textSecondary,
                                     ),
                                     textAlign: TextAlign.center,
                                     maxLines: 1,
@@ -129,7 +130,7 @@ class AppSummaryCard extends StatelessWidget {
                             Container(
                               width: 1,
                               margin: const EdgeInsets.symmetric(vertical: 8),
-                              color: AppColor.borderSubtle,
+                              color: context.appTheme.borderDefault,
                             ),
                         ],
                       ),

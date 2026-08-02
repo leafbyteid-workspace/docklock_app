@@ -74,35 +74,37 @@ class RepositoriPengguna {
     JenisKelamin? jenisKelamin,
     int? idPeran,
   }) async {
-    final pengguna = await berdasarkanId(id);
+    await _isar.writeTxn(() async {
+      final pengguna = await _isar.penggunaModels.get(id);
 
-    if (pengguna == null) {
-      throw Exception("Pengguna tidak ditemukan.");
-    }
+      if (pengguna == null) {
+        throw Exception("Pengguna tidak ditemukan");
+      }
 
-    if (namaLengkap != null) {
-      pengguna.namaLengkap = namaLengkap;
-    }
+      if (namaLengkap != null) {
+        pengguna.namaLengkap = namaLengkap;
+      }
 
-    if (namaPengguna != null) {
-      pengguna.namaPengguna = namaPengguna;
-    }
+      if (namaPengguna != null) {
+        pengguna.namaPengguna = namaPengguna;
+      }
 
-    if (usia != null) {
-      pengguna.usia = usia;
-    }
+      if (usia != null) {
+        pengguna.usia = usia;
+      }
 
-    if (jenisKelamin != null) {
-      pengguna.jenisKelamin = jenisKelamin;
-    }
+      if (jenisKelamin != null) {
+        pengguna.jenisKelamin = jenisKelamin;
+      }
 
-    if (idPeran != null) {
-      pengguna.idPeran = idPeran;
-    }
+      if (idPeran != null) {
+        pengguna.idPeran = idPeran;
+      }
 
-    pengguna.diperbaruiPada = DateTime.now();
+      pengguna.diperbaruiPada = DateTime.now();
 
-    await simpan(pengguna);
+      await _isar.penggunaModels.put(pengguna);
+    });
   }
 
   Future<List<PenggunaModel>> cari(String keyword) {

@@ -1,13 +1,14 @@
+import 'package:doclock_app/core/theme/app_theme_helper.dart';
 import 'package:doclock_app/core/widget/action/app_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 
-import '../../../../../../../core/constants/app_color.dart';
 import '../../../../../../../core/constants/app_typography.dart';
 import '../../../../../../../core/helper/date_helper/format_date.dart';
 import '../../../../../../../core/widget/input/app_textfield.dart';
 import '../../../../../../../core/widget/navigation/app_appbar.dart';
+import '../../../../../../../localization/locale_keys.dart';
 import '../controllers/index_controller.dart';
 
 class IndexKunciBerkasView extends GetView<IndexKunciBerkasController> {
@@ -15,9 +16,9 @@ class IndexKunciBerkasView extends GetView<IndexKunciBerkasController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColor.background,
+      backgroundColor: context.appTheme.background,
       appBar: AppBarPengguna(
-        title: "Kunci Berkas",
+        title: LocaleKeys.lockFile.tr,
         onBackPressed: () => Get.back(),
       ),
       body: SafeArea(
@@ -29,66 +30,55 @@ class IndexKunciBerkasView extends GetView<IndexKunciBerkasController> {
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      /// FILE
                       Obx(() {
                         return AppTextField(
                           type: AppTextFieldType.file,
-                          label: "Pilih Berkas",
-                          hint: "Pilih Berkas",
+                          label: LocaleKeys.selectFile.tr,
+                          hint: LocaleKeys.selectFile.tr,
                           file: controller.memilihPlatformBerkas.value,
                           onFileChanged: controller.saatBerkasBerubah,
                         );
                       }),
-
                       const SizedBox(height: 16),
-
                       AppTextField(
                         controller: controller.namaBerkasController,
-                        label: "Nama Berkas",
+                        label: LocaleKeys.fileName.tr,
+                        hint: "${LocaleKeys.fileName.tr}...",
                         type: AppTextFieldType.text,
-                        hint: "Nama Berkas...",
                         prefix: const Icon(
                           Symbols.description_rounded,
                         ),
                       ),
-
                       const SizedBox(height: 16),
-
                       AppTextField(
                         controller: controller.kataSandiController,
-                        label: "Kata Sandi",
+                        label: LocaleKeys.password.tr,
+                        hint: LocaleKeys.enterPassword.tr,
                         type: AppTextFieldType.password,
                         required: true,
-                        hint: "Masukkan kata sandi...",
                       ),
-
                       const SizedBox(height: 16),
-
                       AppTextField(
                         controller: controller.konfirmasiKataSandiController,
-                        label: "Konfirmasi Kata Sandi",
+                        label: LocaleKeys.confirmPassword.tr,
+                        hint: LocaleKeys.repeatPassword.tr,
                         type: AppTextFieldType.password,
                         required: true,
-                        hint: "Ulangi kata sandi...",
                       ),
-
                       const SizedBox(height: 16),
-
                       AppTextField(
                         controller: controller.petunjukSandiController,
-                        label: "Petunjuk Kata Sandi",
-                        hint: "Petunjuk untuk mengingat kata sandi",
+                        label: LocaleKeys.passwordHint.tr,
+                        hint: LocaleKeys.passwordHintPlaceholder.tr,
                         prefix: const Icon(
                           Symbols.lightbulb_rounded,
                         ),
                       ),
-
                       const SizedBox(height: 16),
-
                       AppTextField(
                         controller: controller.deskripsiController,
-                        label: "Deskripsi",
-                        hint: "Tambahkan deskripsi berkas...",
+                        label: LocaleKeys.description.tr,
+                        hint: LocaleKeys.descriptionPlaceholder.tr,
                         type: AppTextFieldType.multiline,
                         maxLines: 4,
                         minLines: 4,
@@ -96,19 +86,13 @@ class IndexKunciBerkasView extends GetView<IndexKunciBerkasController> {
                           Symbols.notes_rounded,
                         ),
                       ),
-
                       const SizedBox(height: 24),
-
-                      Obx(
-                        () => EnkripsiProsesBar(
-                          isVisible: controller.isEncrypting.value,
-                          progress: controller.proses.value,
-                          title: 'Mengunci Berkas',
-                          description:
-                              'Berkas sedang diamankan menggunakan enkripsi',
-                        ),
-                      ),
-
+                      Obx(() => EnkripsiProsesBar(
+                            isVisible: controller.isEncrypting.value,
+                            progress: controller.proses.value,
+                            title: LocaleKeys.lockingFile.tr,
+                            description: LocaleKeys.lockingFileDesc.tr,
+                          )),
                       Obx(() {
                         final result = controller.hasilEnkripsi.value;
 
@@ -120,8 +104,8 @@ class IndexKunciBerkasView extends GetView<IndexKunciBerkasController> {
                           children: [
                             const SizedBox(height: 24),
                             _buatKartuHasilEnkripsi(
+                              context: context,
                               result: result,
-                              onOpen: controller.bukaBerkas,
                               onShare: controller.bagikanBerkas,
                               onDownload: controller.unduhBerkas,
                             ),
@@ -153,10 +137,10 @@ class IndexKunciBerkasView extends GetView<IndexKunciBerkasController> {
                             ? Symbols.lock_reset_rounded
                             : Symbols.lock_rounded,
                     text: isEncrypting
-                        ? "Sedang Mengenkripsi..."
+                        ? LocaleKeys.encrypting.tr
                         : hasEncryptedResult
-                            ? "Kunci Berkas Ulang"
-                            : "Lakukan Penguncian",
+                            ? LocaleKeys.lockAgain.tr
+                            : LocaleKeys.startLocking.tr,
                     onPressed: isEncrypting
                         ? null
                         : hasEncryptedResult
@@ -174,23 +158,23 @@ class IndexKunciBerkasView extends GetView<IndexKunciBerkasController> {
 }
 
 Widget _buatKartuHasilEnkripsi({
+  required BuildContext context,
   required dynamic result,
-  required VoidCallback onOpen,
   required VoidCallback onShare,
   required VoidCallback onDownload,
 }) {
   return Container(
     padding: const EdgeInsets.all(16),
     decoration: BoxDecoration(
-      color: AppColor.surface,
+      color: context.appTheme.surface,
       borderRadius: BorderRadius.circular(16),
       border: Border.all(
-        color: AppColor.borderSubtle,
+        color: context.appTheme.borderSubtle,
         width: 1,
       ),
       boxShadow: [
         BoxShadow(
-          color: AppColor.overlay.withOpacity(0.04),
+          color: context.appTheme.overlay.withOpacity(0.04),
           blurRadius: 16,
           offset: const Offset(0, 4),
         ),
@@ -204,147 +188,88 @@ Widget _buatKartuHasilEnkripsi({
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: AppColor.success.withOpacity(0.1),
+                color: context.appTheme.success.withOpacity(0.1),
                 shape: BoxShape.circle,
               ),
-              child: const Icon(
+              child: Icon(
                 Icons.lock_rounded,
-                color: AppColor.success,
+                color: context.appTheme.success,
                 size: 20,
               ),
             ),
             const SizedBox(width: 16),
             Expanded(
               child: Text(
-                "Berkas Berhasil Dikunci",
+                LocaleKeys.fileLockedSuccess.tr,
                 style: AppTypography.title3(
                   fontWeight: AppTypography.semiBold,
                 ).copyWith(
-                  color: AppColor.textPrimary,
+                  color: context.appTheme.textPrimary,
                 ),
               ),
             ),
           ],
         ),
         const SizedBox(height: 16),
-        const Divider(
-          color: AppColor.divider,
+        Divider(
+          color: context.appTheme.divider,
           height: 1,
         ),
         const SizedBox(height: 16),
         _buatMenuInformasi(
-          label: "Nama Asli",
+          context: context,
+          label: LocaleKeys.originalName.tr,
           value: result.originalName,
         ),
         const SizedBox(height: 8),
         _buatMenuInformasi(
-          label: "Nama File",
+          context: context,
+          label: LocaleKeys.encryptedFileName.tr,
           value: result.encryptedName,
         ),
         const SizedBox(height: 8),
         _buatMenuInformasi(
-          label: "Ukuran",
+          context: context,
+          label: LocaleKeys.fileSize.tr,
           value: result.size,
         ),
         const SizedBox(height: 8),
         _buatMenuInformasi(
-          label: "Tanggal Dikunci",
+          context: context,
+          label: LocaleKeys.lockedDate.tr,
           value: formatTanggal(result.encryptedAt),
         ),
         const SizedBox(height: 24),
         Row(
           children: [
             Expanded(
-              child: OutlinedButton.icon(
-                onPressed: onOpen,
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: AppColor.primary,
-                  side: const BorderSide(
-                    color: AppColor.borderDefault,
-                  ),
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 12,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                icon: const Icon(
-                  Icons.folder_open_rounded,
-                  size: 18,
-                ),
-                label: Text(
-                  "Buka",
-                  style: AppTypography.buttonSecondary.copyWith(
-                    color: AppColor.primary,
-                  ),
-                ),
+              child: AppButton(
+                text: LocaleKeys.share.tr,
+                type: AppTipeTombol.secondary,
+                icon: Icons.share_outlined,
+                onPressed: onShare,
               ),
             ),
             const SizedBox(width: 16),
             Expanded(
-              child: OutlinedButton.icon(
-                onPressed: onShare,
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: AppColor.textPrimary,
-                  side: const BorderSide(
-                    color: AppColor.borderDefault,
-                  ),
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 12,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                icon: const Icon(
-                  Icons.share_outlined,
-                  size: 18,
-                ),
-                label: Text(
-                  "Bagikan",
-                  style: AppTypography.buttonSecondary.copyWith(
-                    color: AppColor.textPrimary,
-                  ),
-                ),
+              child: AppButton(
+                text: LocaleKeys.downloadFile.tr,
+                type: AppTipeTombol.primary,
+                icon: Icons.file_download_outlined,
+                onPressed: onDownload,
               ),
             ),
           ],
-        ),
-        const SizedBox(height: 16),
-        SizedBox(
-          width: double.infinity,
-          child: ElevatedButton.icon(
-            onPressed: onDownload,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColor.primary,
-              foregroundColor: AppColor.onPrimary,
-              elevation: 0,
-              padding: const EdgeInsets.symmetric(
-                vertical: 14,
-              ),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-            icon: const Icon(
-              Icons.file_download_outlined,
-              size: 20,
-            ),
-            label: Text(
-              "Unduh Berkas",
-              style: AppTypography.buttonPrimary.copyWith(
-                color: AppColor.onPrimary,
-              ),
-            ),
-          ),
         ),
       ],
     ),
   );
 }
 
-Widget _buatMenuInformasi({required String label, required String value}) {
+Widget _buatMenuInformasi(
+    {required BuildContext context,
+    required String label,
+    required String value}) {
   return Row(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -353,14 +278,14 @@ Widget _buatMenuInformasi({required String label, required String value}) {
         child: Text(
           label,
           style: AppTypography.subhead().copyWith(
-            color: AppColor.textSecondary,
+            color: context.appTheme.textSecondary,
           ),
         ),
       ),
       Text(
         ": ",
         style: AppTypography.subhead().copyWith(
-          color: AppColor.textSecondary,
+          color: context.appTheme.textSecondary,
         ),
       ),
       Expanded(
@@ -368,7 +293,7 @@ Widget _buatMenuInformasi({required String label, required String value}) {
           value,
           style:
               AppTypography.subhead(fontWeight: AppTypography.medium).copyWith(
-            color: AppColor.textPrimary,
+            color: context.appTheme.textPrimary,
           ),
         ),
       ),
@@ -386,8 +311,8 @@ class EnkripsiProsesBar extends StatelessWidget {
     super.key,
     required this.progress,
     required this.isVisible,
-    this.title = 'Mengenkripsi Data',
-    this.description = 'Mohon tunggu, proses sedang berlangsung...',
+    required this.title,
+    this.description,
   });
 
   @override
@@ -499,8 +424,8 @@ class EnkripsiProsesBar extends StatelessWidget {
                   const SizedBox(height: 16),
                   Text(
                     safeProgress >= 1
-                        ? 'Enkripsi berhasil diselesaikan'
-                        : 'Sedang memproses enkripsi...',
+                        ? LocaleKeys.encryptionCompleted.tr
+                        : LocaleKeys.encryptionProcessing.tr,
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: safeProgress >= 1
                           ? Colors.green

@@ -1,13 +1,14 @@
+import 'package:doclock_app/core/theme/app_theme_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 
-import '../../../../../../../core/constants/app_color.dart';
 import '../../../../../../../core/constants/app_typography.dart';
 import '../../../../../../../core/helper/date_helper/format_date.dart';
 import '../../../../../../../core/widget/action/app_button.dart';
 import '../../../../../../../core/widget/input/app_textfield.dart';
 import '../../../../../../../core/widget/navigation/app_appbar.dart';
+import '../../../../../../../localization/locale_keys.dart';
 import '../../../../../../data/services/PBE_encryption/enkripsi_metadata.dart';
 import '../controllers/index_controller.dart';
 
@@ -16,9 +17,9 @@ class IndexBukaKunciBerkasView extends GetView<IndexBukaKunciBerkasController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColor.background,
+      backgroundColor: context.appTheme.background,
       appBar: AppBarPengguna(
-        title: "Buka Kunci Berkas",
+        title: LocaleKeys.unlockFile.tr,
         onBackPressed: () => Get.back(),
       ),
       body: SafeArea(
@@ -33,8 +34,8 @@ class IndexBukaKunciBerkasView extends GetView<IndexBukaKunciBerkasController> {
                       Obx(
                         () => AppTextField(
                           type: AppTextFieldType.file,
-                          label: "Berkas Terenkripsi",
-                          hint: "Pilih Berkas .dclock",
+                          label: LocaleKeys.encryptedFile.tr,
+                          hint: LocaleKeys.selectEncryptedFile.tr,
                           file: controller.memilihPlatformBerkas.value,
                           onFileChanged: controller.saatBerkasBerubah,
                         ),
@@ -56,7 +57,7 @@ class IndexBukaKunciBerkasView extends GetView<IndexBukaKunciBerkasController> {
                           duration: const Duration(milliseconds: 350),
                           child: Column(
                             children: [
-                              _membuatKartuMetadata(metadata),
+                              _membuatKartuMetadata(context, metadata),
                               const SizedBox(height: 16),
                             ],
                           ),
@@ -64,20 +65,18 @@ class IndexBukaKunciBerkasView extends GetView<IndexBukaKunciBerkasController> {
                       }),
                       AppTextField(
                         controller: controller.kataSandiController,
-                        label: "Kata Sandi",
-                        hint: "Masukkan Kata Sandi...",
+                        label: LocaleKeys.password.tr,
+                        hint: LocaleKeys.enterPassword.tr,
                         required: true,
                         type: AppTextFieldType.password,
                       ),
                       const SizedBox(height: 24),
-                      Obx(
-                        () => ProsesDekripsiBar(
-                          isVisible: controller.isDecrypting.value,
-                          progress: controller.proses.value,
-                          title: "Membuka Kunci Berkas",
-                          description: "Sedang melakukan proses dekripsi...",
-                        ),
-                      ),
+                      Obx(() => ProsesDekripsiBar(
+                            isVisible: controller.isDecrypting.value,
+                            progress: controller.proses.value,
+                            title: LocaleKeys.openingFile.tr,
+                            description: LocaleKeys.openingFileDesc.tr,
+                          )),
                       Obx(() {
                         final result = controller.hasilDekripsi.value;
 
@@ -91,8 +90,8 @@ class IndexBukaKunciBerkasView extends GetView<IndexBukaKunciBerkasController> {
                             children: [
                               const SizedBox(height: 24),
                               _membuatKartuHasilDekripsi(
+                                context: context,
                                 result: result,
-                                onOpen: controller.bukaBerkas,
                                 onShare: controller.bagikanBerkas,
                                 onDownload: controller.unduhBerkas,
                               ),
@@ -125,10 +124,10 @@ class IndexBukaKunciBerkasView extends GetView<IndexBukaKunciBerkasController> {
                             ? Symbols.lock_reset
                             : Symbols.lock_open_right,
                     text: decrypting
-                        ? "Sedang Membuka..."
+                        ? LocaleKeys.opening.tr
                         : finished
-                            ? "Buka Berkas Lain"
-                            : "Buka Kunci Berkas",
+                            ? LocaleKeys.openAnotherFile.tr
+                            : LocaleKeys.unlockFile.tr,
                     onPressed: decrypting
                         ? null
                         : finished
@@ -146,20 +145,21 @@ class IndexBukaKunciBerkasView extends GetView<IndexBukaKunciBerkasController> {
 }
 
 Widget _membuatKartuMetadata(
+  BuildContext context,
   EnkripsiMetadataModel metadata,
 ) {
   return Container(
     width: double.infinity,
     padding: const EdgeInsets.all(16),
     decoration: BoxDecoration(
-      color: AppColor.surface,
+      color: context.appTheme.surface,
       borderRadius: BorderRadius.circular(16),
       border: Border.all(
-        color: AppColor.borderSubtle,
+        color: context.appTheme.borderSubtle,
       ),
       boxShadow: [
         BoxShadow(
-          color: AppColor.overlay.withOpacity(.04),
+          color: context.appTheme.overlay.withOpacity(.04),
           blurRadius: 18,
           offset: const Offset(0, 4),
         ),
@@ -173,18 +173,18 @@ Widget _membuatKartuMetadata(
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: AppColor.primary.withOpacity(.08),
+                color: context.appTheme.primary.withOpacity(.08),
                 shape: BoxShape.circle,
               ),
-              child: const Icon(
+              child: Icon(
                 Symbols.description_rounded,
-                color: AppColor.primary,
+                color: context.appTheme.primary,
               ),
             ),
             const SizedBox(width: 16),
             Expanded(
               child: Text(
-                "Informasi Berkas",
+                LocaleKeys.fileInformation.tr,
                 style: AppTypography.title3(
                   fontWeight: AppTypography.semiBold,
                 ),
@@ -196,42 +196,50 @@ Widget _membuatKartuMetadata(
         const Divider(),
         const SizedBox(height: 16),
         _buatMenuInformasi(
-          "Nama Berkas",
+          context,
+          LocaleKeys.fileName.tr,
           metadata.originalFileName,
         ),
         const SizedBox(height: 8),
         _buatMenuInformasi(
-          "Deskripsi",
+          context,
+          LocaleKeys.description.tr,
           metadata.description.isEmpty ? "-" : metadata.description,
         ),
         const SizedBox(height: 8),
         _buatMenuInformasi(
-          "Petunjuk Sandi",
+          context,
+          LocaleKeys.passwordHint.tr,
           metadata.hint.isEmpty ? "-" : metadata.hint,
         ),
         const SizedBox(height: 8),
         _buatMenuInformasi(
-          "Dibuat Pada",
+          context,
+          LocaleKeys.createdAt.tr,
           formatTanggal(metadata.createdAt),
         ),
         const SizedBox(height: 8),
         _buatMenuInformasi(
-          "Ukuran",
+          context,
+          LocaleKeys.fileSize.tr,
           metadata.readableSize,
         ),
         const SizedBox(height: 8),
         _buatMenuInformasi(
-          "Tipe",
+          context,
+          LocaleKeys.fileType.tr,
           metadata.mimeType,
         ),
         const SizedBox(height: 8),
         _buatMenuInformasi(
-          "Enkstensi",
+          context,
+          LocaleKeys.extension.tr,
           metadata.originalExtension,
         ),
         const SizedBox(height: 8),
         _buatMenuInformasi(
-          "Versi",
+          context,
+          LocaleKeys.version.tr,
           metadata.formatVersion,
         ),
       ],
@@ -240,22 +248,22 @@ Widget _membuatKartuMetadata(
 }
 
 Widget _membuatKartuHasilDekripsi({
+  required BuildContext context,
   required dynamic result,
-  required VoidCallback onOpen,
   required VoidCallback onShare,
   required VoidCallback onDownload,
 }) {
   return Container(
     padding: const EdgeInsets.all(16),
     decoration: BoxDecoration(
-      color: AppColor.surface,
+      color: context.appTheme.surface,
       borderRadius: BorderRadius.circular(16),
       border: Border.all(
-        color: AppColor.borderSubtle,
+        color: context.appTheme.borderSubtle,
       ),
       boxShadow: [
         BoxShadow(
-          color: AppColor.overlay.withOpacity(.04),
+          color: context.appTheme.overlay.withOpacity(.04),
           blurRadius: 16,
           offset: const Offset(0, 4),
         ),
@@ -269,19 +277,19 @@ Widget _membuatKartuHasilDekripsi({
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: AppColor.success.withOpacity(.10),
+                color: context.appTheme.success.withOpacity(.10),
                 shape: BoxShape.circle,
               ),
-              child: const Icon(
+              child: Icon(
                 Symbols.lock_open_rounded,
-                color: AppColor.success,
+                color: context.appTheme.success,
                 size: 22,
               ),
             ),
             const SizedBox(width: 16),
             Expanded(
               child: Text(
-                "Berkas Berhasil Dibuka",
+                LocaleKeys.fileOpenedSuccess.tr,
                 style: AppTypography.title3(
                   fontWeight: AppTypography.semiBold,
                 ),
@@ -293,22 +301,26 @@ Widget _membuatKartuHasilDekripsi({
         const Divider(),
         const SizedBox(height: 16),
         _buatMenuInformasi(
-          "Nama Berkas",
+          context,
+          LocaleKeys.fileName.tr,
           result.originalName,
         ),
         const SizedBox(height: 8),
         _buatMenuInformasi(
-          "Sumber",
+          context,
+          LocaleKeys.sourceFile.tr,
           result.encryptedName,
         ),
         const SizedBox(height: 8),
         _buatMenuInformasi(
-          "Ukuran",
+          context,
+          LocaleKeys.fileSize.tr,
           result.size,
         ),
         const SizedBox(height: 8),
         _buatMenuInformasi(
-          "Tanggal Dikunci",
+          context,
+          LocaleKeys.lockedDate.tr,
           formatTanggal(
             result.encryptedAt,
           ),
@@ -317,86 +329,23 @@ Widget _membuatKartuHasilDekripsi({
         Row(
           children: [
             Expanded(
-              child: OutlinedButton.icon(
-                onPressed: onOpen,
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: AppColor.primary,
-                  side: const BorderSide(
-                    color: AppColor.borderDefault,
-                  ),
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 12,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                icon: const Icon(
-                  Symbols.folder_open_rounded,
-                  size: 18,
-                ),
-                label: const Text(
-                  "Buka",
-                  style: AppTypography.buttonSecondary,
-                ),
+              child: AppButton(
+                text: LocaleKeys.share.tr,
+                type: AppTipeTombol.secondary,
+                icon: Icons.share_outlined,
+                onPressed: onShare,
               ),
             ),
             const SizedBox(width: 16),
             Expanded(
-              child: OutlinedButton.icon(
-                onPressed: onShare,
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: AppColor.textPrimary,
-                  side: const BorderSide(
-                    color: AppColor.borderDefault,
-                  ),
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 12,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(
-                      10,
-                    ),
-                  ),
-                ),
-                icon: const Icon(
-                  Symbols.share_rounded,
-                  size: 18,
-                ),
-                label: const Text(
-                  "Bagikan",
-                  style: AppTypography.buttonSecondary,
-                ),
+              child: AppButton(
+                text: LocaleKeys.downloadFile.tr,
+                type: AppTipeTombol.primary,
+                icon: Icons.file_download_outlined,
+                onPressed: onDownload,
               ),
             ),
           ],
-        ),
-        const SizedBox(height: 16),
-        SizedBox(
-          width: double.infinity,
-          child: ElevatedButton.icon(
-            onPressed: onDownload,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColor.primary,
-              foregroundColor: AppColor.onPrimary,
-              elevation: 0,
-              padding: const EdgeInsets.symmetric(
-                vertical: 14,
-              ),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(
-                  10,
-                ),
-              ),
-            ),
-            icon: const Icon(
-              Symbols.file_download_rounded,
-            ),
-            label: const Text(
-              "Unduh Berkas",
-              style: AppTypography.buttonPrimary,
-            ),
-          ),
         ),
       ],
     ),
@@ -404,6 +353,7 @@ Widget _membuatKartuHasilDekripsi({
 }
 
 Widget _buatMenuInformasi(
+  BuildContext context,
   String label,
   String value,
 ) {
@@ -415,14 +365,14 @@ Widget _buatMenuInformasi(
         child: Text(
           label,
           style: AppTypography.subhead().copyWith(
-            color: AppColor.textSecondary,
+            color: context.appTheme.textSecondary,
           ),
         ),
       ),
       Text(
         ": ",
         style: AppTypography.subhead().copyWith(
-          color: AppColor.textSecondary,
+          color: context.appTheme.textSecondary,
         ),
       ),
       Expanded(
@@ -431,7 +381,7 @@ Widget _buatMenuInformasi(
           style: AppTypography.subhead(
             fontWeight: AppTypography.medium,
           ).copyWith(
-            color: AppColor.textPrimary,
+            color: context.appTheme.textPrimary,
           ),
         ),
       ),
@@ -453,10 +403,10 @@ class DekripsiKondisiKosong extends StatelessWidget {
         vertical: 30,
       ),
       decoration: BoxDecoration(
-        color: AppColor.surface,
+        color: context.appTheme.surface,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: AppColor.borderSubtle,
+          color: context.appTheme.borderSubtle,
         ),
       ),
       child: Column(
@@ -465,28 +415,28 @@ class DekripsiKondisiKosong extends StatelessWidget {
             width: 72,
             height: 72,
             decoration: BoxDecoration(
-              color: AppColor.primary.withOpacity(.08),
+              color: context.appTheme.primary.withOpacity(.08),
               shape: BoxShape.circle,
             ),
-            child: const Icon(
+            child: Icon(
               Symbols.lock_open_rounded,
               size: 34,
-              color: AppColor.primary,
+              color: context.appTheme.primary,
             ),
           ),
           const SizedBox(height: 16),
           Text(
-            "Belum Ada Berkas",
+            LocaleKeys.noEncryptedFile.tr,
             style: AppTypography.title3(
               fontWeight: AppTypography.semiBold,
             ),
           ),
           const SizedBox(height: 8),
           Text(
-            "Silakan pilih Berkas .dclock terlebih dahulu untuk melihat informasi berkas dan melakukan proses dekripsi.",
+            LocaleKeys.noEncryptedFileDesc.tr,
             textAlign: TextAlign.center,
             style: AppTypography.bodyPrimary().copyWith(
-              color: AppColor.textSecondary,
+              color: context.appTheme.textSecondary,
             ),
           ),
         ],
@@ -618,8 +568,8 @@ class ProsesDekripsiBar extends StatelessWidget {
                   const SizedBox(height: 16),
                   Text(
                     safeProgress >= 1
-                        ? 'Dekripsi berhasil diselesaikan'
-                        : 'Sedang memproses dekripsi...',
+                        ? LocaleKeys.decryptionCompleted.tr
+                        : LocaleKeys.decryptionProcessing.tr,
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: safeProgress >= 1
                           ? Colors.green

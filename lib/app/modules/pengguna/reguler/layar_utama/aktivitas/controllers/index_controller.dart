@@ -39,12 +39,14 @@ class IndexAktivitasController extends GetxController {
     await memuatData();
   }
 
+  Future<void> refreshData() async {
+    await memuatRiwayat();
+  }
+
   Future<void> memuatData() async {
     try {
       isLoading.value = true;
-
       idPengguna = await _layananAutentikasi.penggunaSaatIni();
-
       await memuatRiwayat();
     } finally {
       isLoading.value = false;
@@ -112,10 +114,6 @@ class IndexAktivitasController extends GetxController {
 
     filter.value = value;
 
-    await memuatRiwayat();
-  }
-
-  Future<void> refreshData() async {
     await memuatRiwayat();
   }
 

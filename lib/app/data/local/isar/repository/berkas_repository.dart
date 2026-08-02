@@ -160,6 +160,31 @@ class RepositoriBerkas {
     await simpan(data);
   }
 
+  Future<void> hapusLengkap(
+    int idBerkas,
+  ) async {
+    await _isar.writeTxn(() async {
+      final berkas = await _isar.berkasModels.get(idBerkas);
+
+      if (berkas == null) {
+        return;
+      }
+
+      final seluruhRiwayat = await _isar.riwayatBerkasModels
+          .filter()
+          .idBerkasEqualTo(idBerkas)
+          .findAll();
+
+      if (seluruhRiwayat.isNotEmpty) {
+        final ids = seluruhRiwayat.map((e) => e.id).toList();
+
+        await _isar.riwayatBerkasModels.deleteAll(ids);
+      }
+
+      await _isar.berkasModels.delete(idBerkas);
+    });
+  }
+
   Future<bool> hapusPermanent(int id) async {
     return await _isar.writeTxn(
       () async => await _isar.berkasModels.delete(id),

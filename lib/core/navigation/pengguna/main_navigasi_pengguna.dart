@@ -1,3 +1,4 @@
+import 'package:doclock_app/core/theme/app_theme_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
@@ -5,7 +6,7 @@ import 'package:material_symbols_icons/material_symbols_icons.dart';
 import '../../../app/modules/pengguna/reguler/layar_utama/aktivitas/views/index_view.dart';
 import '../../../app/modules/pengguna/reguler/layar_utama/beranda/views/index_view.dart';
 import '../../../app/modules/pengguna/reguler/layar_utama/profil/views/index_view.dart';
-import '../../constants/app_color.dart';
+import '../../../localization/locale_keys.dart';
 import '../../constants/app_typography.dart';
 
 class MainNavigasiPenggunaController extends GetxController {
@@ -31,7 +32,7 @@ class MainNavigasiPenggunaView extends GetView<MainNavigasiPenggunaController> {
 
     return Obx(
       () => Scaffold(
-        backgroundColor: AppColor.background,
+        backgroundColor: context.appTheme.background,
         body: IndexedStack(
           index: controller.selectedIndex.value,
           children: pages,
@@ -72,9 +73,9 @@ class _NavigasiBawahPenggunaMobile extends StatelessWidget {
               painter: _WarnaKurvaNavigasi(
                 selectedIndex: selectedIndex,
                 itemCount: 3,
-                backgroundColor: AppColor.surface,
-                shadowColor: AppColor.neutral900.withOpacity(0.08),
-                borderColor: AppColor.borderSubtle,
+                backgroundColor: context.appTheme.surface,
+                shadowColor: context.appTheme.surfaceVariant.withOpacity(0.08),
+                borderColor: context.appTheme.borderSubtle,
               ),
               child: const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 12),
@@ -101,7 +102,7 @@ class _MenuNavigasi extends StatelessWidget {
         children: [
           Expanded(
             child: _TabNavigasi(
-              label: "Aktivitas",
+              label: LocaleKeys.activity.tr,
               icon: Symbols.history_rounded,
               selectedIcon: Symbols.history,
               selected: controller.selectedIndex.value == 0,
@@ -110,7 +111,7 @@ class _MenuNavigasi extends StatelessWidget {
           ),
           Expanded(
             child: _TabNavigasi(
-              label: "Beranda",
+              label: LocaleKeys.home.tr,
               icon: Symbols.home_rounded,
               selectedIcon: Symbols.home,
               selected: controller.selectedIndex.value == 1,
@@ -119,7 +120,7 @@ class _MenuNavigasi extends StatelessWidget {
           ),
           Expanded(
             child: _TabNavigasi(
-              label: "Profil",
+              label: LocaleKeys.profile.tr,
               icon: Symbols.person_rounded,
               selectedIcon: Symbols.person,
               selected: controller.selectedIndex.value == 2,
@@ -167,13 +168,15 @@ class _TabNavigasi extends StatelessWidget {
               height: selected ? 50 : 36,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: selected ? AppColor.primary : Colors.transparent,
+                color: selected ? context.appTheme.primary : Colors.transparent,
               ),
               child: Center(
                 child: Icon(
                   selected ? selectedIcon : icon,
                   size: selected ? 24 : 22,
-                  color: selected ? AppColor.onPrimary : AppColor.iconSecondary,
+                  color: selected
+                      ? context.appTheme.onPrimary
+                      : context.appTheme.iconSecondary,
                   fill: selected ? 1.0 : 0.0,
                   weight: selected ? 600 : 400,
                 ),
@@ -188,7 +191,9 @@ class _TabNavigasi extends StatelessWidget {
               child: AnimatedDefaultTextStyle(
                 duration: const Duration(milliseconds: 200),
                 style: AppTypography.caption1().copyWith(
-                  color: selected ? AppColor.primary : AppColor.textSecondary,
+                  color: selected
+                      ? context.appTheme.primary
+                      : context.appTheme.textSecondary,
                   fontWeight:
                       selected ? AppTypography.bold : AppTypography.medium,
                   fontSize: selected ? 11 : 10.5,

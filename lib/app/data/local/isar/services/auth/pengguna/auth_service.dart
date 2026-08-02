@@ -54,6 +54,10 @@ class AuthServicePengguna extends GetxService {
     return _sesiService.penggunaSaatIni();
   }
 
+  Future<int?> idAkunSaatIni() {
+    return _sesiService.idAkunSaatIni();
+  }
+
   Future<String?> tokenAkses() {
     return _sesiService.dapatkanTokenAkses();
   }

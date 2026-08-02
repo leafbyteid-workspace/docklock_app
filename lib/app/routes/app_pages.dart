@@ -11,6 +11,15 @@ import '../modules/auth/pengguna/layar_sambutan/halaman_utama/views/index_view.d
 import '../modules/auth/pengguna/masuk/views/index_view.dart';
 import '../modules/pengguna/reguler/kunci_berkas/buka_berkas/views/index_view.dart';
 import '../modules/pengguna/reguler/kunci_berkas/kunci_berkas/views/index_view.dart';
+import '../modules/pengguna/reguler/layar_utama/aktivitas/views/detail_berkas_view.dart';
+import '../modules/pengguna/reguler/layar_utama/profil/views/akun/informasi_pribadi/index_view.dart';
+import '../modules/pengguna/reguler/layar_utama/profil/views/akun/keamanan_akun/index_view.dart';
+import '../modules/pengguna/reguler/layar_utama/profil/views/akun/keamanan_akun/ubah_sandi/index_view.dart';
+import '../modules/pengguna/reguler/layar_utama/profil/views/bantuan/kebijakan_privasi/index_view.dart';
+import '../modules/pengguna/reguler/layar_utama/profil/views/bantuan/syarat_dan_ketentuan/index_view.dart';
+import '../modules/pengguna/reguler/layar_utama/profil/views/bantuan/tentang_aplikasi/index_view.dart';
+import '../modules/pengguna/reguler/layar_utama/profil/views/preferensi/bahasa/index_view.dart';
+import '../modules/pengguna/reguler/layar_utama/profil/views/preferensi/tema/index_view.dart';
 
 part 'app_routes.dart';
 
@@ -67,6 +76,87 @@ class AppPages {
     GetPage(
       name: _Paths.indexBukaKunciBerkas,
       page: () => const IndexBukaKunciBerkasView(),
+      binding: PenggunaBinding(),
+      middlewares: [
+        AuthGuardPengguna(),
+      ],
+    ),
+    GetPage(
+      name: _Paths.detailBerkas,
+      page: () => const DetailBerkasView(),
+      binding: PenggunaBinding(),
+      middlewares: [
+        AuthGuardPengguna(),
+      ],
+    ),
+
+    // Profil
+    // Akun
+    GetPage(
+      name: _Paths.indexAkunInformasiPribadi,
+      page: () => const IndexAkunInformasiPribadiView(),
+      binding: PenggunaBinding(),
+      middlewares: [
+        AuthGuardPengguna(),
+      ],
+    ),
+    GetPage(
+      name: _Paths.indexAkunKeamananAkun,
+      page: () => const IndexAkunKeamananAkunView(),
+      binding: PenggunaBinding(),
+      middlewares: [
+        AuthGuardPengguna(),
+      ],
+    ),
+
+    // Ubah Sandi
+    GetPage(
+      name: _Paths.indexKeamananAkunUbahSandi,
+      page: () => const IndexKeamananAkunUbahSandiView(),
+      binding: PenggunaBinding(),
+      middlewares: [
+        AuthGuardPengguna(),
+      ],
+    ),
+
+    // Preferensi
+    GetPage(
+      name: _Paths.indexPreferensiBahasa,
+      page: () => const IndexPreferensiBahasaView(),
+      binding: PenggunaBinding(),
+      middlewares: [
+        AuthGuardPengguna(),
+      ],
+    ),
+    GetPage(
+      name: _Paths.indexPreferensiTema,
+      page: () => const IndexPreferensiTemaView(),
+      binding: PenggunaBinding(),
+      middlewares: [
+        AuthGuardPengguna(),
+      ],
+    ),
+
+    // Bantuan
+    GetPage(
+      name: _Paths.indexKebijakanPrivasi,
+      page: () => const IndexKebijakanPrivasiView(),
+      binding: PenggunaBinding(),
+      middlewares: [
+        AuthGuardPengguna(),
+      ],
+    ),
+    GetPage(
+      name: _Paths.indexSyaratdanKetentuan,
+      page: () => const IndexSyaratdanKetentuanView(),
+      binding: PenggunaBinding(),
+      middlewares: [
+        AuthGuardPengguna(),
+      ],
+    ),
+    GetPage(
+      name: _Paths.indexTentangAplikasi,
+      page: () => const IndexTentangAplikasiView(),
       binding: PenggunaBinding(),
       middlewares: [
         AuthGuardPengguna(),

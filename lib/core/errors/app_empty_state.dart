@@ -1,6 +1,6 @@
+import 'package:doclock_app/core/theme/app_theme_helper.dart';
 import 'package:flutter/material.dart';
 
-import '../constants/app_color.dart';
 import '../constants/app_typography.dart';
 
 class EmptyState extends StatelessWidget {
@@ -48,15 +48,15 @@ class EmptyState extends StatelessWidget {
                 height: containerSize,
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
-                  color: AppColor.hover,
+                  color: context.appTheme.hover,
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: AppColor.borderSubtle,
+                    color: context.appTheme.borderSubtle,
                     width: 1.5,
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: AppColor.primary.withOpacity(0.08),
+                      color: context.appTheme.primary.withOpacity(0.08),
                       blurRadius: 24,
                       spreadRadius: 4,
                       offset: const Offset(0, 8),
@@ -66,7 +66,7 @@ class EmptyState extends StatelessWidget {
                 child: Icon(
                   icon,
                   size: iconSize,
-                  color: AppColor.primary,
+                  color: context.appTheme.primary,
                 ),
               ),
               const SizedBox(height: 24),
@@ -76,7 +76,7 @@ class EmptyState extends StatelessWidget {
                 style: AppTypography.title2(
                   fontWeight: AppTypography.bold,
                 ).copyWith(
-                  color: AppColor.textPrimary,
+                  color: context.appTheme.textPrimary,
                 ),
               ),
               const SizedBox(height: 8),
@@ -86,18 +86,17 @@ class EmptyState extends StatelessWidget {
                 style: AppTypography.bodySmall(
                   fontWeight: AppTypography.regular,
                 ).copyWith(
-                  color: AppColor.textSecondary,
+                  color: context.appTheme.textSecondary,
                   height: 1.5,
                 ),
               ),
-
               if (_showButton) ...[
                 const SizedBox(height: 32),
                 FilledButton.icon(
                   onPressed: onAdd,
                   style: FilledButton.styleFrom(
-                    backgroundColor: AppColor.primary,
-                    foregroundColor: AppColor.onPrimary,
+                    backgroundColor: context.appTheme.primary,
+                    foregroundColor: context.appTheme.onPrimary,
                     padding: const EdgeInsets.symmetric(
                       horizontal: 24,
                       vertical: 14,
@@ -108,15 +107,15 @@ class EmptyState extends StatelessWidget {
                     elevation: 0,
                     shadowColor: Colors.transparent,
                   ),
-                  icon: const Icon(
+                  icon: Icon(
                     Icons.add_rounded,
                     size: 20,
-                    color: AppColor.onPrimary,
+                    color: context.appTheme.onPrimary,
                   ),
                   label: Text(
                     buttonLabel!,
                     style: AppTypography.buttonPrimary.copyWith(
-                      color: AppColor.onPrimary,
+                      color: context.appTheme.onPrimary,
                     ),
                   ),
                 ),

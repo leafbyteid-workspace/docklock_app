@@ -116,6 +116,11 @@ class SesiService {
     return _repositoriSesi.dapatkanSesiAktif();
   }
 
+  Future<int?> idAkunSaatIni() async {
+  final session = await _sesiSaatIni();
+  return session?.idAkun;
+}
+
   bool _fungsiPengecekanTokenAksesValid(SesiModel session) {
     final expiredAt = session.tokenAksesAkhir;
 

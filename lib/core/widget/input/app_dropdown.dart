@@ -1,8 +1,8 @@
+import 'package:doclock_app/core/theme/app_theme_helper.dart';
 import 'package:doclock_app/core/widget/input/app_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 
-import '../../constants/app_color.dart';
 import '../../constants/app_typography.dart';
 
 class DropdownItem<T> {
@@ -134,9 +134,9 @@ class _DropdownFieldState<T> extends State<_DropdownField<T>> {
                   scrollController,
                 ) {
                   return Container(
-                    decoration: const BoxDecoration(
-                      color: AppColor.surfaceVariant,
-                      borderRadius: BorderRadius.vertical(
+                    decoration: BoxDecoration(
+                      color: context.appTheme.surfaceVariant,
+                      borderRadius: const BorderRadius.vertical(
                         top: Radius.circular(
                           16,
                         ),
@@ -157,7 +157,7 @@ class _DropdownFieldState<T> extends State<_DropdownField<T>> {
                           width: 40,
                           height: 4,
                           decoration: BoxDecoration(
-                            color: AppColor.disabledBorder,
+                            color: context.appTheme.disabledBorder,
                             borderRadius: BorderRadius.circular(
                               8,
                             ),
@@ -228,14 +228,14 @@ class _DropdownFieldState<T> extends State<_DropdownField<T>> {
                                               : AppTypography.regular,
                                         ).copyWith(
                                           color: isSelected
-                                              ? AppColor.primary
-                                              : AppColor.textPrimary,
+                                              ? context.appTheme.primary
+                                              : context.appTheme.textPrimary,
                                         ),
                                       ),
                                       trailing: isSelected
-                                          ? const Icon(
+                                          ? Icon(
                                               Icons.check_rounded,
-                                              color: AppColor.primary,
+                                              color: context.appTheme.primary,
                                               size: 20,
                                             )
                                           : null,
@@ -280,8 +280,9 @@ class _DropdownFieldState<T> extends State<_DropdownField<T>> {
           Text(
             widget.label!,
             style: AppTypography.subhead().copyWith(
-              color:
-                  widget.enabled ? AppColor.textPrimary : AppColor.disabledText,
+              color: widget.enabled
+                  ? context.appTheme.textPrimary
+                  : context.appTheme.disabledText,
               fontWeight: AppTypography.semiBold,
             ),
           ),
@@ -301,9 +302,9 @@ class _DropdownFieldState<T> extends State<_DropdownField<T>> {
                   filled: true,
                   fillColor: widget.enabled
                       ? (widget.readOnly
-                          ? AppColor.surfaceVariant
-                          : AppColor.surface)
-                      : AppColor.disabledBackground,
+                          ? context.appTheme.surfaceVariant
+                          : context.appTheme.surface)
+                      : context.appTheme.disabledBackground,
                   prefixIcon: widget.prefixIcon,
                   suffixIcon: widget.suffixIcon ??
                       const Icon(
@@ -315,57 +316,57 @@ class _DropdownFieldState<T> extends State<_DropdownField<T>> {
                   ),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(
-                      color: AppColor.borderDefault,
+                    borderSide: BorderSide(
+                      color: context.appTheme.borderDefault,
                     ),
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(
-                      color: AppColor.borderDefault,
+                    borderSide: BorderSide(
+                      color: context.appTheme.borderDefault,
                       width: 1,
                     ),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(
-                      color: AppColor.borderFocus,
+                    borderSide: BorderSide(
+                      color: context.appTheme.borderFocus,
                       width: 1.8,
                     ),
                   ),
                   disabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(
-                      color: AppColor.disabledBorder,
+                    borderSide: BorderSide(
+                      color: context.appTheme.disabledBorder,
                       width: 1,
                     ),
                   ),
                   errorBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(
-                      color: AppColor.danger,
+                    borderSide: BorderSide(
+                      color: context.appTheme.danger,
                       width: 1,
                     ),
                   ),
                   focusedErrorBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(
-                      color: AppColor.danger,
+                    borderSide: BorderSide(
+                      color: context.appTheme.danger,
                       width: 1.8,
                     ),
                   ),
                   errorStyle: AppTypography.error.copyWith(
-                    color: AppColor.danger,
+                    color: context.appTheme.danger,
                   ),
                 ),
                 child: Text(
                   label.isEmpty ? '' : label,
                   style: AppTypography.bodyPrimary().copyWith(
                     color: label.isEmpty
-                        ? AppColor.textMuted
+                        ? context.appTheme.textMuted
                         : widget.enabled
-                            ? AppColor.textPrimary
-                            : AppColor.disabledText,
+                            ? context.appTheme.textPrimary
+                            : context.appTheme.disabledText,
                   ),
                 ),
               ),
