@@ -13,11 +13,14 @@ import 'package:get/get.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../../../../../../../core/errors/app_confirmationAlert.dart';
 import '../../../../../../../core/errors/app_toast.dart';
+import '../../../../../../../localization/locale_keys.dart';
 import '../../../../../../data/local/isar/models/riwayat_aktivitas_model.dart';
 import '../../../../../../data/local/isar/repository/berkas_repository.dart';
 import '../../../../../../data/local/isar/repository/riwayat_aktivitas_repository.dart';
 import '../../../../../../data/local/isar/services/auth/pengguna/auth_service.dart';
+import '../../../../../../data/local/isar/services/main/storage_checker.dart';
 import '../../../../../../data/services/PBE_encryption/layanan_checksum.dart';
 import '../../../../../../data/services/PBE_encryption/enkripsi_metadata.dart';
 import '../../../../../../data/services/PBE_encryption/enkripsi_konstan.dart';
@@ -26,6 +29,7 @@ import '../../../../../../data/services/PBE_encryption/layanan_enkripsi.dart';
 import '../../../../../../data/services/PBE_encryption/manifestasi_enkripsi.dart';
 import '../../../../../../data/services/PBE_encryption/layanan_sandi.dart';
 import '../../../../../../data/services/PBE_encryption/layanan_penyimpanan.dart';
+import '../../../../../../data/services/connection/network_guard.dart';
 
 class IndexBukaKunciBerkasController extends GetxController {
   final AuthServicePengguna _layananAutentikasi =
@@ -91,6 +95,15 @@ class IndexBukaKunciBerkasController extends GetxController {
     try {
       proses.value = 0.1;
 
+      if (memilihBerkas.value == null) {
+        return;
+      }
+
+      if (path.extension(memilihBerkas.value!.path).toLowerCase() !=
+          ".dclock") {
+        throw Exception(LocaleKeys.fileNotDoclock.tr);
+      }
+
       final bytes = await memilihBerkas.value!.readAsBytes();
 
       archive = ZipDecoder().decodeBytes(bytes);
@@ -109,12 +122,17 @@ class IndexBukaKunciBerkasController extends GetxController {
         "cipher.bin",
       );
 
-      if (manifestFile == null || metadataFile == null || cipherFile == null) {
-        throw Exception(
-          "Format berkas tidak valid",
-        );
+      if (manifestFile == null) {
+        throw Exception(LocaleKeys.manifestNotFound.tr);
       }
 
+      if (metadataFile == null) {
+        throw Exception(LocaleKeys.metadataNotFound.tr);
+      }
+
+      if (cipherFile == null) {
+        throw Exception(LocaleKeys.cipherNotFound.tr);
+      }
       manifest.value = ManifestasiEnkripsi.decode(
         utf8.decode(
           manifestFile.content,
@@ -135,15 +153,17 @@ class IndexBukaKunciBerkasController extends GetxController {
       validasiMetadata();
 
       proses.value = 1;
+    } on ArchiveException {
+      await tampilkanDialogBerkasTidakValid(
+        LocaleKeys.invalidDoclockFile.tr,
+      );
     } on SecretBoxAuthenticationError {
-      AppSnackbar.gagal(
-        title: "Kata Sandi Salah",
-        message: "Kata Sandi yang dimasukkan tidak sesuai.",
+      await tampilkanDialogBerkasTidakValid(
+        LocaleKeys.fileCannotBeVerified.tr,
       );
     } catch (e) {
-      AppSnackbar.gagal(
-        title: "Terjadi Kesalahan",
-        message: "terjadi kesalahan, silahkan coba lagi",
+      await tampilkanDialogBerkasTidakValid(
+        e.toString().replaceFirst("Exception: ", ""),
       );
     }
   }
@@ -152,25 +172,19 @@ class IndexBukaKunciBerkasController extends GetxController {
     final data = manifest.value;
 
     if (data == null) {
-      throw Exception("Manifestasi tidak ditemukan");
+      throw Exception(LocaleKeys.manifestNotFound.tr);
     }
 
     if (data.signature != EnkripsiKonstan.signature) {
-      throw Exception(
-        "Signature tidak valid",
-      );
+      throw Exception(LocaleKeys.invalidSignature.tr);
     }
 
     if (data.application != EnkripsiKonstan.appName) {
-      throw Exception(
-        "Berkas bukan berasal dari DocLock",
-      );
+      throw Exception(LocaleKeys.fileNotDoclock.tr);
     }
 
     if (data.formatVersion != EnkripsiKonstan.formatVersion) {
-      throw Exception(
-        "Versi Berkas tidak didukung",
-      );
+      throw Exception(LocaleKeys.unsupportedVersion.tr);
     }
 
     return true;
@@ -180,21 +194,15 @@ class IndexBukaKunciBerkasController extends GetxController {
     final data = metadata.value;
 
     if (data == null) {
-      throw Exception(
-        "Metadata tidak ditemukan",
-      );
+      throw Exception(LocaleKeys.metadataNotFound.tr);
     }
 
     if (data.algorithm != EnkripsiKonstan.algorithm) {
-      throw Exception(
-        "Algoritma tidak sesuai",
-      );
+      throw Exception(LocaleKeys.invalidAlgorithm.tr);
     }
 
     if (data.salt.isEmpty || data.nonce.isEmpty || data.mac.isEmpty) {
-      throw Exception(
-        "Metadata rusak",
-      );
+      throw Exception(LocaleKeys.corruptedMetadata.tr);
     }
 
     return true;
@@ -217,19 +225,38 @@ class IndexBukaKunciBerkasController extends GetxController {
     return hash == data.passwordHash;
   }
 
+  Future<void> tampilkanDialogBerkasTidakValid(
+    String pesan,
+  ) async {
+    await ShowConfirmationDialog.show(
+      context: Get.context!,
+      title: LocaleKeys.invalidFileTitle.tr,
+      subtitle: pesan,
+      confirmText: LocaleKeys.okUnderstand.tr,
+      cancelText: "",
+      type: ConfirmationDialogType.warning,
+      barrierDismissible: false,
+    );
+
+    resetFileTerpilih();
+  }
+
   Future<void> prosesDekripsi() async {
+    if (!await NetworkGuard.check()) {
+      return;
+    }
     if (memilihBerkas.value == null) {
       AppSnackbar.gagal(
-        title: "Terjadi Kesalahan",
-        message: "Silahkan Pilih Berkas Anda!",
+        title: LocaleKeys.anError.tr,
+        message: LocaleKeys.selectEncryptedFile.tr,
       );
       return;
     }
 
     if (kataSandiController.text.isEmpty) {
       AppSnackbar.gagal(
-        title: "Terjadi Kesalahan",
-        message: "Masukkan Kata Sandi Anda!",
+        title: LocaleKeys.anError.tr,
+        message: LocaleKeys.enterPasswordMessage.tr,
       );
       return;
     }
@@ -257,11 +284,20 @@ class IndexBukaKunciBerkasController extends GetxController {
 
       if (!valid) {
         throw Exception(
-          "Checksum tidak sesuai. File kemungkinan rusak.",
+          LocaleKeys.checksumMismatch.tr,
         );
       }
 
       proses.value = 0.8;
+
+      final cukup = await StorageChecker.hasEnoughStorage(
+        requiredBytes: 0,
+      );
+
+      if (!cukup) {
+        await StorageChecker.showStorageFullDialog();
+        return;
+      }
 
       final output = await simpanBerkasDekripsi(
         plainBytes,
@@ -283,14 +319,16 @@ class IndexBukaKunciBerkasController extends GetxController {
 
       proses.value = 1;
 
-      AppToast.sukses(title: "Berkas Berhasil Di Dekripsi");
+      AppToast.sukses(
+        title: LocaleKeys.fileOpenedSuccess.tr,
+      );
 
       final idPengguna = await _layananAutentikasi.sesiSaatIni();
 
       if (idPengguna != null) {
         await repositoriRiwayat.tambah(
           idAkun: idPengguna.idAkun,
-          judulAktivitas: "Buka Kunci Berkas",
+          judulAktivitas: LocaleKeys.openingFile,
           deskripsi: path.basename(memilihBerkas.value!.path),
           alamatIp: "-",
           namaPerangkat: Platform.operatingSystem,
@@ -299,13 +337,13 @@ class IndexBukaKunciBerkasController extends GetxController {
       }
     } on SecretBoxAuthenticationError {
       AppSnackbar.gagal(
-        title: "Kata Sandi Salah",
-        message: "Kata sandi yang dimasukkan tidak sesuai.",
+        title: LocaleKeys.wrongPassword.tr,
+        message: LocaleKeys.wrongPasswordDesc.tr,
       );
     } catch (e) {
       AppSnackbar.gagal(
-        title: "Terjadi Kesalahan",
-        message: "Gagal melakukan dekripsi, silahkan coba lagi nanti!",
+        title: LocaleKeys.decryptionFailed.tr,
+        message: e.toString().replaceFirst("Exception: ", ""),
       );
     } finally {
       isDecrypting.value = false;
@@ -323,6 +361,15 @@ class IndexBukaKunciBerkasController extends GetxController {
 
     final data = metadata.value!;
 
+    final cukup = await StorageChecker.hasEnoughStorage(
+      requiredBytes: 0,
+    );
+
+    if (!cukup) {
+      await StorageChecker.showStorageFullDialog();
+      return;
+    }
+
     await repositoriBerkas.simpanHasilDekripsi(
       idPengguna: idPengguna.idAkun,
       kodeUnik: data.id,
@@ -334,8 +381,9 @@ class IndexBukaKunciBerkasController extends GetxController {
       ekstensiBerkas: path.extension(
         data.originalFileName,
       ),
-      judulRiwayat: "Dekripsi Berkas",
-      keteranganRiwayat: "Berkas ${data.originalFileName} berhasil didekripsi.",
+      judulRiwayat: LocaleKeys.decryptActivity.tr,
+      keteranganRiwayat: LocaleKeys.decryptActivityDesc.tr
+          .replaceFirst("%s", data.originalFileName),
     );
   }
 
@@ -370,15 +418,20 @@ class IndexBukaKunciBerkasController extends GetxController {
     );
   }
 
-  Future<File> simpanBerkasDekripsi(
-    Uint8List bytes,
-  ) async {
+  Future<File> simpanBerkasDekripsi(Uint8List bytes) async {
     final folder = await layananPenyimpanan.dekripsiDirektori();
+
     final file = File(
       "${folder.path}/${metadata.value!.originalFileName}",
     );
-    await file.writeAsBytes(bytes);
-    return file;
+
+    try {
+      await file.writeAsBytes(bytes, flush: true);
+      return file;
+    } on FileSystemException {
+      await StorageChecker.showStorageFullDialog();
+      rethrow;
+    }
   }
 
   void bersihkanFormulir() {
@@ -389,6 +442,20 @@ class IndexBukaKunciBerkasController extends GetxController {
     archive = null;
     cipherBytes = null;
     kataSandiController.clear();
+    proses.value = 0;
+  }
+
+  void resetFileTerpilih() {
+    memilihPlatformBerkas.value = null;
+    memilihBerkas.value = null;
+
+    manifest.value = null;
+    metadata.value = null;
+    hasilDekripsi.value = null;
+
+    archive = null;
+    cipherBytes = null;
+
     proses.value = 0;
   }
 

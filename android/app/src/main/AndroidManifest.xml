@@ -1,8 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="doclock_app"
+        android:label="Doclock"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-2661889861005971~5675219226"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"

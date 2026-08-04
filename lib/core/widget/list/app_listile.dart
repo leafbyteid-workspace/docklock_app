@@ -1,6 +1,8 @@
 import 'package:doclock_app/core/theme/app_theme_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
+import '../../../localization/locale_keys.dart';
 import '../../constants/app_typography.dart';
 
 enum ActivityStatus {
@@ -41,11 +43,11 @@ class AppActivityTile extends StatelessWidget {
   String get statusText {
     switch (status) {
       case ActivityStatus.sukses:
-        return "Berhasil";
+        return LocaleKeys.successful.tr;
       case ActivityStatus.diproses:
-        return "Diproses";
+        return LocaleKeys.processing.tr;
       case ActivityStatus.gagal:
-        return "Gagal";
+        return LocaleKeys.failed.tr;
     }
   }
 

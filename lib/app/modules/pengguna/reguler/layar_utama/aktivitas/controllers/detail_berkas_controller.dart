@@ -9,6 +9,7 @@ import 'package:share_plus/share_plus.dart';
 import '../../../../../../../core/errors/app_confirmationAlert.dart';
 import '../../../../../../../core/errors/app_snackbar.dart';
 import '../../../../../../../core/errors/app_toast.dart';
+import '../../../../../../../localization/locale_keys.dart';
 import '../../../../../../data/local/isar/models/berkas_model.dart';
 import '../../../../../../data/local/isar/models/riwayat_berkas_model.dart';
 import '../../../../../../data/local/isar/repository/berkas_repository.dart';
@@ -181,10 +182,10 @@ class DetailBerkasController extends GetxController {
 
     final konfirmasi = await ShowConfirmationDialog.show(
       context: Get.context!,
-      title: "Hapus Berkas",
-      subtitle: "Apakah Anda yakin ingin menghapus berkas ini?",
-      confirmText: "Hapus",
-      cancelText: "Batal",
+      title: LocaleKeys.deleteFile.tr,
+      subtitle: LocaleKeys.deleteFileConfirmation.tr,
+      confirmText: LocaleKeys.confirmDelete.tr,
+      cancelText: LocaleKeys.cancel.tr,
       type: ConfirmationDialogType.danger,
     );
 
@@ -264,13 +265,11 @@ class DetailBerkasController extends GetxController {
   }
 
   String get status {
-    if (berkas.value == null) {
-      return "-";
-    }
+    if (berkas.value == null) return "-";
 
     return berkas.value!.statusBerkas == StatusBerkas.terkunci
-        ? "Terkunci"
-        : "Terbuka";
+        ? LocaleKeys.locked.tr
+        : LocaleKeys.unlocked.tr;
   }
 
   DateTime? get waktuTerkunci => berkas.value?.waktuTerkunci;

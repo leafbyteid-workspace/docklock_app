@@ -16,6 +16,47 @@ class LocaleKeys {
   static const cancel = "cancel";
   static const profile = "profile";
 
+  // Splash Screen
+  static const splashTitle = "splash_title";
+  static const splashDescription = "splash_description";
+  static const appVersion = "app_version";
+
+  // Auth
+  // Login
+  static const loginFailedTitle = "login_failed_title";
+  static const emailNotRegistered = "email_not_registered";
+  static const incorrectPassword = "incorrect_password";
+  static const userNotFound = "user_not_found";
+  static const loginSuccess = "login_success";
+  // Register Validation
+  static const fullNameRequired = "full_name_required";
+  static const fullNameMinLength = "full_name_min_length";
+
+  static const usernameRequired = "username_required";
+  static const usernameNoSpaces = "username_no_spaces";
+  static const usernameMinLength = "username_min_length";
+
+  static const emailRequired = "email_required";
+  static const invalidEmailFormat = "invalid_email_format";
+
+  static const passwordRequired = "password_required";
+  static const passwordMinLength = "password_min_length";
+
+  static const confirmPasswordRequired = "confirm_password_required";
+  static const confirmPasswordMismatch = "confirm_password_mismatch";
+
+// Register
+  static const emailAlreadyExistsTitle = "email_already_exists_title";
+  static const emailAlreadyExistsDesc = "email_already_exists_desc";
+
+  static const usernameAlreadyExistsTitle = "username_already_exists_title";
+  static const usernameAlreadyExistsDesc = "username_already_exists_desc";
+
+  static const registerSuccess = "register_success";
+// Auth / Logout
+  static const logoutSuccess = "logout_success";
+  static const logoutFailed = "logout_failed";
+
   // Beranda
   static const home = "home";
   static const homeDesc = "home_desc";
@@ -69,6 +110,42 @@ class LocaleKeys {
   static const encryptionCompleted = "encryption_completed";
   static const encryptionProcessing = "encryption_processing";
 
+  static const fileNotSelectedTitle = "file_not_selected_title";
+  static const fileNotSelectedDesc = "file_not_selected_desc";
+
+  static const emptyFileNameTitle = "empty_file_name_title";
+  static const emptyFileNameDesc = "empty_file_name_desc";
+
+  static const fileNameTooLongTitle = "file_name_too_long_title";
+  static const fileNameTooLongDesc = "file_name_too_long_desc";
+
+  static const emptyPasswordTitle = "empty_password_title";
+  static const emptyPasswordDesc = "empty_password_desc";
+
+  static const passwordTooShortTitle = "password_too_short_title";
+  static const passwordTooShortDesc = "password_too_short_desc";
+
+  static const passwordTooLongTitle = "password_too_long_title";
+  static const passwordTooLongDesc = "password_too_long_desc";
+
+  static const emptyConfirmPasswordTitle = "empty_confirm_password_title";
+  static const emptyConfirmPasswordDesc = "empty_confirm_password_desc";
+
+  static const passwordMismatchTitle = "password_mismatch_title";
+  static const passwordMismatchDesc = "password_mismatch_desc";
+
+  static const passwordHintTooLongTitle = "password_hint_too_long_title";
+  static const passwordHintTooLongDesc = "password_hint_too_long_desc";
+
+  static const descriptionTooLongTitle = "description_too_long_title";
+  static const descriptionTooLongDesc = "description_too_long_desc";
+
+  static const fileSizeTooLargeTitle = "file_size_too_large_title";
+  static const fileSizeTooLargeDesc = "file_size_too_large_desc";
+
+  static const encryptActivity = "encrypt_activity";
+  static const encryptActivityDesc = "encrypt_activity_desc";
+
   // Buka Kunci Berkas
   static const unlockFile = "unlock_file";
 
@@ -104,6 +181,31 @@ class LocaleKeys {
 
   static const decryptionProcessing = "decryption_processing";
 
+  static const invalidFileTitle = "invalid_file_title";
+  static const okUnderstand = "ok_understand";
+
+  static const invalidDoclockFile = "invalid_doclock_file";
+  static const fileCannotBeVerified = "file_cannot_be_verified";
+  static const fileNotDoclock = "file_not_doclock";
+  static const manifestNotFound = "manifest_not_found";
+  static const metadataNotFound = "metadata_not_found";
+  static const cipherNotFound = "cipher_not_found";
+  static const invalidSignature = "invalid_signature";
+  static const unsupportedVersion = "unsupported_version";
+  static const invalidAlgorithm = "invalid_algorithm";
+  static const corruptedMetadata = "corrupted_metadata";
+  static const checksumMismatch = "checksum_mismatch";
+
+  static const enterPasswordMessage = "enter_password_message";
+
+  static const wrongPassword = "wrong_password";
+  static const wrongPasswordDesc = "wrong_password_desc";
+
+  static const decryptionFailed = "decryption_failed";
+
+  static const decryptActivity = "decrypt_activity";
+  static const decryptActivityDesc = "decrypt_activity_desc";
+
   // Ringkasan Beranda
   static const activitySummary = "activity_summary";
   static const latestActivity = "latest_activity";
@@ -120,6 +222,7 @@ class LocaleKeys {
   static const userName = "username";
   static const age = "age";
   static const gender = "gender";
+  static const genderHint = "gender_hint";
   // Keamanan Akun
   // Ubah Kata Sandi
   static const accountSecurityTitle = "account_security_title";
@@ -172,6 +275,7 @@ class LocaleKeys {
   static const download = "download";
 
   static const deleteFile = "delete_file";
+  static const deleteFileConfirmation = "delete_file_confirmation";
   static const deleting = "deleting";
 
   static const dataNotFound = "data_not_found";
@@ -234,4 +338,32 @@ class LocaleKeys {
 
   static const darkTheme = "dark_theme";
   static const darkThemeDesc = "dark_theme_desc";
+
+  // Pesan kesalahan
+  // Logout Dialog
+  static const logoutTitle = "logout_title";
+  static const logoutSubtitle = "logout_subtitle";
+  static const logoutConfirm = "logout_confirm";
+  // Delete Account Dialog
+  static const deleteAccountTitle = "delete_account_title";
+  static const deleteAccountWarning = "delete_account_warning";
+  static const deleteAccountType = "delete_account_type";
+  static const deleteAccountConfirmation = "delete_account_confirmation";
+  static const deleteAccountPlaceholder = "delete_account_placeholder";
+  static const confirmDelete = "confirm_delete";
+
+  // Internet Connection
+  static const noInternetConnection = "no_internet_connection";
+  static const noInternetConnectionDesc = "no_internet_connection_desc";
+  static const understood = "understood";
+
+  // Snackbar
+  // Main
+  static const anError = "an_error";
+  static const anErrorDesc = "an_error_desc";
+  // Hapus Data
+
+  // List
+  static const processing = "processing";
+  static const failed = "failed";
 }

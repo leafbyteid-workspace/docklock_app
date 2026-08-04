@@ -16,6 +16,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../../../../../core/errors/app_snackbar.dart';
+import '../../../../../../../localization/locale_keys.dart';
 import '../../../../../../data/local/isar/models/berkas_model.dart';
 import '../../../../../../data/local/isar/models/riwayat_aktivitas_model.dart';
 import '../../../../../../data/local/isar/models/riwayat_berkas_model.dart';
@@ -23,6 +24,7 @@ import '../../../../../../data/local/isar/repository/berkas_repository.dart';
 import '../../../../../../data/local/isar/repository/riwayat_aktivitas_repository.dart';
 import '../../../../../../data/local/isar/repository/riwayat_berkas_repository.dart';
 import '../../../../../../data/local/isar/repository/sesi_repository.dart';
+import '../../../../../../data/local/isar/services/main/storage_checker.dart';
 import '../../../../../../data/services/PBE_encryption/layanan_checksum.dart';
 import '../../../../../../data/services/PBE_encryption/enkripsi_konstan.dart';
 import '../../../../../../data/services/PBE_encryption/hasil_enkripsi.dart';
@@ -31,6 +33,7 @@ import '../../../../../../data/services/PBE_encryption/manifestasi_enkripsi.dart
 
 import '../../../../../../data/services/PBE_encryption/layanan_sandi.dart';
 import '../../../../../../data/services/PBE_encryption/layanan_penyimpanan.dart';
+import '../../../../../../data/services/connection/network_guard.dart';
 
 class IndexKunciBerkasController extends GetxController {
   final RepositoriSesi repositoriSesi = RepositoriSesi();
@@ -91,80 +94,81 @@ class IndexKunciBerkasController extends GetxController {
   bool validasiDataInput() {
     if (memilihBerkas.value == null) {
       AppSnackbar.gagal(
-        title: "Berkas Belum Dipilih",
-        message: "Silakan pilih berkas yang akan dikunci.",
+        title: LocaleKeys.invalidFileTitle.tr,
+        message: LocaleKeys.noEncryptedFileDesc.tr,
       );
       return false;
     }
 
     if (namaBerkasController.text.trim().isEmpty) {
       AppSnackbar.gagal(
-        title: "Nama Berkas Kosong",
-        message: "Masukkan nama berkas.",
+        title: LocaleKeys.emptyFileNameTitle.tr,
+        message: LocaleKeys.emptyFileNameDesc.tr,
       );
       return false;
     }
 
     if (namaBerkasController.text.trim().length > 50) {
       AppSnackbar.gagal(
-        title: "Nama Berkas Terlalu Panjang",
-        message: "Nama berkas maksimal 50 karakter.",
+        title: LocaleKeys.fileNameTooLongTitle.tr,
+        message: LocaleKeys.fileNameTooLongDesc.tr,
       );
       return false;
     }
 
     if (kataSandiController.text.isEmpty) {
       AppSnackbar.gagal(
-        title: "Kata Sandi Kosong",
-        message: "Masukkan kata sandi.",
+        title: LocaleKeys.emptyPasswordTitle.tr,
+        message: LocaleKeys.emptyPasswordDesc.tr,
       );
       return false;
     }
 
     if (kataSandiController.text.length < 8) {
       AppSnackbar.gagal(
-        title: "Kata Sandi Terlalu Pendek",
-        message: "Kata sandi minimal 8 karakter.",
+        title: LocaleKeys.passwordTooShortTitle.tr,
+        message: LocaleKeys.passwordTooShortDesc.tr,
       );
       return false;
     }
 
     if (kataSandiController.text.length > 15) {
       AppSnackbar.gagal(
-        title: "Kata Sandi Terlalu Panjang",
-        message: "Kata sandi maksimal 15 karakter.",
+        title: LocaleKeys.passwordTooLongTitle.tr,
+        message: LocaleKeys.passwordTooLongDesc.tr,
       );
+
       return false;
     }
 
     if (konfirmasiKataSandiController.text.isEmpty) {
       AppSnackbar.gagal(
-        title: "Konfirmasi Kata Sandi Kosong",
-        message: "Masukkan konfirmasi kata sandi.",
+        title: LocaleKeys.emptyConfirmPasswordTitle.tr,
+        message: LocaleKeys.emptyConfirmPasswordDesc.tr,
       );
       return false;
     }
 
     if (kataSandiController.text != konfirmasiKataSandiController.text) {
       AppSnackbar.gagal(
-        title: "Konfirmasi Tidak Sesuai",
-        message: "Konfirmasi kata sandi tidak sama.",
+        title: LocaleKeys.passwordMismatchTitle.tr,
+        message: LocaleKeys.passwordMismatchDesc.tr,
       );
       return false;
     }
 
     if (petunjukSandiController.text.length > 25) {
       AppSnackbar.gagal(
-        title: "Petunjuk Terlalu Panjang",
-        message: "Petunjuk kata sandi maksimal 25 karakter.",
+        title: LocaleKeys.passwordHintTooLongTitle.tr,
+        message: LocaleKeys.passwordHintTooLongDesc.tr,
       );
       return false;
     }
 
     if (deskripsiController.text.length > 150) {
       AppSnackbar.gagal(
-        title: "Deskripsi Terlalu Panjang",
-        message: "Deskripsi maksimal 150 karakter.",
+        title: LocaleKeys.descriptionTooLongTitle.tr,
+        message: LocaleKeys.descriptionTooLongDesc.tr,
       );
       return false;
     }
@@ -205,10 +209,29 @@ class IndexKunciBerkasController extends GetxController {
 
     if (file.size > maxFileSize) {
       AppSnackbar.gagal(
-        title: "Ukuran Berkas Terlalu Besar",
-        message: "Unggah Berkas tidak boleh melebihi 100 MB.",
+        title: LocaleKeys.fileSizeTooLargeTitle.tr,
+        message: LocaleKeys.fileSizeTooLargeDesc.tr,
       );
 
+      return false;
+    }
+
+    return true;
+  }
+
+  Future<bool> validasiPenyimpanan() async {
+    final file = memilihPlatformBerkas.value;
+
+    if (file == null) {
+      return false;
+    }
+
+    final cukup = await StorageChecker.hasEnoughStorage(
+      requiredBytes: file.size,
+    );
+
+    if (!cukup) {
+      await StorageChecker.showStorageFullDialog();
       return false;
     }
 
@@ -300,9 +323,11 @@ class IndexKunciBerkasController extends GetxController {
   }
 
   Future<void> prosesKunciBerkas() async {
+    if (!await NetworkGuard.check()) {
+      return;
+    }
     if (!validasiDataInput()) return;
     if (!validasiUkuranBerkas()) return;
-
     try {
       isEncrypting.value = true;
 
@@ -362,14 +387,16 @@ class IndexKunciBerkasController extends GetxController {
 
       proses.value = 1;
 
-      AppToast.sukses(title: "Berkas Berhasil Di Kunci!");
+      AppToast.sukses(
+        title: LocaleKeys.encryptionCompleted.tr,
+      );
 
       final sesi = await repositoriSesi.dapatkanSesiAktif();
 
       if (sesi != null) {
         await repositoriRiwayat.tambah(
           idAkun: sesi.idAkun,
-          judulAktivitas: "Enkripsi Dokumen",
+          judulAktivitas: LocaleKeys.encryptedFile,
           deskripsi: path.basename(memilihBerkas.value!.path),
           alamatIp: "-",
           namaPerangkat: Platform.operatingSystem,
@@ -378,15 +405,15 @@ class IndexKunciBerkasController extends GetxController {
       }
     } catch (e) {
       AppSnackbar.gagal(
-        title: "Terjadi Kesalahan",
-        message: "Silahkan coba lagi nanti!",
+        title: LocaleKeys.anError,
+        message: LocaleKeys.anErrorDesc,
       );
       final sesi = await repositoriSesi.dapatkanSesiAktif();
 
       if (sesi != null) {
         await repositoriRiwayat.tambah(
           idAkun: sesi.idAkun,
-          judulAktivitas: "Enkripsi Dokumen",
+          judulAktivitas: LocaleKeys.encryptedFile,
           deskripsi: path.basename(memilihBerkas.value!.path),
           alamatIp: "-",
           namaPerangkat: Platform.operatingSystem,
@@ -403,7 +430,14 @@ class IndexKunciBerkasController extends GetxController {
   }) async {
     final sesi = await repositoriSesi.dapatkanSesiAktif();
 
-    if (sesi == null) {
+    if (sesi == null) return;
+
+    final cukup = await StorageChecker.hasEnoughStorage(
+      requiredBytes: 0,
+    );
+
+    if (!cukup) {
+      await StorageChecker.showStorageFullDialog();
       return;
     }
 
@@ -412,16 +446,10 @@ class IndexKunciBerkasController extends GetxController {
     final idBerkas = await repositoriBerkas.tambahBerkas(
       idPengguna: sesi.idAkun,
       kodeUnik: kodeUnik,
-      namaBerkasAsli: path.basename(
-        memilihBerkas.value!.path,
-      ),
-      namaBerkasEnkripsi: path.basename(
-        fileEnkripsi.path,
-      ),
+      namaBerkasAsli: path.basename(memilihBerkas.value!.path),
+      namaBerkasEnkripsi: path.basename(fileEnkripsi.path),
       ukuranBerkas: fileEnkripsi.lengthSync(),
-      ekstensiBerkas: path.extension(
-        memilihBerkas.value!.path,
-      ),
+      ekstensiBerkas: path.extension(memilihBerkas.value!.path),
       status: StatusBerkas.terkunci,
       waktuTerkunci: DateTime.now(),
     );
@@ -429,9 +457,11 @@ class IndexKunciBerkasController extends GetxController {
     await repositoriRiwayatBerkas.tambah(
       idBerkas: idBerkas,
       idPengguna: sesi.idAkun,
-      judul: "Enkripsi Berkas",
-      keterangan:
-          "Berkas ${path.basename(memilihBerkas.value!.path)} berhasil dikunci.",
+      judul: LocaleKeys.encryptActivity.tr,
+      keterangan: LocaleKeys.encryptActivityDesc.tr.replaceFirst(
+        "%s",
+        path.basename(memilihBerkas.value!.path),
+      ),
       status: StatusRiwayatBerkas.terkunci,
     );
   }
@@ -467,12 +497,12 @@ class IndexKunciBerkasController extends GetxController {
       final savedPath = await FlutterFileDialog.saveFile(params: params);
 
       if (savedPath != null) {
-        AppToast.sukses(title: "Berkas Berhasil Disimpan!");
+        AppToast.sukses(title: LocaleKeys.successful);
       }
     } catch (e) {
       AppSnackbar.gagal(
-        title: "Terjadi Kesalahan",
-        message: "Silahkan coba lagi nanti!",
+        title: LocaleKeys.anError,
+        message: LocaleKeys.anErrorDesc,
       );
     }
   }

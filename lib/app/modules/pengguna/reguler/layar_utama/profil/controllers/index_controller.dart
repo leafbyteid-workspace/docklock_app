@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../../../../../core/errors/app_confirmationAlert.dart';
+import '../../../../../../../core/theme/app_theme_service.dart';
+import '../../../../../../../localization/locale_keys.dart';
+import '../../../../../../../localization/localization_service.dart';
 import '../../../../../../data/local/isar/models/pengguna_model.dart';
 import '../../../../../../data/local/isar/repository/akun_repository.dart';
 import '../../../../../../data/local/isar/repository/pengguna_repository.dart';
@@ -67,11 +70,10 @@ class IndexProfilPenggunaController extends GetxController {
   Future<void> keluar(BuildContext context) async {
     final konfirmasi = await ShowConfirmationDialog.show(
       context: context,
-      title: "Keluar dari akun?",
-      subtitle:
-          "Anda akan keluar dari sesi saat ini dan perlu masuk kembali untuk menggunakan aplikasi.",
-      confirmText: "Keluar",
-      cancelText: "Batal",
+      title: LocaleKeys.logoutTitle.tr,
+      subtitle: LocaleKeys.logoutSubtitle.tr,
+      confirmText: LocaleKeys.logoutConfirm.tr,
+      cancelText: LocaleKeys.cancel.tr,
       type: ConfirmationDialogType.warning,
     );
 
@@ -80,19 +82,23 @@ class IndexProfilPenggunaController extends GetxController {
     try {
       isLogoutLoading.value = true;
 
+      final themeService = Get.find<AppThemeService>();
+      final localization = Get.find<LocalizationService>();
+
+      await themeService.clearTheme();
+      await localization.clearLocale();
       await _layananAutentikasi.keluar();
 
-      Get.deleteAll(force: true);
       Get.offAllNamed(Routes.indexMasukPengguna);
 
       AppSnackbar.sukses(
-        title: "Akun Berhasil Dikeluarkan",
-        message: "Silahkan Melakukan Sesi Masuk Akun Lagi!",
+        title: LocaleKeys.logoutSuccess.tr,
+        message: LocaleKeys.logoutSuccess.tr,
       );
     } catch (e) {
-      AppSnackbar.sukses(
-        title: "Terjadi Kesalahan",
-        message: "Gagal ketika keluar akun, Silahkan Coba Lagi!",
+      AppSnackbar.gagal(
+        title: LocaleKeys.anError.tr,
+        message: LocaleKeys.logoutFailed.tr,
       );
     } finally {
       isLogoutLoading.value = false;

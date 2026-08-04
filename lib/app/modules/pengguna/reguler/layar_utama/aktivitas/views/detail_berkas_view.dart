@@ -7,6 +7,7 @@ import 'package:material_symbols_icons/material_symbols_icons.dart';
 import '../../../../../../../core/constants/app_typography.dart';
 import '../../../../../../../core/errors/app_empty_state.dart';
 import '../../../../../../../core/helper/date_helper/format_date.dart';
+import '../../../../../../../core/utils/responsive_device/responsive_service.dart';
 import '../../../../../../../core/widget/action/app_button.dart';
 import '../../../../../../../core/widget/navigation/app_appbar.dart';
 import '../../../../../../../localization/locale_keys.dart';
@@ -29,7 +30,7 @@ class DetailBerkasView extends GetView<DetailBerkasController> {
           return Center(
             child: LoadingAnimationWidget.inkDrop(
               color: context.appTheme.primary,
-              size: 36,
+              size: Responsive.loadingSize(context),
             ),
           );
         }
@@ -49,61 +50,68 @@ class DetailBerkasView extends GetView<DetailBerkasController> {
           child: Column(
             children: [
               Expanded(
-                child: SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 20,
-                  ),
-                  child: Column(
-                    children: [
-                      _StatusCard(
-                        status: data.statusBerkas,
+                child: Center(
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxWidth: Responsive.pageWidth(context),
+                    ),
+                    child: SingleChildScrollView(
+                      physics: const BouncingScrollPhysics(),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: Responsive.horizontalPadding(context),
+                        vertical: Responsive.sectionSpacing(context),
                       ),
-                      const SizedBox(height: 20),
-                      _InfoCard(
-                        title: LocaleKeys.fileInformation.tr,
+                      child: Column(
                         children: [
-                          _InfoItem(
-                            LocaleKeys.originalName.tr,
-                            controller.namaFile,
+                          _StatusCard(
+                            status: data.statusBerkas,
                           ),
-                          _InfoItem(
-                            LocaleKeys.encryptedName.tr,
-                            controller.namaEnkripsi,
-                          ),
-                          _InfoItem(
-                            LocaleKeys.fileSize.tr,
-                            controller.ukuran,
-                          ),
-                          _InfoItem(
-                            LocaleKeys.extension.tr,
-                            controller.ekstensi,
-                          ),
-                          _InfoItem(
-                            LocaleKeys.status.tr,
-                            controller.status,
-                          ),
-                          _InfoItem(
-                            LocaleKeys.lockedAt.tr,
-                            controller.waktuTerkunci == null
-                                ? "-"
-                                : formatTanggal(
-                                    controller.waktuTerkunci!,
-                                  ),
-                          ),
-                          _InfoItem(
-                            LocaleKeys.openedAt.tr,
-                            controller.waktuTerbuka == null
-                                ? "-"
-                                : formatTanggal(
-                                    controller.waktuTerbuka!,
-                                  ),
-                            isLast: true,
+                          const SizedBox(height: 20),
+                          _InfoCard(
+                            title: LocaleKeys.fileInformation.tr,
+                            children: [
+                              _InfoItem(
+                                LocaleKeys.originalName.tr,
+                                controller.namaFile,
+                              ),
+                              _InfoItem(
+                                LocaleKeys.encryptedName.tr,
+                                controller.namaEnkripsi,
+                              ),
+                              _InfoItem(
+                                LocaleKeys.fileSize.tr,
+                                controller.ukuran,
+                              ),
+                              _InfoItem(
+                                LocaleKeys.extension.tr,
+                                controller.ekstensi,
+                              ),
+                              _InfoItem(
+                                LocaleKeys.status.tr,
+                                controller.status,
+                              ),
+                              _InfoItem(
+                                LocaleKeys.lockedAt.tr,
+                                controller.waktuTerkunci == null
+                                    ? "-"
+                                    : formatTanggal(
+                                        controller.waktuTerkunci!,
+                                      ),
+                              ),
+                              _InfoItem(
+                                LocaleKeys.openedAt.tr,
+                                controller.waktuTerbuka == null
+                                    ? "-"
+                                    : formatTanggal(
+                                        controller.waktuTerbuka!,
+                                      ),
+                                isLast: true,
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                    ],
+                    ),
                   ),
                 ),
               ),
@@ -130,43 +138,70 @@ class DetailBerkasView extends GetView<DetailBerkasController> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            child: AppButton(
-                              text: LocaleKeys.share.tr,
-                              type: AppTipeTombol.secondary,
-                              icon: Symbols.share_rounded,
-                              onPressed: controller.bagikanBerkas,
+                      Responsive.useCompactLayout(context)
+                          ? Column(
+                              children: [
+                                SizedBox(
+                                  width: double.infinity,
+                                  child: AppButton(
+                                    text: LocaleKeys.share.tr,
+                                    type: AppTipeTombol.secondary,
+                                    icon: Symbols.share_rounded,
+                                    onPressed: controller.bagikanBerkas,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: Responsive.textFieldSpacing(context),
+                                ),
+                                SizedBox(
+                                  width: double.infinity,
+                                  child: AppButton(
+                                    text: LocaleKeys.download.tr,
+                                    type: AppTipeTombol.primary,
+                                    icon: Symbols.download_rounded,
+                                    onPressed: controller.unduhBerkas,
+                                  ),
+                                ),
+                              ],
+                            )
+                          : Row(
+                              children: [
+                                Expanded(
+                                  child: AppButton(
+                                    text: LocaleKeys.share.tr,
+                                    type: AppTipeTombol.secondary,
+                                    icon: Symbols.share_rounded,
+                                    onPressed: controller.bagikanBerkas,
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: Responsive.textFieldSpacing(context),
+                                ),
+                                Expanded(
+                                  child: AppButton(
+                                    text: LocaleKeys.download.tr,
+                                    type: AppTipeTombol.primary,
+                                    icon: Symbols.download_rounded,
+                                    onPressed: controller.unduhBerkas,
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: AppButton(
-                              text: LocaleKeys.download.tr,
-                              type: AppTipeTombol.primary,
-                              icon: Symbols.download_rounded,
-                              onPressed: controller.unduhBerkas,
-                            ),
-                          ),
-                        ],
+                      SizedBox(
+                        height: Responsive.textFieldSpacing(context),
                       ),
-                      const SizedBox(height: 12),
                       SizedBox(
                         width: double.infinity,
                         child: Obx(
-                          () => SizedBox(
-                            width: double.infinity,
-                            child: AppButton(
-                              text: controller.isDeleting.value
-                                  ? LocaleKeys.deleting.tr
-                                  : LocaleKeys.deleteFile.tr,
-                              type: AppTipeTombol.danger,
-                              icon: Icons.delete_outline_rounded,
-                              onPressed: controller.isDeleting.value
-                                  ? null
-                                  : controller.hapusBerkas,
-                            ),
+                          () => AppButton(
+                            text: controller.isDeleting.value
+                                ? LocaleKeys.deleting.tr
+                                : LocaleKeys.deleteFile.tr,
+                            type: AppTipeTombol.danger,
+                            icon: Icons.delete_outline_rounded,
+                            onPressed: controller.isDeleting.value
+                                ? null
+                                : controller.hapusBerkas,
                           ),
                         ),
                       ),

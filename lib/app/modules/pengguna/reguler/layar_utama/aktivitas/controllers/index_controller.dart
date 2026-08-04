@@ -30,6 +30,11 @@ class IndexAktivitasController extends GetxController {
   final daftarRiwayat = <RiwayatBerkasModel>[].obs;
   final daftarBerkas = <int, BerkasModel>{}.obs;
 
+  // Paginasi
+  static const int _limitPerPage = 5;
+  final halaman = 1.obs;
+  final bisaLoadLagi = false.obs;
+
   int? idPengguna;
 
   @override
@@ -41,6 +46,31 @@ class IndexAktivitasController extends GetxController {
 
   Future<void> refreshData() async {
     await memuatRiwayat();
+  }
+
+  void _refreshPagination() {
+    final total = semuaRiwayat.length;
+
+    final jumlah = halaman.value * _limitPerPage;
+
+    if (jumlah >= total) {
+      daftarRiwayat.assignAll(semuaRiwayat);
+      bisaLoadLagi.value = false;
+    } else {
+      daftarRiwayat.assignAll(
+        semuaRiwayat.take(jumlah).toList(),
+      );
+
+      bisaLoadLagi.value = true;
+    }
+  }
+
+  void loadMore() {
+    if (!bisaLoadLagi.value) return;
+
+    halaman.value++;
+
+    _refreshPagination();
   }
 
   Future<void> memuatData() async {
@@ -90,7 +120,8 @@ class IndexAktivitasController extends GetxController {
 
     daftarBerkas.assignAll(cache);
     semuaRiwayat.assignAll(hasil);
-    daftarRiwayat.assignAll(hasil);
+    halaman.value = 1;
+    _refreshPagination();
   }
 
   Future<void> memuatBerkas() async {
@@ -121,7 +152,8 @@ class IndexAktivitasController extends GetxController {
     final key = keyword.trim().toLowerCase();
 
     if (key.isEmpty) {
-      daftarRiwayat.assignAll(semuaRiwayat);
+      halaman.value = 1;
+      _refreshPagination();
       return;
     }
 
@@ -142,7 +174,20 @@ class IndexAktivitasController extends GetxController {
           status.contains(key);
     }).toList();
 
-    daftarRiwayat.assignAll(hasil);
+    halaman.value = 1;
+
+    const jumlah = _limitPerPage;
+
+    if (hasil.length <= jumlah) {
+      daftarRiwayat.assignAll(hasil);
+      bisaLoadLagi.value = false;
+    } else {
+      daftarRiwayat.assignAll(
+        hasil.take(jumlah).toList(),
+      );
+
+      bisaLoadLagi.value = true;
+    }
   }
 
   BerkasModel? ambilBerkas(

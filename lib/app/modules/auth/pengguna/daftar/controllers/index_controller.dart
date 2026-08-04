@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:isar/isar.dart';
 
 import '../../../../../../core/utils/security/app_password_hasher.dart';
+import '../../../../../../localization/locale_keys.dart';
 import '../../../../../data/local/isar/repository/akun_repository.dart';
 import '../../../../../data/local/isar/repository/pengguna_repository.dart';
 import '../../../../../data/local/isar/services/main/isar_service.dart';
@@ -45,11 +46,11 @@ class IndexDaftarPenggunaController extends GetxController {
 
   String? validasiNamaLengkap(String? value) {
     if (value == null || value.trim().isEmpty) {
-      return "Nama lengkap wajib diisi.";
+      return LocaleKeys.fullNameRequired.tr;
     }
 
     if (value.trim().length < 3) {
-      return "Minimal 3 karakter.";
+      return LocaleKeys.fullNameMinLength.tr;
     }
 
     return null;
@@ -57,15 +58,15 @@ class IndexDaftarPenggunaController extends GetxController {
 
   String? validasiNamaPengguna(String? value) {
     if (value == null || value.trim().isEmpty) {
-      return "Nama pengguna wajib diisi.";
+      return LocaleKeys.usernameRequired.tr;
     }
 
     if (value.contains(" ")) {
-      return "Nama pengguna tidak boleh mengandung spasi.";
+      return LocaleKeys.usernameNoSpaces.tr;
     }
 
     if (value.length < 4) {
-      return "Minimal 4 karakter.";
+      return LocaleKeys.usernameMinLength.tr;
     }
 
     return null;
@@ -73,11 +74,11 @@ class IndexDaftarPenggunaController extends GetxController {
 
   String? validasiEmail(String? value) {
     if (value == null || value.trim().isEmpty) {
-      return "Email wajib diisi.";
+      return LocaleKeys.emailRequired.tr;
     }
 
     if (!GetUtils.isEmail(value.trim())) {
-      return "Format email tidak valid.";
+      return LocaleKeys.invalidEmailFormat.tr;
     }
 
     return null;
@@ -85,11 +86,11 @@ class IndexDaftarPenggunaController extends GetxController {
 
   String? validasiKataSandi(String? value) {
     if (value == null || value.isEmpty) {
-      return "Kata sandi wajib diisi.";
+      return LocaleKeys.passwordRequired.tr;
     }
 
     if (value.length < 8) {
-      return "Minimal 8 karakter.";
+      return LocaleKeys.passwordMinLength.tr;
     }
 
     return null;
@@ -97,11 +98,11 @@ class IndexDaftarPenggunaController extends GetxController {
 
   String? validasiKonfirmasiKataSandi(String? value) {
     if (value == null || value.isEmpty) {
-      return "Konfirmasi kata sandi wajib diisi.";
+      return LocaleKeys.confirmPasswordRequired.tr;
     }
 
     if (value != kataSandiController.text) {
-      return "Konfirmasi kata sandi tidak sama.";
+      return LocaleKeys.confirmPasswordMismatch.tr;
     }
 
     return null;
@@ -122,9 +123,9 @@ class IndexDaftarPenggunaController extends GetxController {
       final emailSudahAda = await _repositoriAkun.emailSudahDigunakan(email);
 
       if (emailSudahAda) {
-        AppSnackbar.sukses(
-          title: "Email Sudah Tersedia",
-          message: "Gunakan Alamat Email Unik Lainnya!",
+        AppSnackbar.gagal(
+          title: LocaleKeys.emailAlreadyExistsTitle.tr,
+          message: LocaleKeys.emailAlreadyExistsDesc.tr,
         );
         return;
       }
@@ -135,9 +136,9 @@ class IndexDaftarPenggunaController extends GetxController {
       );
 
       if (penggunaSudahAda) {
-        AppSnackbar.sukses(
-          title: "Pengguna Sudah Tersedia",
-          message: "Gunakan Nama Pengguna Unik Lainnya!",
+        AppSnackbar.gagal(
+          title: LocaleKeys.usernameAlreadyExistsTitle.tr,
+          message: LocaleKeys.usernameAlreadyExistsDesc.tr,
         );
         return;
       }
@@ -161,13 +162,14 @@ class IndexDaftarPenggunaController extends GetxController {
 
       _bersihkanFormulir();
 
-      AppToast.sukses(title: "Pendaftaraan Berhasil");
+      AppToast.sukses(
+        title: LocaleKeys.registerSuccess.tr,
+      );
     } catch (e) {
       AppSnackbar.gagal(
-        title: "Terjadi Kesalahan",
-        message: "Pendaftaran Akun Gagal, Silahkan Coba Lagi!",
+        title: LocaleKeys.anError,
+        message: LocaleKeys.anErrorDesc,
       );
-      print(e);
     } finally {
       isLoading.value = false;
     }

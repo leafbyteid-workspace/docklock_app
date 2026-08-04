@@ -144,6 +144,17 @@ class RepositoriSesi {
     });
   }
 
+  Future<void> hapusBerdasarkanPengguna(int idPengguna) async {
+    await _isar.writeTxn(() async {
+      final data =
+          await _isar.sesiModels.filter().idAkunEqualTo(idPengguna).findAll();
+
+      await _isar.sesiModels.deleteAll(
+        data.map((e) => e.id).toList(),
+      );
+    });
+  }
+
   Future<void> hapus(int idAkun) async {
     final sesi = await berdasarkanIdAkun(idAkun);
 

@@ -18,6 +18,59 @@ class AppTranslations extends Translations {
           LocaleKeys.cancel: "Batal",
           LocaleKeys.profile: "Profil",
 
+          // Splash Screen
+          LocaleKeys.splashTitle: "DocLock",
+          LocaleKeys.splashDescription:
+              "Lindungi dokumen penting dengan\nkeamanan yang hanya dapat Anda akses.",
+          LocaleKeys.appVersion: "Versi",
+
+          // Auth
+          // Login
+          LocaleKeys.loginFailedTitle: "Masuk Gagal",
+
+          LocaleKeys.emailNotRegistered: "Email tidak terdaftar.",
+
+          LocaleKeys.incorrectPassword: "Kata sandi yang dimasukkan salah.",
+
+          LocaleKeys.userNotFound: "Data pengguna tidak ditemukan.",
+
+          LocaleKeys.loginSuccess: "Berhasil Masuk",
+          // Validasi
+          LocaleKeys.fullNameRequired: "Nama lengkap wajib diisi.",
+          LocaleKeys.fullNameMinLength: "Minimal 3 karakter.",
+
+          LocaleKeys.usernameRequired: "Nama pengguna wajib diisi.",
+          LocaleKeys.usernameNoSpaces:
+              "Nama pengguna tidak boleh mengandung spasi.",
+          LocaleKeys.usernameMinLength: "Minimal 4 karakter.",
+
+          LocaleKeys.emailRequired: "Email wajib diisi.",
+          LocaleKeys.invalidEmailFormat: "Format email tidak valid.",
+
+          LocaleKeys.passwordRequired: "Kata sandi wajib diisi.",
+          LocaleKeys.passwordMinLength: "Minimal 8 karakter.",
+
+          LocaleKeys.confirmPasswordRequired:
+              "Konfirmasi kata sandi wajib diisi.",
+          LocaleKeys.confirmPasswordMismatch:
+              "Konfirmasi kata sandi tidak sama.",
+
+// Register
+          LocaleKeys.emailAlreadyExistsTitle: "Email Sudah Digunakan",
+          LocaleKeys.emailAlreadyExistsDesc:
+              "Gunakan alamat email lain yang unik.",
+
+          LocaleKeys.usernameAlreadyExistsTitle:
+              "Nama Pengguna Sudah Digunakan",
+          LocaleKeys.usernameAlreadyExistsDesc:
+              "Gunakan nama pengguna lain yang unik.",
+
+          LocaleKeys.registerSuccess: "Pendaftaran Berhasil",
+
+          // Logout
+          LocaleKeys.logoutSuccess: "Akun Berhasil Dikeluarkan",
+          LocaleKeys.logoutFailed: "Gagal Keluar Akun",
+
           // Beranda
           // Feature Card
           LocaleKeys.home: "Beranda",
@@ -33,7 +86,7 @@ class AppTranslations extends Translations {
           LocaleKeys.unlockFiles: "Buka Berkas",
           LocaleKeys.unlockFilesDesc:
               "Pulihkan dokumen terenkripsi kembali ke bentuk aslinya menggunakan kunci yang valid.",
-          LocaleKeys.startunlockFiles: "Mulai Unlock",
+          LocaleKeys.startunlockFiles: "Mulai Buka",
           // Ringkasan
           LocaleKeys.activitySummary: "Ringkasan Aktivitas",
           LocaleKeys.latestActivity: "Aktivitas Terbaru",
@@ -85,6 +138,46 @@ class AppTranslations extends Translations {
 
           LocaleKeys.encryptionProcessing: "Sedang memproses enkripsi...",
 
+          LocaleKeys.fileNotSelectedTitle: "Berkas Belum Dipilih",
+          LocaleKeys.fileNotSelectedDesc:
+              "Silakan pilih berkas yang akan dikunci.",
+
+          LocaleKeys.emptyFileNameTitle: "Nama Berkas Kosong",
+          LocaleKeys.emptyFileNameDesc: "Masukkan nama berkas.",
+
+          LocaleKeys.fileNameTooLongTitle: "Nama Berkas Terlalu Panjang",
+          LocaleKeys.fileNameTooLongDesc: "Nama berkas maksimal 50 karakter.",
+
+          LocaleKeys.emptyPasswordTitle: "Kata Sandi Kosong",
+          LocaleKeys.emptyPasswordDesc: "Masukkan kata sandi.",
+
+          LocaleKeys.passwordTooShortTitle: "Kata Sandi Terlalu Pendek",
+          LocaleKeys.passwordTooShortDesc: "Kata sandi minimal 8 karakter.",
+
+          LocaleKeys.passwordTooLongTitle: "Kata Sandi Terlalu Panjang",
+          LocaleKeys.passwordTooLongDesc: "Kata sandi maksimal 15 karakter.",
+
+          LocaleKeys.emptyConfirmPasswordTitle: "Konfirmasi Kata Sandi Kosong",
+          LocaleKeys.emptyConfirmPasswordDesc:
+              "Masukkan konfirmasi kata sandi.",
+
+          LocaleKeys.passwordMismatchTitle: "Konfirmasi Tidak Sesuai",
+          LocaleKeys.passwordMismatchDesc: "Konfirmasi kata sandi tidak sama.",
+
+          LocaleKeys.passwordHintTooLongTitle: "Petunjuk Terlalu Panjang",
+          LocaleKeys.passwordHintTooLongDesc:
+              "Petunjuk kata sandi maksimal 25 karakter.",
+
+          LocaleKeys.descriptionTooLongTitle: "Deskripsi Terlalu Panjang",
+          LocaleKeys.descriptionTooLongDesc: "Deskripsi maksimal 150 karakter.",
+
+          LocaleKeys.fileSizeTooLargeTitle: "Ukuran Berkas Terlalu Besar",
+          LocaleKeys.fileSizeTooLargeDesc:
+              "Ukuran berkas tidak boleh melebihi 100 MB.",
+
+          LocaleKeys.encryptActivity: "Enkripsi Berkas",
+          LocaleKeys.encryptActivityDesc: "Berkas %s berhasil dikunci.",
+
           // Buka Kunci Berkas
           LocaleKeys.unlockFile: "Buka Kunci Berkas",
 
@@ -122,6 +215,36 @@ class AppTranslations extends Translations {
           LocaleKeys.decryptionCompleted: "Dekripsi berhasil diselesaikan",
 
           LocaleKeys.decryptionProcessing: "Sedang memproses dekripsi...",
+
+          LocaleKeys.invalidFileTitle: "Berkas Tidak Valid",
+          LocaleKeys.okUnderstand: "Oke, Dimengerti!",
+
+          LocaleKeys.invalidDoclockFile:
+              "Berkas yang dipilih bukan berkas DocLock yang valid.",
+          LocaleKeys.fileCannotBeVerified: "Berkas tidak dapat diverifikasi.",
+          LocaleKeys.fileNotDoclock:
+              "Berkas ini bukan berasal dari aplikasi DocLock.",
+          LocaleKeys.manifestNotFound:
+              "Manifest tidak ditemukan. File bukan berasal dari DocLock.",
+          LocaleKeys.metadataNotFound:
+              "Metadata tidak ditemukan. File bukan berasal dari DocLock.",
+          LocaleKeys.cipherNotFound:
+              "Cipher tidak ditemukan. File bukan berasal dari DocLock.",
+          LocaleKeys.invalidSignature: "Signature DocLock tidak valid.",
+          LocaleKeys.unsupportedVersion: "Versi berkas tidak didukung.",
+          LocaleKeys.invalidAlgorithm: "Algoritma enkripsi tidak sesuai.",
+          LocaleKeys.corruptedMetadata: "Metadata berkas rusak.",
+          LocaleKeys.checksumMismatch:
+              "Checksum tidak sesuai. File kemungkinan rusak.",
+          LocaleKeys.enterPasswordMessage: "Masukkan kata sandi Anda!",
+          LocaleKeys.wrongPassword: "Kata Sandi Salah",
+          LocaleKeys.wrongPasswordDesc:
+              "Kata sandi yang dimasukkan tidak sesuai.",
+
+          LocaleKeys.decryptionFailed: "Dekripsi Gagal",
+
+          LocaleKeys.decryptActivity: "Dekripsi Berkas",
+          LocaleKeys.decryptActivityDesc: "Berkas %s berhasil didekripsi.",
 
           // Aktivitas
           // Daftar Aktivitas
@@ -164,6 +287,8 @@ class AppTranslations extends Translations {
           LocaleKeys.download: "Unduh",
 
           LocaleKeys.deleteFile: "Hapus Berkas",
+          LocaleKeys.deleteFileConfirmation:
+              "Apakah Anda yakin ingin menghapus berkas ini?",
           LocaleKeys.deleting: "Menghapus...",
 
           LocaleKeys.dataNotFound: "Data Tidak Ditemukan",
@@ -216,6 +341,7 @@ class AppTranslations extends Translations {
           LocaleKeys.userName: "Nama Pengguna",
           LocaleKeys.age: "Usia",
           LocaleKeys.gender: "Jenis Kelamin",
+          LocaleKeys.genderHint: "Belum Terisi",
 
           // Keamanan Akun
           // Ubah Kata Sandi
@@ -242,6 +368,42 @@ class AppTranslations extends Translations {
 
           LocaleKeys.passwordRequirement:
               "Kata sandi minimal terdiri dari 8 karakter. Gunakan kombinasi huruf besar, huruf kecil, angka, dan simbol agar akun lebih aman.",
+
+          // Pesan Kesalahan
+          // Keluar
+          LocaleKeys.logoutTitle: "Keluar dari akun?",
+          LocaleKeys.logoutSubtitle:
+              "Anda akan keluar dari sesi saat ini dan perlu masuk kembali untuk menggunakan aplikasi.",
+          LocaleKeys.logoutConfirm: "Keluar",
+
+          // Hapus Akun
+          LocaleKeys.deleteAccountTitle: "Hapus Akun",
+
+          LocaleKeys.deleteAccountWarning:
+              "Tindakan ini tidak dapat dibatalkan.",
+
+          LocaleKeys.deleteAccountType: "Ketik",
+
+          LocaleKeys.deleteAccountConfirmation: "konfirmasi penghapusan",
+
+          LocaleKeys.deleteAccountPlaceholder: "konfirmasi penghapusan",
+
+          LocaleKeys.confirmDelete: "Hapus",
+
+          // Internet Connection
+          LocaleKeys.noInternetConnection: "Tidak Ada Koneksi Internet",
+          LocaleKeys.noInternetConnectionDesc:
+              "Aplikasi membutuhkan koneksi internet untuk digunakan. Silakan aktifkan koneksi internet Anda.",
+          LocaleKeys.understood: "Ya, Saya Mengerti!",
+
+          // Snackbar:
+          // Main
+          LocaleKeys.anError: "Terjadi Kesalahan",
+          LocaleKeys.anErrorDesc: "Gagal Dalam Memproses, Silahkan Coba lagi!",
+
+          // List
+          LocaleKeys.processing: "Diproses",
+          LocaleKeys.failed: "Gagal",
         },
         "en_US": {
           LocaleKeys.appName: "Application",
@@ -255,6 +417,58 @@ class AppTranslations extends Translations {
           LocaleKeys.save: "Save",
           LocaleKeys.cancel: "Cancel",
           LocaleKeys.profile: "Profile",
+
+          // Splash Screen
+          LocaleKeys.splashTitle: "DocLock",
+          LocaleKeys.splashDescription:
+              "Protect your important documents with\nsecurity that only you can access.",
+          LocaleKeys.appVersion: "Version",
+
+          // Auth
+          // Login
+          LocaleKeys.loginFailedTitle: "Login Failed",
+
+          LocaleKeys.emailNotRegistered: "Email is not registered.",
+
+          LocaleKeys.incorrectPassword:
+              "The password you entered is incorrect.",
+
+          LocaleKeys.userNotFound: "User data not found.",
+
+          LocaleKeys.loginSuccess: "Login Successful",
+          // Validation
+          LocaleKeys.fullNameRequired: "Full name is required.",
+          LocaleKeys.fullNameMinLength: "Minimum 3 characters.",
+
+          LocaleKeys.usernameRequired: "Username is required.",
+          LocaleKeys.usernameNoSpaces: "Username cannot contain spaces.",
+          LocaleKeys.usernameMinLength: "Minimum 4 characters.",
+
+          LocaleKeys.emailRequired: "Email is required.",
+          LocaleKeys.invalidEmailFormat: "Invalid email format.",
+
+          LocaleKeys.passwordRequired: "Password is required.",
+          LocaleKeys.passwordMinLength: "Minimum 8 characters.",
+
+          LocaleKeys.confirmPasswordRequired:
+              "Password confirmation is required.",
+          LocaleKeys.confirmPasswordMismatch:
+              "Password confirmation does not match.",
+
+// Register
+          LocaleKeys.emailAlreadyExistsTitle: "Email Already Exists",
+          LocaleKeys.emailAlreadyExistsDesc:
+              "Please use another unique email address.",
+
+          LocaleKeys.usernameAlreadyExistsTitle: "Username Already Exists",
+          LocaleKeys.usernameAlreadyExistsDesc:
+              "Please use another unique username.",
+
+          LocaleKeys.registerSuccess: "Registration Successful",
+
+          // Logout
+          LocaleKeys.logoutSuccess: "Account Signed Out Successfully",
+          LocaleKeys.logoutFailed: "Failed to Sign Out",
 
           // Beranda
           // Feature Card
@@ -324,6 +538,47 @@ class AppTranslations extends Translations {
 
           LocaleKeys.encryptionProcessing: "Encrypting file...",
 
+          LocaleKeys.emptyFileNameTitle: "File Name Required",
+          LocaleKeys.emptyFileNameDesc: "Please enter the file name.",
+
+          LocaleKeys.fileNameTooLongTitle: "File Name Too Long",
+          LocaleKeys.fileNameTooLongDesc:
+              "File name cannot exceed 50 characters.",
+
+          LocaleKeys.emptyPasswordTitle: "Password Required",
+          LocaleKeys.emptyPasswordDesc: "Please enter your password.",
+
+          LocaleKeys.passwordTooShortTitle: "Password Too Short",
+          LocaleKeys.passwordTooShortDesc:
+              "Password must be at least 8 characters.",
+
+          LocaleKeys.passwordTooLongTitle: "Password Too Long",
+          LocaleKeys.passwordTooLongDesc:
+              "Password cannot exceed 15 characters.",
+
+          LocaleKeys.emptyConfirmPasswordTitle: "Confirmation Required",
+          LocaleKeys.emptyConfirmPasswordDesc:
+              "Please enter the password confirmation.",
+
+          LocaleKeys.passwordMismatchTitle: "Password Mismatch",
+          LocaleKeys.passwordMismatchDesc:
+              "Password confirmation does not match.",
+
+          LocaleKeys.passwordHintTooLongTitle: "Password Hint Too Long",
+          LocaleKeys.passwordHintTooLongDesc:
+              "Password hint cannot exceed 25 characters.",
+
+          LocaleKeys.descriptionTooLongTitle: "Description Too Long",
+          LocaleKeys.descriptionTooLongDesc:
+              "Description cannot exceed 150 characters.",
+
+          LocaleKeys.fileSizeTooLargeTitle: "File Size Too Large",
+          LocaleKeys.fileSizeTooLargeDesc:
+              "The file size must not exceed 100 MB.",
+
+          LocaleKeys.encryptActivity: "File Encryption",
+          LocaleKeys.encryptActivityDesc: "File %s was successfully encrypted.",
+
           // Unlock File
           LocaleKeys.unlockFile: "Unlock File",
 
@@ -363,6 +618,36 @@ class AppTranslations extends Translations {
 
           LocaleKeys.decryptionProcessing: "Decrypting file...",
 
+          LocaleKeys.invalidFileTitle: "Invalid File",
+          LocaleKeys.okUnderstand: "OK, I Understand!",
+
+          LocaleKeys.invalidDoclockFile:
+              "The selected file is not a valid DocLock file.",
+          LocaleKeys.fileCannotBeVerified: "The file could not be verified.",
+          LocaleKeys.fileNotDoclock: "This file was not created by DocLock.",
+          LocaleKeys.manifestNotFound:
+              "Manifest not found. This is not a DocLock file.",
+          LocaleKeys.metadataNotFound:
+              "Metadata not found. This is not a DocLock file.",
+          LocaleKeys.cipherNotFound:
+              "Cipher not found. This is not a DocLock file.",
+          LocaleKeys.invalidSignature: "Invalid DocLock signature.",
+          LocaleKeys.unsupportedVersion: "Unsupported file version.",
+          LocaleKeys.invalidAlgorithm: "Invalid encryption algorithm.",
+          LocaleKeys.corruptedMetadata: "File metadata is corrupted.",
+          LocaleKeys.checksumMismatch:
+              "Checksum mismatch. The file may be corrupted.",
+
+          LocaleKeys.enterPasswordMessage: "Please enter your password!",
+
+          LocaleKeys.wrongPassword: "Incorrect Password",
+          LocaleKeys.wrongPasswordDesc:
+              "The password you entered is incorrect.",
+          LocaleKeys.decryptionFailed: "Decryption Failed",
+
+          LocaleKeys.decryptActivity: "File Decryption",
+          LocaleKeys.decryptActivityDesc: "File %s was successfully decrypted.",
+
           // Aktivitas
           // Daftar Aktivitas
           LocaleKeys.activity: "Activity",
@@ -379,36 +664,38 @@ class AppTranslations extends Translations {
               "Encryption and decryption history will appear here.",
 
           LocaleKeys.fileDeletedSuccess: "File deleted successfully.",
-          // Detail Berkas
-          LocaleKeys.fileDetail: "Detail Berkas",
+          // File Detail
+          LocaleKeys.fileDetail: "File Detail",
 
-          LocaleKeys.fileInformation: "Informasi Berkas",
+          LocaleKeys.fileInformation: "File Information",
 
-          LocaleKeys.originalName: "Nama Asli",
-          LocaleKeys.encryptedName: "Nama Enkripsi",
-          LocaleKeys.fileSize: "Ukuran",
-          LocaleKeys.extension: "Ekstensi",
+          LocaleKeys.originalName: "Original Name",
+          LocaleKeys.encryptedName: "Encrypted Name",
+          LocaleKeys.fileSize: "Size",
+          LocaleKeys.extension: "Extension",
           LocaleKeys.status: "Status",
-          LocaleKeys.lockedAt: "Waktu Dikunci",
-          LocaleKeys.openedAt: "Terakhir Dibuka",
+          LocaleKeys.lockedAt: "Locked At",
+          LocaleKeys.openedAt: "Last Opened",
 
-          LocaleKeys.fileLocked: "Berkas Terkunci",
-          LocaleKeys.fileUnlocked: "Berkas Terbuka",
+          LocaleKeys.fileLocked: "File Locked",
+          LocaleKeys.fileUnlocked: "File Unlocked",
 
           LocaleKeys.fileLockedDesc:
-              "Dokumen berhasil diamankan menggunakan enkripsi.",
+              "The document has been successfully secured using encryption.",
 
-          LocaleKeys.fileUnlockedDesc: "Dokumen telah berhasil didekripsi.",
+          LocaleKeys.fileUnlockedDesc:
+              "The document has been successfully decrypted.",
 
-          LocaleKeys.share: "Bagikan",
-          LocaleKeys.download: "Unduh",
+          LocaleKeys.share: "Share",
+          LocaleKeys.download: "Download",
 
-          LocaleKeys.deleteFile: "Hapus Berkas",
-          LocaleKeys.deleting: "Menghapus...",
+          LocaleKeys.deleteFile: "Delete File",
+          LocaleKeys.deleteFileConfirmation:
+              "Are you sure you want to delete this file?",
+          LocaleKeys.deleting: "Deleting...",
 
-          LocaleKeys.dataNotFound: "Data Tidak Ditemukan",
-          LocaleKeys.dataNotFoundDesc:
-              "Silakan tambahkan data berkas terlebih dahulu.",
+          LocaleKeys.dataNotFound: "Data Not Found",
+          LocaleKeys.dataNotFoundDesc: "Please add file data first.",
 
           // Profil
           LocaleKeys.myProfile: "My Profile",
@@ -454,6 +741,7 @@ class AppTranslations extends Translations {
           LocaleKeys.userName: "Username",
           LocaleKeys.age: "Age",
           LocaleKeys.gender: "Gender",
+          LocaleKeys.genderHint: "Not filled in yet",
 
           // Keamanan Akun
           // Ubah Kata Sandi
@@ -479,6 +767,35 @@ class AppTranslations extends Translations {
 
           LocaleKeys.passwordRequirement:
               "Your password must contain at least 8 characters. Use a combination of uppercase letters, lowercase letters, numbers, and symbols to keep your account secure.",
+
+          // Pesan Kesalahan
+          // Keluar
+          LocaleKeys.logoutTitle: "Sign out of your account?",
+          LocaleKeys.logoutSubtitle:
+              "You will be signed out of your current session and need to sign in again to use the application.",
+          LocaleKeys.logoutConfirm: "Sign Out",
+
+          // Hapus Akun
+          LocaleKeys.deleteAccountTitle: "Delete Account",
+          LocaleKeys.deleteAccountWarning: "This action cannot be undone.",
+          LocaleKeys.deleteAccountType: "Type",
+          LocaleKeys.deleteAccountConfirmation: "delete my account",
+          LocaleKeys.deleteAccountPlaceholder: "delete my account",
+          LocaleKeys.confirmDelete: "Delete",
+
+          // Internet Connection
+          LocaleKeys.noInternetConnection: "No Internet Connection",
+          LocaleKeys.noInternetConnectionDesc:
+              "This application requires an internet connection to function. Please enable your internet connection and try again.",
+          LocaleKeys.understood: "Yes, I Understand!",
+
+          // Snackbar
+          LocaleKeys.anError: "An error occurred",
+          LocaleKeys.anErrorDesc: "Processing Failed. Please Try Again!",
+
+          // List
+          LocaleKeys.processing: "Processing",
+          LocaleKeys.failed: "Failed",
         },
       };
 }

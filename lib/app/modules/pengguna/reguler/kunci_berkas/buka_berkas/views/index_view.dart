@@ -5,6 +5,7 @@ import 'package:material_symbols_icons/material_symbols_icons.dart';
 
 import '../../../../../../../core/constants/app_typography.dart';
 import '../../../../../../../core/helper/date_helper/format_date.dart';
+import '../../../../../../../core/utils/responsive_device/responsive_service.dart';
 import '../../../../../../../core/widget/action/app_button.dart';
 import '../../../../../../../core/widget/input/app_textfield.dart';
 import '../../../../../../../core/widget/navigation/app_appbar.dart';
@@ -23,120 +24,140 @@ class IndexBukaKunciBerkasView extends GetView<IndexBukaKunciBerkasController> {
         onBackPressed: () => Get.back(),
       ),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      Obx(
-                        () => AppTextField(
-                          type: AppTextFieldType.file,
-                          label: LocaleKeys.encryptedFile.tr,
-                          hint: LocaleKeys.selectEncryptedFile.tr,
-                          file: controller.memilihPlatformBerkas.value,
-                          onFileChanged: controller.saatBerkasBerubah,
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      Obx(() {
-                        final metadata = controller.metadata.value;
-
-                        if (metadata == null) {
-                          return const Column(
-                            children: [
-                              DekripsiKondisiKosong(),
-                              SizedBox(height: 16),
-                            ],
-                          );
-                        }
-
-                        return AnimatedSwitcher(
-                          duration: const Duration(milliseconds: 350),
-                          child: Column(
-                            children: [
-                              _membuatKartuMetadata(context, metadata),
-                              const SizedBox(height: 16),
-                            ],
-                          ),
-                        );
-                      }),
-                      AppTextField(
-                        controller: controller.kataSandiController,
-                        label: LocaleKeys.password.tr,
-                        hint: LocaleKeys.enterPassword.tr,
-                        required: true,
-                        type: AppTextFieldType.password,
-                      ),
-                      const SizedBox(height: 24),
-                      Obx(() => ProsesDekripsiBar(
-                            isVisible: controller.isDecrypting.value,
-                            progress: controller.proses.value,
-                            title: LocaleKeys.openingFile.tr,
-                            description: LocaleKeys.openingFileDesc.tr,
-                          )),
-                      Obx(() {
-                        final result = controller.hasilDekripsi.value;
-
-                        if (result == null) {
-                          return const SizedBox();
-                        }
-
-                        return AnimatedSwitcher(
-                          duration: const Duration(milliseconds: 350),
-                          child: Column(
-                            children: [
-                              const SizedBox(height: 24),
-                              _membuatKartuHasilDekripsi(
-                                context: context,
-                                result: result,
-                                onShare: controller.bagikanBerkas,
-                                onDownload: controller.unduhBerkas,
-                              ),
-                            ],
-                          ),
-                        );
-                      }),
-                    ],
-                  ),
-                ),
+        child: Center(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: Responsive.pageWidth(context),
+            ),
+            child: Padding(
+              padding: EdgeInsets.all(
+                Responsive.horizontalPadding(context),
               ),
-              const SizedBox(height: 16),
-              Obx(() {
-                final decrypting = controller.isDecrypting.value;
+              child: Column(
+                children: [
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          Obx(
+                            () => AppTextField(
+                              type: AppTextFieldType.file,
+                              label: LocaleKeys.encryptedFile.tr,
+                              hint: LocaleKeys.selectEncryptedFile.tr,
+                              file: controller.memilihPlatformBerkas.value,
+                              onFileChanged: controller.saatBerkasBerubah,
+                            ),
+                          ),
+                          SizedBox(
+                            height: Responsive.textFieldSpacing(context),
+                          ),
+                          Obx(() {
+                            final metadata = controller.metadata.value;
 
-                final finished = controller.hasilDekripsi.value != null;
+                            if (metadata == null) {
+                              return const Column(
+                                children: [
+                                  DekripsiKondisiKosong(),
+                                  SizedBox(height: 16),
+                                ],
+                              );
+                            }
 
-                return SizedBox(
-                  width: double.infinity,
-                  height: 54,
-                  child: AppButton(
-                    type: decrypting
-                        ? AppTipeTombol.primary
-                        : finished
-                            ? AppTipeTombol.danger
-                            : AppTipeTombol.primary,
-                    icon: decrypting
-                        ? Symbols.progress_activity
-                        : finished
-                            ? Symbols.lock_reset
-                            : Symbols.lock_open_right,
-                    text: decrypting
-                        ? LocaleKeys.opening.tr
-                        : finished
-                            ? LocaleKeys.openAnotherFile.tr
-                            : LocaleKeys.unlockFile.tr,
-                    onPressed: decrypting
-                        ? null
-                        : finished
-                            ? controller.bersihkanFormulir
-                            : controller.prosesDekripsi,
+                            return AnimatedSwitcher(
+                              duration: const Duration(milliseconds: 350),
+                              child: Column(
+                                children: [
+                                  _membuatKartuMetadata(context, metadata),
+                                  SizedBox(
+                                    height:
+                                        Responsive.textFieldSpacing(context),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }),
+                          AppTextField(
+                            controller: controller.kataSandiController,
+                            label: LocaleKeys.password.tr,
+                            hint: LocaleKeys.enterPassword.tr,
+                            required: true,
+                            type: AppTextFieldType.password,
+                          ),
+                          SizedBox(
+                            height: Responsive.sectionSpacing(context),
+                          ),
+                          Obx(() => ProsesDekripsiBar(
+                                isVisible: controller.isDecrypting.value,
+                                progress: controller.proses.value,
+                                title: LocaleKeys.openingFile.tr,
+                                description: LocaleKeys.openingFileDesc.tr,
+                              )),
+                          Obx(() {
+                            final result = controller.hasilDekripsi.value;
+
+                            if (result == null) {
+                              return const SizedBox();
+                            }
+
+                            return AnimatedSwitcher(
+                              duration: const Duration(milliseconds: 350),
+                              child: Column(
+                                children: [
+                                  SizedBox(
+                                    height: Responsive.sectionSpacing(context),
+                                  ),
+                                  _membuatKartuHasilDekripsi(
+                                    context: context,
+                                    result: result,
+                                    onShare: controller.bagikanBerkas,
+                                    onDownload: controller.unduhBerkas,
+                                  ),
+                                ],
+                              ),
+                            );
+                          }),
+                        ],
+                      ),
+                    ),
                   ),
-                );
-              }),
-            ],
+                  SizedBox(
+                    height: Responsive.textFieldSpacing(context),
+                  ),
+                  Obx(() {
+                    final decrypting = controller.isDecrypting.value;
+
+                    final finished = controller.hasilDekripsi.value != null;
+
+                    return SizedBox(
+                      width: double.infinity,
+                      height: Responsive.buttonHeight(context),
+                      child: AppButton(
+                        type: decrypting
+                            ? AppTipeTombol.primary
+                            : finished
+                                ? AppTipeTombol.danger
+                                : AppTipeTombol.primary,
+                        icon: decrypting
+                            ? Symbols.progress_activity
+                            : finished
+                                ? Symbols.lock_reset
+                                : Symbols.lock_open_right,
+                        text: decrypting
+                            ? LocaleKeys.opening.tr
+                            : finished
+                                ? LocaleKeys.openAnotherFile.tr
+                                : LocaleKeys.unlockFile.tr,
+                        onPressed: decrypting
+                            ? null
+                            : finished
+                                ? controller.bersihkanFormulir
+                                : controller.prosesDekripsi,
+                      ),
+                    );
+                  }),
+                ],
+              ),
+            ),
           ),
         ),
       ),
@@ -150,7 +171,9 @@ Widget _membuatKartuMetadata(
 ) {
   return Container(
     width: double.infinity,
-    padding: const EdgeInsets.all(16),
+    padding: EdgeInsets.all(
+      Responsive.horizontalPadding(context),
+    ),
     decoration: BoxDecoration(
       color: context.appTheme.surface,
       borderRadius: BorderRadius.circular(16),
@@ -171,7 +194,9 @@ Widget _membuatKartuMetadata(
         Row(
           children: [
             Container(
-              padding: const EdgeInsets.all(10),
+              padding: EdgeInsets.all(
+                Responsive.textFieldSpacing(context) / 2,
+              ),
               decoration: BoxDecoration(
                 color: context.appTheme.primary.withOpacity(.08),
                 shape: BoxShape.circle,
@@ -181,7 +206,9 @@ Widget _membuatKartuMetadata(
                 color: context.appTheme.primary,
               ),
             ),
-            const SizedBox(width: 16),
+            SizedBox(
+              width: Responsive.textFieldSpacing(context),
+            ),
             Expanded(
               child: Text(
                 LocaleKeys.fileInformation.tr,
@@ -192,9 +219,13 @@ Widget _membuatKartuMetadata(
             ),
           ],
         ),
-        const SizedBox(height: 16),
+        SizedBox(
+          height: Responsive.textFieldSpacing(context),
+        ),
         const Divider(),
-        const SizedBox(height: 16),
+        SizedBox(
+          height: Responsive.textFieldSpacing(context),
+        ),
         _buatMenuInformasi(
           context,
           LocaleKeys.fileName.tr,
@@ -286,7 +317,9 @@ Widget _membuatKartuHasilDekripsi({
                 size: 22,
               ),
             ),
-            const SizedBox(width: 16),
+            SizedBox(
+              width: Responsive.textFieldSpacing(context),
+            ),
             Expanded(
               child: Text(
                 LocaleKeys.fileOpenedSuccess.tr,
@@ -297,9 +330,13 @@ Widget _membuatKartuHasilDekripsi({
             ),
           ],
         ),
-        const SizedBox(height: 16),
+        SizedBox(
+          height: Responsive.textFieldSpacing(context),
+        ),
         const Divider(),
-        const SizedBox(height: 16),
+        SizedBox(
+          height: Responsive.textFieldSpacing(context),
+        ),
         _buatMenuInformasi(
           context,
           LocaleKeys.fileName.tr,
@@ -325,28 +362,58 @@ Widget _membuatKartuHasilDekripsi({
             result.encryptedAt,
           ),
         ),
-        const SizedBox(height: 24),
-        Row(
-          children: [
-            Expanded(
-              child: AppButton(
-                text: LocaleKeys.share.tr,
-                type: AppTipeTombol.secondary,
-                icon: Icons.share_outlined,
-                onPressed: onShare,
-              ),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: AppButton(
-                text: LocaleKeys.downloadFile.tr,
-                type: AppTipeTombol.primary,
-                icon: Icons.file_download_outlined,
-                onPressed: onDownload,
-              ),
-            ),
-          ],
+        SizedBox(
+          height: Responsive.sectionSpacing(context),
         ),
+        Responsive.useCompactLayout(context)
+            ? Column(
+                children: [
+                  SizedBox(
+                    width: double.infinity,
+                    child: AppButton(
+                      text: LocaleKeys.share.tr,
+                      type: AppTipeTombol.secondary,
+                      icon: Icons.share_outlined,
+                      onPressed: onShare,
+                    ),
+                  ),
+                  SizedBox(
+                    height: Responsive.textFieldSpacing(context),
+                  ),
+                  SizedBox(
+                    width: double.infinity,
+                    child: AppButton(
+                      text: LocaleKeys.downloadFile.tr,
+                      type: AppTipeTombol.primary,
+                      icon: Icons.file_download_outlined,
+                      onPressed: onDownload,
+                    ),
+                  ),
+                ],
+              )
+            : Row(
+                children: [
+                  Expanded(
+                    child: AppButton(
+                      text: LocaleKeys.share.tr,
+                      type: AppTipeTombol.secondary,
+                      icon: Icons.share_outlined,
+                      onPressed: onShare,
+                    ),
+                  ),
+                  SizedBox(
+                    width: Responsive.textFieldSpacing(context),
+                  ),
+                  Expanded(
+                    child: AppButton(
+                      text: LocaleKeys.downloadFile.tr,
+                      type: AppTipeTombol.primary,
+                      icon: Icons.file_download_outlined,
+                      onPressed: onDownload,
+                    ),
+                  ),
+                ],
+              ),
       ],
     ),
   );
@@ -398,9 +465,9 @@ class DekripsiKondisiKosong extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(
-        horizontal: 20,
-        vertical: 30,
+      padding: EdgeInsets.symmetric(
+        horizontal: Responsive.horizontalPadding(context),
+        vertical: Responsive.sectionSpacing(context),
       ),
       decoration: BoxDecoration(
         color: context.appTheme.surface,
@@ -412,19 +479,21 @@ class DekripsiKondisiKosong extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            width: 72,
-            height: 72,
+            width: Responsive.isTablet(context) ? 88 : 72,
+            height: Responsive.isTablet(context) ? 88 : 72,
             decoration: BoxDecoration(
               color: context.appTheme.primary.withOpacity(.08),
               shape: BoxShape.circle,
             ),
             child: Icon(
               Symbols.lock_open_rounded,
-              size: 34,
+              size: Responsive.isTablet(context) ? 42 : 34,
               color: context.appTheme.primary,
             ),
           ),
-          const SizedBox(height: 16),
+          SizedBox(
+            height: Responsive.textFieldSpacing(context),
+          ),
           Text(
             LocaleKeys.noEncryptedFile.tr,
             style: AppTypography.title3(
@@ -473,7 +542,9 @@ class ProsesDekripsiBar extends StatelessWidget {
           : Container(
               key: const ValueKey('decryption_progress'),
               width: double.infinity,
-              padding: const EdgeInsets.all(16),
+              padding: EdgeInsets.all(
+                Responsive.horizontalPadding(context),
+              ),
               decoration: BoxDecoration(
                 color: theme.colorScheme.surface,
                 borderRadius: BorderRadius.circular(8),
@@ -494,8 +565,8 @@ class ProsesDekripsiBar extends StatelessWidget {
                   Row(
                     children: [
                       Container(
-                        width: 48,
-                        height: 48,
+                        width: Responsive.isTablet(context) ? 56 : 48,
+                        height: Responsive.isTablet(context) ? 56 : 48,
                         decoration: BoxDecoration(
                           color: theme.colorScheme.primary.withOpacity(0.12),
                           borderRadius: BorderRadius.circular(14),
@@ -503,10 +574,12 @@ class ProsesDekripsiBar extends StatelessWidget {
                         child: Icon(
                           Symbols.lock_outline_rounded,
                           color: theme.colorScheme.primary,
-                          size: 25,
+                          size: Responsive.isTablet(context) ? 30 : 25,
                         ),
                       ),
-                      const SizedBox(width: 16),
+                      SizedBox(
+                        width: Responsive.textFieldSpacing(context),
+                      ),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -530,7 +603,9 @@ class ProsesDekripsiBar extends StatelessWidget {
                           ],
                         ),
                       ),
-                      const SizedBox(width: 16),
+                      SizedBox(
+                        width: Responsive.textFieldSpacing(context),
+                      ),
                       Text(
                         '$percentage%',
                         style: theme.textTheme.titleMedium?.copyWith(
@@ -540,7 +615,9 @@ class ProsesDekripsiBar extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 24),
+                  SizedBox(
+                    height: Responsive.sectionSpacing(context),
+                  ),
                   ClipRRect(
                     borderRadius: BorderRadius.circular(10),
                     child: TweenAnimationBuilder<double>(
@@ -565,7 +642,9 @@ class ProsesDekripsiBar extends StatelessWidget {
                       },
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(
+                    height: Responsive.textFieldSpacing(context),
+                  ),
                   Text(
                     safeProgress >= 1
                         ? LocaleKeys.decryptionCompleted.tr

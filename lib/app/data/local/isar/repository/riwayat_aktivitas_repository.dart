@@ -52,6 +52,19 @@ class RepositoriRiwayatAktivitas {
         .findAll();
   }
 
+  Future<void> hapusBerdasarkanPengguna(int idPengguna) async {
+    await _isar.writeTxn(() async {
+      final data = await _isar.riwayatAktivitasModels
+          .filter()
+          .idAkunEqualTo(idPengguna)
+          .findAll();
+
+      await _isar.riwayatAktivitasModels.deleteAll(
+        data.map((e) => e.id).toList(),
+      );
+    });
+  }
+
   Future<void> hapusSemua(int idAkun) async {
     final data = await _isar.riwayatAktivitasModels
         .filter()

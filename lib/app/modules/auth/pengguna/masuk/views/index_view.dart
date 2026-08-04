@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import '../../../../../../core/constants/app_color.dart';
 import '../../../../../../core/constants/app_typography.dart';
 import '../../../../../../core/errors/app_toast.dart';
+import '../../../../../../core/utils/responsive_device/responsive_service.dart';
 import '../../../../../../core/widget/action/app_button.dart';
 import '../../../../../../core/widget/input/app_textfield.dart';
 import '../../../../../routes/app_pages.dart';
@@ -21,10 +22,12 @@ class IndexMasukPenggunaView extends GetView<IndexMasukPenggunaController> {
           onTap: () => FocusScope.of(context).unfocus(),
           child: Center(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.all(24),
+              padding: EdgeInsets.all(
+                Responsive.horizontalPadding(context),
+              ),
               child: ConstrainedBox(
-                constraints: const BoxConstraints(
-                  maxWidth: 480,
+                constraints: BoxConstraints(
+                  maxWidth: Responsive.formWidth(context),
                 ),
                 child: Form(
                   key: controller.formKey,
@@ -32,33 +35,48 @@ class IndexMasukPenggunaView extends GetView<IndexMasukPenggunaController> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Center(
-                        child: Image.asset(
-                          'material/assets/logo/doclock-primary-logo.png',
-                          width: 104,
+                        child: SizedBox(
+                          width: Responsive.logoSize(context),
+                          height: Responsive.logoSize(context),
+                          child: Image.asset(
+                            'material/assets/logo/doclock-primary-logo.png',
+                            fit: BoxFit.contain,
+                          ),
                         ),
                       ),
-                      const SizedBox(height: 12),
+                      SizedBox(
+                        height: Responsive.textFieldSpacing(context),
+                      ),
                       Text(
-                        'Masuk',
+                        "Masuk",
                         textAlign: TextAlign.center,
                         style: AppTypography.title2(
                           fontWeight: AppTypography.bold,
                         ).copyWith(
+                          fontSize: Responsive.titleSize(context),
                           color: AppColor.textPrimary,
                         ),
                       ),
-                      const SizedBox(height: 12),
+                      SizedBox(
+                        height: Responsive.textFieldSpacing(context),
+                      ),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        padding: EdgeInsets.symmetric(
+                          horizontal:
+                              Responsive.horizontalPadding(context) * 0.5,
+                        ),
                         child: Text(
-                          'Keamanan data dimulai dari sini. Masuk ke akun DocLock Anda.',
+                          "Keamanan data dimulai dari sini. Masuk ke akun DocLock Anda.",
                           textAlign: TextAlign.center,
                           style: AppTypography.bodySmall().copyWith(
+                            fontSize: Responsive.descriptionSize(context),
                             color: AppColor.textSecondary,
                           ),
                         ),
                       ),
-                      const SizedBox(height: 32),
+                      SizedBox(
+                        height: Responsive.textFieldSpacing(context),
+                      ),
                       AppTextField(
                         controller: controller.emailController,
                         label: "Email",
@@ -67,7 +85,9 @@ class IndexMasukPenggunaView extends GetView<IndexMasukPenggunaController> {
                         validator: controller.validasiEmail,
                         textInputAction: TextInputAction.next,
                       ),
-                      const SizedBox(height: 16),
+                      SizedBox(
+                        height: Responsive.textFieldSpacing(context),
+                      ),
                       AppTextField(
                         controller: controller.kataSandiController,
                         label: "Kata Sandi",
@@ -76,12 +96,14 @@ class IndexMasukPenggunaView extends GetView<IndexMasukPenggunaController> {
                         validator: controller.validasiKataSandi,
                         textInputAction: TextInputAction.done,
                       ),
-                      const SizedBox(height: 32),
+                      SizedBox(
+                        height: Responsive.sectionSpacing(context),
+                      ),
                       Obx(() {
                         final isLoading = controller.isLoading.value;
 
                         return SizedBox(
-                          height: 48,
+                          height: Responsive.buttonHeight(context),
                           child: AppButton(
                             type: AppTipeTombol.primary,
                             text: isLoading ? "Memproses..." : "Masuk",
@@ -90,9 +112,11 @@ class IndexMasukPenggunaView extends GetView<IndexMasukPenggunaController> {
                           ),
                         );
                       }),
-                      const SizedBox(height: 8),
                       SizedBox(
-                        height: 48,
+                        height: Responsive.textFieldSpacing(context),
+                      ),
+                      SizedBox(
+                        height: Responsive.buttonHeight(context),
                         child: AppButton(
                           type: AppTipeTombol.secondary,
                           text: "Belum Punya Akun?",
@@ -109,14 +133,20 @@ class IndexMasukPenggunaView extends GetView<IndexMasukPenggunaController> {
                           },
                         ),
                       ),
-                      const SizedBox(height: 24),
+                      SizedBox(
+                        height: Responsive.sectionSpacing(context),
+                      ),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                        padding: EdgeInsets.symmetric(
+                          horizontal:
+                              Responsive.horizontalPadding(context) * 0.4,
+                        ),
                         child: Text(
-                          '© 2026 Doclock. All rights reserved.',
+                          "© 2026 DocLock. All rights reserved.",
                           textAlign: TextAlign.center,
                           style: AppTypography.bodySmall().copyWith(
                             color: AppColor.textSecondary,
+                            fontSize: Responsive.descriptionSize(context) - 1,
                           ),
                         ),
                       ),

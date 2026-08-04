@@ -69,6 +69,19 @@ class RepositoriSetelanAkun {
     await simpan(data);
   }
 
+  Future<void> hapusBerdasarkanPengguna(int idPengguna) async {
+    await _isar.writeTxn(() async {
+      final data = await _isar.setelanAkunModels
+          .filter()
+          .idAkunEqualTo(idPengguna)
+          .findAll();
+
+      await _isar.setelanAkunModels.deleteAll(
+        data.map((e) => e.id).toList(),
+      );
+    });
+  }
+
   Future<void> hapus(int idAkun) async {
     final data = await berdasarkanIdAkun(idAkun);
 

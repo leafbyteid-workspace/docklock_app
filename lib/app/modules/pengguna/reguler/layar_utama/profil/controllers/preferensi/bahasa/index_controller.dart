@@ -2,21 +2,14 @@ import 'package:get/get.dart';
 
 import '../../../../../../../../../localization/app_locale.dart';
 import '../../../../../../../../../localization/language_item.dart';
-import '../../../../../../../../data/local/isar/repository/setelan_akun_repository.dart';
-import '../../../../../../../../data/local/isar/services/auth/pengguna/auth_service.dart';
+import '../../../../../../../../../localization/localization_service.dart';
 
 class IndexPreferensiBahasaController extends GetxController {
-  IndexPreferensiBahasaController({
-    RepositoriSetelanAkun? repositoriSetelan,
-    AuthServicePengguna? authService,
-  })  : _repositoriSetelan = repositoriSetelan ?? RepositoriSetelanAkun(),
-        _authService = authService ?? Get.find<AuthServicePengguna>();
+  final localization = LocalizationService.to;
 
-  final RepositoriSetelanAkun _repositoriSetelan;
-  final AuthServicePengguna _authService;
-
-  final isLoading = false.obs;
   final selectedLanguage = "id".obs;
+  final isLoading = false.obs;
+
   final languages = const [
     LanguageItem(
       code: "id",
@@ -35,47 +28,16 @@ class IndexPreferensiBahasaController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    membuatBahasa();
-  }
 
-  Future<void> membuatBahasa() async {
-    isLoading.value = true;
-
-    try {
-      final idAkun = await _authService.idAkunSaatIni();
-
-      if (idAkun == null) return;
-
-      final setting = await _repositoriSetelan.dapatkanAtauBuat(idAkun);
-
-      selectedLanguage.value = setting.bahasa;
-
-      final language = languages.firstWhere(
-        (e) => e.code == setting.bahasa,
-        orElse: () => languages.first,
-      );
-
-      Get.updateLocale(language.locale);
-    } finally {
-      isLoading.value = false;
-    }
+    selectedLanguage.value =
+        localization.codeFromLocale(localization.currentLocale.value);
   }
 
   Future<void> pilihBahasa(String code) async {
     if (selectedLanguage.value == code) return;
 
-    final idAkun = await _authService.idAkunSaatIni();
-    if (idAkun == null) return;
-
-    final language = languages.firstWhere((e) => e.code == code);
-
     selectedLanguage.value = code;
 
-    await _repositoriSetelan.simpanBahasa(
-      idAkun: idAkun,
-      bahasa: code,
-    );
-
-    Get.updateLocale(language.locale);
+    await localization.changeLocale(code);
   }
 }

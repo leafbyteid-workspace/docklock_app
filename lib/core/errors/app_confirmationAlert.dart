@@ -87,16 +87,18 @@ class ShowConfirmationDialog {
                       Get.back(result: true);
                     },
                   ),
-                  const SizedBox(height: 12),
-                  AppButton(
-                    text: cancelText,
-                    type: AppTipeTombol.secondary,
-                    onPressed: () {
-                      Get.back(result: false);
-                    },
-                  ),
+                  if (cancelText.isNotEmpty) ...[
+                    const SizedBox(height: 12),
+                    AppButton(
+                      text: cancelText,
+                      type: AppTipeTombol.secondary,
+                      onPressed: () {
+                        Get.back(result: false);
+                      },
+                    ),
+                  ],
                 ],
-              )
+              ),
             ],
           ),
         ),

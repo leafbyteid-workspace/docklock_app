@@ -133,4 +133,12 @@ class AppThemeService extends GetxService {
         break;
     }
   }
+
+  Future<void> clearTheme() async {
+    tema.value = TemaAplikasi.terang;
+
+    Get.changeThemeMode(ThemeMode.light);
+
+    isReady.value = false;
+  }
 }

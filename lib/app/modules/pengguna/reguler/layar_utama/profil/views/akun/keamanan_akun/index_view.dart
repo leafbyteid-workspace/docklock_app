@@ -63,9 +63,8 @@ class IndexAkunKeamananAkunView
                 icon: Symbols.delete_forever_rounded,
                 iconColor: Colors.red,
                 textColor: Colors.red,
-                title: "Delete Account",
-                subtitle:
-                    "Permanently delete your account and all associated data.",
+                title: LocaleKeys.deleteAccount.tr,
+                subtitle: LocaleKeys.deleteAccountDesc.tr,
                 onTap: () {
                   Get.dialog(
                     AppDeleteAccountDialog(

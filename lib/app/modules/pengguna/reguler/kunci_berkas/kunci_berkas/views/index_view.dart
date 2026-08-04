@@ -6,6 +6,7 @@ import 'package:material_symbols_icons/material_symbols_icons.dart';
 
 import '../../../../../../../core/constants/app_typography.dart';
 import '../../../../../../../core/helper/date_helper/format_date.dart';
+import '../../../../../../../core/utils/responsive_device/responsive_service.dart';
 import '../../../../../../../core/widget/input/app_textfield.dart';
 import '../../../../../../../core/widget/navigation/app_appbar.dart';
 import '../../../../../../../localization/locale_keys.dart';
@@ -22,134 +23,160 @@ class IndexKunciBerkasView extends GetView<IndexKunciBerkasController> {
         onBackPressed: () => Get.back(),
       ),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      Obx(() {
-                        return AppTextField(
-                          type: AppTextFieldType.file,
-                          label: LocaleKeys.selectFile.tr,
-                          hint: LocaleKeys.selectFile.tr,
-                          file: controller.memilihPlatformBerkas.value,
-                          onFileChanged: controller.saatBerkasBerubah,
-                        );
-                      }),
-                      const SizedBox(height: 16),
-                      AppTextField(
-                        controller: controller.namaBerkasController,
-                        label: LocaleKeys.fileName.tr,
-                        hint: "${LocaleKeys.fileName.tr}...",
-                        type: AppTextFieldType.text,
-                        prefix: const Icon(
-                          Symbols.description_rounded,
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      AppTextField(
-                        controller: controller.kataSandiController,
-                        label: LocaleKeys.password.tr,
-                        hint: LocaleKeys.enterPassword.tr,
-                        type: AppTextFieldType.password,
-                        required: true,
-                      ),
-                      const SizedBox(height: 16),
-                      AppTextField(
-                        controller: controller.konfirmasiKataSandiController,
-                        label: LocaleKeys.confirmPassword.tr,
-                        hint: LocaleKeys.repeatPassword.tr,
-                        type: AppTextFieldType.password,
-                        required: true,
-                      ),
-                      const SizedBox(height: 16),
-                      AppTextField(
-                        controller: controller.petunjukSandiController,
-                        label: LocaleKeys.passwordHint.tr,
-                        hint: LocaleKeys.passwordHintPlaceholder.tr,
-                        prefix: const Icon(
-                          Symbols.lightbulb_rounded,
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      AppTextField(
-                        controller: controller.deskripsiController,
-                        label: LocaleKeys.description.tr,
-                        hint: LocaleKeys.descriptionPlaceholder.tr,
-                        type: AppTextFieldType.multiline,
-                        maxLines: 4,
-                        minLines: 4,
-                        prefix: const Icon(
-                          Symbols.notes_rounded,
-                        ),
-                      ),
-                      const SizedBox(height: 24),
-                      Obx(() => EnkripsiProsesBar(
-                            isVisible: controller.isEncrypting.value,
-                            progress: controller.proses.value,
-                            title: LocaleKeys.lockingFile.tr,
-                            description: LocaleKeys.lockingFileDesc.tr,
-                          )),
-                      Obx(() {
-                        final result = controller.hasilEnkripsi.value;
-
-                        if (result == null) {
-                          return const SizedBox();
-                        }
-
-                        return Column(
-                          children: [
-                            const SizedBox(height: 24),
-                            _buatKartuHasilEnkripsi(
-                              context: context,
-                              result: result,
-                              onShare: controller.bagikanBerkas,
-                              onDownload: controller.unduhBerkas,
-                            ),
-                          ],
-                        );
-                      }),
-                    ],
-                  ),
-                ),
+        child: Center(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: Responsive.pageWidth(context),
+            ),
+            child: Padding(
+              padding: EdgeInsets.all(
+                Responsive.horizontalPadding(context),
               ),
-              const SizedBox(height: 24),
-              Obx(() {
-                final isEncrypting = controller.isEncrypting.value;
-                final hasEncryptedResult =
-                    controller.hasilEnkripsi.value != null;
+              child: Column(
+                children: [
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          Obx(() {
+                            return AppTextField(
+                              type: AppTextFieldType.file,
+                              label: LocaleKeys.selectFile.tr,
+                              hint: LocaleKeys.selectFile.tr,
+                              file: controller.memilihPlatformBerkas.value,
+                              onFileChanged: controller.saatBerkasBerubah,
+                            );
+                          }),
+                          SizedBox(
+                            height: Responsive.textFieldSpacing(context),
+                          ),
+                          AppTextField(
+                            controller: controller.namaBerkasController,
+                            label: LocaleKeys.fileName.tr,
+                            hint: "${LocaleKeys.fileName.tr}...",
+                            type: AppTextFieldType.text,
+                            prefix: const Icon(
+                              Symbols.description_rounded,
+                            ),
+                          ),
+                          SizedBox(
+                            height: Responsive.textFieldSpacing(context),
+                          ),
+                          AppTextField(
+                            controller: controller.kataSandiController,
+                            label: LocaleKeys.password.tr,
+                            hint: LocaleKeys.enterPassword.tr,
+                            type: AppTextFieldType.password,
+                            required: true,
+                          ),
+                          SizedBox(
+                            height: Responsive.textFieldSpacing(context),
+                          ),
+                          AppTextField(
+                            controller:
+                                controller.konfirmasiKataSandiController,
+                            label: LocaleKeys.confirmPassword.tr,
+                            hint: LocaleKeys.repeatPassword.tr,
+                            type: AppTextFieldType.password,
+                            required: true,
+                          ),
+                          SizedBox(
+                            height: Responsive.textFieldSpacing(context),
+                          ),
+                          AppTextField(
+                            controller: controller.petunjukSandiController,
+                            label: LocaleKeys.passwordHint.tr,
+                            hint: LocaleKeys.passwordHintPlaceholder.tr,
+                            prefix: const Icon(
+                              Symbols.lightbulb_rounded,
+                            ),
+                          ),
+                          SizedBox(
+                            height: Responsive.textFieldSpacing(context),
+                          ),
+                          AppTextField(
+                            controller: controller.deskripsiController,
+                            label: LocaleKeys.description.tr,
+                            hint: LocaleKeys.descriptionPlaceholder.tr,
+                            type: AppTextFieldType.multiline,
+                            maxLines: 4,
+                            minLines: 4,
+                            prefix: const Icon(
+                              Symbols.notes_rounded,
+                            ),
+                          ),
+                          SizedBox(
+                            height: Responsive.sectionSpacing(context),
+                          ),
+                          Obx(() => EnkripsiProsesBar(
+                                isVisible: controller.isEncrypting.value,
+                                progress: controller.proses.value,
+                                title: LocaleKeys.lockingFile.tr,
+                                description: LocaleKeys.lockingFileDesc.tr,
+                              )),
+                          Obx(() {
+                            final result = controller.hasilEnkripsi.value;
 
-                return SizedBox(
-                  width: double.infinity,
-                  height: 54,
-                  child: AppButton(
-                    type: isEncrypting
-                        ? AppTipeTombol.primary
-                        : hasEncryptedResult
-                            ? AppTipeTombol.danger
-                            : AppTipeTombol.primary,
-                    icon: isEncrypting
-                        ? Symbols.progress_activity
-                        : hasEncryptedResult
-                            ? Symbols.lock_reset_rounded
-                            : Symbols.lock_rounded,
-                    text: isEncrypting
-                        ? LocaleKeys.encrypting.tr
-                        : hasEncryptedResult
-                            ? LocaleKeys.lockAgain.tr
-                            : LocaleKeys.startLocking.tr,
-                    onPressed: isEncrypting
-                        ? null
-                        : hasEncryptedResult
-                            ? controller.bersihkanFormulir
-                            : controller.prosesKunciBerkas,
+                            if (result == null) {
+                              return const SizedBox();
+                            }
+
+                            return Column(
+                              children: [
+                                SizedBox(
+                                  height: Responsive.sectionSpacing(context),
+                                ),
+                                _buatKartuHasilEnkripsi(
+                                  context: context,
+                                  result: result,
+                                  onShare: controller.bagikanBerkas,
+                                  onDownload: controller.unduhBerkas,
+                                ),
+                              ],
+                            );
+                          }),
+                        ],
+                      ),
+                    ),
                   ),
-                );
-              }),
-            ],
+                  SizedBox(
+                    height: Responsive.sectionSpacing(context),
+                  ),
+                  Obx(() {
+                    final isEncrypting = controller.isEncrypting.value;
+                    final hasEncryptedResult =
+                        controller.hasilEnkripsi.value != null;
+
+                    return SizedBox(
+                      width: double.infinity,
+                      height: Responsive.buttonHeight(context),
+                      child: AppButton(
+                        type: isEncrypting
+                            ? AppTipeTombol.primary
+                            : hasEncryptedResult
+                                ? AppTipeTombol.danger
+                                : AppTipeTombol.primary,
+                        icon: isEncrypting
+                            ? Symbols.progress_activity
+                            : hasEncryptedResult
+                                ? Symbols.lock_reset_rounded
+                                : Symbols.lock_rounded,
+                        text: isEncrypting
+                            ? LocaleKeys.encrypting.tr
+                            : hasEncryptedResult
+                                ? LocaleKeys.lockAgain.tr
+                                : LocaleKeys.startLocking.tr,
+                        onPressed: isEncrypting
+                            ? null
+                            : hasEncryptedResult
+                                ? controller.bersihkanFormulir
+                                : controller.prosesKunciBerkas,
+                      ),
+                    );
+                  }),
+                ],
+              ),
+            ),
           ),
         ),
       ),
@@ -164,7 +191,9 @@ Widget _buatKartuHasilEnkripsi({
   required VoidCallback onDownload,
 }) {
   return Container(
-    padding: const EdgeInsets.all(16),
+    padding: EdgeInsets.all(
+      Responsive.horizontalPadding(context),
+    ),
     decoration: BoxDecoration(
       color: context.appTheme.surface,
       borderRadius: BorderRadius.circular(16),
@@ -197,7 +226,9 @@ Widget _buatKartuHasilEnkripsi({
                 size: 20,
               ),
             ),
-            const SizedBox(width: 16),
+            SizedBox(
+              height: Responsive.textFieldSpacing(context),
+            ),
             Expanded(
               child: Text(
                 LocaleKeys.fileLockedSuccess.tr,
@@ -210,57 +241,95 @@ Widget _buatKartuHasilEnkripsi({
             ),
           ],
         ),
-        const SizedBox(height: 16),
+        SizedBox(
+          height: Responsive.textFieldSpacing(context),
+        ),
         Divider(
           color: context.appTheme.divider,
           height: 1,
         ),
-        const SizedBox(height: 16),
+        SizedBox(
+          height: Responsive.textFieldSpacing(context),
+        ),
         _buatMenuInformasi(
           context: context,
           label: LocaleKeys.originalName.tr,
           value: result.originalName,
         ),
-        const SizedBox(height: 8),
+        SizedBox(
+          height: Responsive.textFieldSpacing(context) / 2,
+        ),
         _buatMenuInformasi(
           context: context,
           label: LocaleKeys.encryptedFileName.tr,
           value: result.encryptedName,
         ),
-        const SizedBox(height: 8),
+        SizedBox(
+          height: Responsive.textFieldSpacing(context) / 2,
+        ),
         _buatMenuInformasi(
           context: context,
           label: LocaleKeys.fileSize.tr,
           value: result.size,
         ),
-        const SizedBox(height: 8),
+        SizedBox(
+          height: Responsive.textFieldSpacing(context) / 2,
+        ),
         _buatMenuInformasi(
           context: context,
           label: LocaleKeys.lockedDate.tr,
           value: formatTanggal(result.encryptedAt),
         ),
         const SizedBox(height: 24),
-        Row(
-          children: [
-            Expanded(
-              child: AppButton(
-                text: LocaleKeys.share.tr,
-                type: AppTipeTombol.secondary,
-                icon: Icons.share_outlined,
-                onPressed: onShare,
-              ),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: AppButton(
-                text: LocaleKeys.downloadFile.tr,
-                type: AppTipeTombol.primary,
-                icon: Icons.file_download_outlined,
-                onPressed: onDownload,
-              ),
-            ),
-          ],
-        ),
+        Responsive.useCompactLayout(context)
+            ? Column(
+                children: [
+                  SizedBox(
+                    width: double.infinity,
+                    child: AppButton(
+                      text: LocaleKeys.share.tr,
+                      type: AppTipeTombol.secondary,
+                      icon: Icons.share_outlined,
+                      onPressed: onShare,
+                    ),
+                  ),
+                  SizedBox(
+                    height: Responsive.textFieldSpacing(context),
+                  ),
+                  SizedBox(
+                    width: double.infinity,
+                    child: AppButton(
+                      text: LocaleKeys.downloadFile.tr,
+                      type: AppTipeTombol.primary,
+                      icon: Icons.file_download_outlined,
+                      onPressed: onDownload,
+                    ),
+                  ),
+                ],
+              )
+            : Row(
+                children: [
+                  Expanded(
+                    child: AppButton(
+                      text: LocaleKeys.share.tr,
+                      type: AppTipeTombol.secondary,
+                      icon: Icons.share_outlined,
+                      onPressed: onShare,
+                    ),
+                  ),
+                  SizedBox(
+                    width: Responsive.textFieldSpacing(context),
+                  ),
+                  Expanded(
+                    child: AppButton(
+                      text: LocaleKeys.downloadFile.tr,
+                      type: AppTipeTombol.primary,
+                      icon: Icons.file_download_outlined,
+                      onPressed: onDownload,
+                    ),
+                  ),
+                ],
+              )
       ],
     ),
   );
@@ -274,7 +343,11 @@ Widget _buatMenuInformasi(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       SizedBox(
-        width: 90,
+        width: Responsive.isTablet(context)
+            ? 140
+            : Responsive.isMobileMini(context)
+                ? 80
+                : 100,
         child: Text(
           label,
           style: AppTypography.subhead().copyWith(
@@ -329,7 +402,9 @@ class EnkripsiProsesBar extends StatelessWidget {
           : Container(
               key: const ValueKey('encryption_progress'),
               width: double.infinity,
-              padding: const EdgeInsets.all(16),
+              padding: EdgeInsets.all(
+                Responsive.horizontalPadding(context),
+              ),
               decoration: BoxDecoration(
                 color: theme.colorScheme.surface,
                 borderRadius: BorderRadius.circular(8),
@@ -350,8 +425,8 @@ class EnkripsiProsesBar extends StatelessWidget {
                   Row(
                     children: [
                       Container(
-                        width: 48,
-                        height: 48,
+                        width: Responsive.isTablet(context) ? 56 : 48,
+                        height: Responsive.isTablet(context) ? 56 : 48,
                         decoration: BoxDecoration(
                           color: theme.colorScheme.primary.withOpacity(0.12),
                           borderRadius: BorderRadius.circular(14),
@@ -359,10 +434,12 @@ class EnkripsiProsesBar extends StatelessWidget {
                         child: Icon(
                           Icons.lock_outline_rounded,
                           color: theme.colorScheme.primary,
-                          size: 25,
+                          size: Responsive.isTablet(context) ? 30 : 24,
                         ),
                       ),
-                      const SizedBox(width: 16),
+                      SizedBox(
+                        height: Responsive.textFieldSpacing(context),
+                      ),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -373,7 +450,9 @@ class EnkripsiProsesBar extends StatelessWidget {
                                 fontWeight: FontWeight.w700,
                               ),
                             ),
-                            const SizedBox(height: 8),
+                            SizedBox(
+                              height: Responsive.textFieldSpacing(context) / 2,
+                            ),
                             Text(
                               description ?? '',
                               maxLines: 1,
@@ -386,7 +465,9 @@ class EnkripsiProsesBar extends StatelessWidget {
                           ],
                         ),
                       ),
-                      const SizedBox(width: 16),
+                      SizedBox(
+                        height: Responsive.textFieldSpacing(context),
+                      ),
                       Text(
                         '$percentage%',
                         style: theme.textTheme.titleMedium?.copyWith(

@@ -1,75 +1,94 @@
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 import '../../../../../../core/constants/app_color.dart';
 import '../../../../../../core/constants/app_typography.dart';
+import '../../../../../../core/utils/responsive_device/responsive_service.dart';
+import '../../../../../../localization/locale_keys.dart';
 import '../controllers/index_controller.dart';
 
-class LayarPembukaView extends GetView<LayarPembukaController> {
+class LayarPembukaView extends StatelessWidget {
   const LayarPembukaView({super.key});
+
   @override
   Widget build(BuildContext context) {
+    Get.find<LayarPembukaController>();
+
     return Scaffold(
       backgroundColor: AppColor.primary,
       body: SafeArea(
         child: Center(
           child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 500),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: Column(
-                children: [
-                  const Spacer(flex: 2),
-                  FractionallySizedBox(
-                    widthFactor: 0.3,
-                    child: AspectRatio(
-                      aspectRatio: 1,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8),
-                        child: Image.asset(
-                          'material/assets/logo/doclock-white-logo.png',
-                          fit: BoxFit.contain,
-                        ),
+            constraints: BoxConstraints(
+              maxWidth: Responsive.maxContentWidth(context),
+            ),
+            child: SingleChildScrollView(
+              padding: EdgeInsets.symmetric(
+                horizontal: Responsive.horizontalPadding(context),
+              ),
+              child: SizedBox(
+                height: MediaQuery.of(context).size.height -
+                    MediaQuery.of(context).padding.top,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Spacer(flex: 2),
+                    SizedBox(
+                      width: Responsive.logoSize(context),
+                      height: Responsive.logoSize(context),
+                      child: Image.asset(
+                        'material/assets/logo/doclock-white-logo.png',
+                        fit: BoxFit.contain,
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 16),
-                  FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Text(
-                      "DocLock",
+                    SizedBox(
+                      height: Responsive.spacing(context, 24),
+                    ),
+                    Text(
+                      LocaleKeys.splashTitle.tr,
+                      textAlign: TextAlign.center,
                       style: AppTypography.title1().copyWith(
+                        fontSize: Responsive.titleSize(context),
                         color: AppColor.textInverse,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    "Lindungi dokumen penting dengan\n"
-                    "keamanan yang hanya dapat Anda akses.",
-                    textAlign: TextAlign.center,
-                    style: AppTypography.bodySmall().copyWith(
-                      color: AppColor.textInverse,
-                      height: 1.5,
+                    SizedBox(
+                      height: Responsive.spacing(context, 16),
                     ),
-                  ),
-                  const SizedBox(height: 40),
-                  LoadingAnimationWidget.inkDrop(
-                    color: Colors.white,
-                    size: 48,
-                  ),
-                  const Spacer(flex: 3),
-                  Text(
-                    "Version 1.0.0",
-                    style: AppTypography.footnote().copyWith(
-                      color: AppColor.textInverse,
+                    ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 520),
+                      child: Text(
+                        LocaleKeys.splashDescription.tr,
+                        textAlign: TextAlign.center,
+                        style: AppTypography.bodySmall().copyWith(
+                          fontSize: Responsive.descriptionSize(context),
+                          color: AppColor.textInverse,
+                          height: 1.5,
+                        ),
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 24),
-                ],
+                    SizedBox(
+                      height: Responsive.spacing(context, 40),
+                    ),
+                    LoadingAnimationWidget.inkDrop(
+                      color: Colors.white,
+                      size: Responsive.loadingSize(context),
+                    ),
+                    const Spacer(flex: 3),
+                    Text(
+                      "${LocaleKeys.appVersion.tr} 1.0.0",
+                      textAlign: TextAlign.center,
+                      style: AppTypography.footnote().copyWith(
+                        color: AppColor.textInverse,
+                      ),
+                    ),
+                    SizedBox(
+                      height: Responsive.spacing(context, 24),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

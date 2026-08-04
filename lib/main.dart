@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:get/get.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import 'app/bindings/initial_binding.dart';
 import 'app/data/local/isar/services/auth/pengguna/auth_service.dart';
@@ -61,122 +62,128 @@ Future<void> main() async {
 
 Future<void> _initializeApp() async {
   await IsarService.instance.init();
+  await MobileAds.instance.initialize();
 }
 
 class Doclock extends StatelessWidget {
   Doclock({super.key});
 
   final themeService = Get.find<AppThemeService>();
+  final localization = LocalizationService.to;
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      title: 'Application',
-      initialRoute: AppPages.initial,
-      initialBinding: InitialBinding(),
-      getPages: AppPages.routes,
-      theme: AppLightTheme.theme,
-      darkTheme: AppDarkTheme.theme,
-      themeMode: themeService.themeMode,
-      translations: AppTranslations(),
-      locale: LocalizationService.to.currentLocale.value,
-      debugShowCheckedModeBanner: false,
-      defaultTransition: Transition.noTransition,
-      transitionDuration: Duration.zero,
-      builder: (context, child) {
-        ErrorWidget.builder = (FlutterErrorDetails details) {
-          return Material(
-            color: AppColor.background,
-            child: SafeArea(
-              child: Center(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(16),
-                  child: ConstrainedBox(
-                    constraints: const BoxConstraints(
-                      maxWidth: 480,
-                    ),
-                    child: Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(20),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Container(
-                            width: 80,
-                            height: 80,
-                            decoration: BoxDecoration(
-                              color: AppColor.danger.withOpacity(0.1),
-                              shape: BoxShape.circle,
-                            ),
-                            child: const Icon(
-                              Icons.error_outline_rounded,
-                              color: AppColor.danger,
-                              size: 40,
-                            ),
-                          ),
-                          const SizedBox(height: 24),
-                          Text(
-                            'Oops! Terjadi Kesalahan',
-                            textAlign: TextAlign.center,
-                            style: AppTypography.title2().copyWith(
-                              color: AppColor.textPrimary,
-                              fontWeight: AppTypography.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 12),
-                          Text(
-                            'Terjadi kesalahan saat menjalankan aplikasi. '
-                            'Silakan coba kembali beberapa saat lagi atau hubungi '
-                            'support@yourapp.com untuk bantuan lebih lanjut.',
-                            textAlign: TextAlign.center,
-                            style: AppTypography.bodySmall().copyWith(
-                              color: AppColor.textSecondary,
-                              height: 1.6,
-                            ),
-                          ),
-                          const SizedBox(height: 32),
-                          Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                              color: AppColor.neutral100,
-                              borderRadius: BorderRadius.circular(8),
-                              border: Border.all(
-                                color: AppColor.borderSubtle,
+    return Obx(
+      () {
+        return GetMaterialApp(
+          title: "Application",
+          initialRoute: AppPages.initial,
+          initialBinding: InitialBinding(),
+          getPages: AppPages.routes,
+          theme: AppLightTheme.theme,
+          darkTheme: AppDarkTheme.theme,
+          themeMode: themeService.themeMode,
+          translations: AppTranslations(),
+          locale: localization.currentLocale.value,
+          debugShowCheckedModeBanner: false,
+          defaultTransition: Transition.noTransition,
+          transitionDuration: Duration.zero,
+          builder: (context, child) {
+            ErrorWidget.builder = (FlutterErrorDetails details) {
+              return Material(
+                color: AppColor.background,
+                child: SafeArea(
+                  child: Center(
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.all(16),
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(
+                          maxWidth: 480,
+                        ),
+                        child: Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(20),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Container(
+                                width: 80,
+                                height: 80,
+                                decoration: BoxDecoration(
+                                  color: AppColor.danger.withOpacity(0.1),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: const Icon(
+                                  Icons.error_outline_rounded,
+                                  color: AppColor.danger,
+                                  size: 40,
+                                ),
                               ),
-                            ),
-                            child: Text(
-                              kDebugMode
-                                  ? details.exceptionAsString()
-                                  : 'Aplikasi mengalami kendala tidak terduga. Silakan coba kembali beberapa saat lagi.',
-                              textAlign: TextAlign.center,
-                              style: AppTypography.bodySmall().copyWith(
-                                color: AppColor.textSecondary,
+                              const SizedBox(height: 24),
+                              Text(
+                                'Oops! Terjadi Kesalahan',
+                                textAlign: TextAlign.center,
+                                style: AppTypography.title2().copyWith(
+                                  color: AppColor.textPrimary,
+                                  fontWeight: AppTypography.bold,
+                                ),
                               ),
-                            ),
+                              const SizedBox(height: 12),
+                              Text(
+                                'Terjadi kesalahan saat menjalankan aplikasi. '
+                                'Silakan coba kembali beberapa saat lagi atau hubungi '
+                                'support@yourapp.com untuk bantuan lebih lanjut.',
+                                textAlign: TextAlign.center,
+                                style: AppTypography.bodySmall().copyWith(
+                                  color: AppColor.textSecondary,
+                                  height: 1.6,
+                                ),
+                              ),
+                              const SizedBox(height: 32),
+                              Container(
+                                width: double.infinity,
+                                padding: const EdgeInsets.all(16),
+                                decoration: BoxDecoration(
+                                  color: AppColor.neutral100,
+                                  borderRadius: BorderRadius.circular(8),
+                                  border: Border.all(
+                                    color: AppColor.borderSubtle,
+                                  ),
+                                ),
+                                child: Text(
+                                  kDebugMode
+                                      ? details.exceptionAsString()
+                                      : 'Aplikasi mengalami kendala tidak terduga. Silakan coba kembali beberapa saat lagi.',
+                                  textAlign: TextAlign.center,
+                                  style: AppTypography.bodySmall().copyWith(
+                                    color: AppColor.textSecondary,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 16),
+                              SizedBox(
+                                width: double.infinity,
+                                child: AppButton(
+                                  text: 'Kembali Ke Beranda',
+                                  type: AppTipeTombol.primary,
+                                  height: 48,
+                                  onPressed: () {
+                                    Navigator.of(context).maybePop();
+                                  },
+                                ),
+                              ),
+                            ],
                           ),
-                          const SizedBox(height: 16),
-                          SizedBox(
-                            width: double.infinity,
-                            child: AppButton(
-                              text: 'Kembali Ke Beranda',
-                              type: AppTipeTombol.primary,
-                              height: 48,
-                              onPressed: () {
-                                Navigator.of(context).maybePop();
-                              },
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            ),
-          );
-        };
-        return child ?? const SizedBox.shrink();
+              );
+            };
+            return child ?? const SizedBox.shrink();
+          },
+        );
       },
     );
   }

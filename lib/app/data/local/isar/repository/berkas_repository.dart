@@ -150,6 +150,19 @@ class RepositoriBerkas {
     await simpan(data);
   }
 
+  Future<void> hapusBerdasarkanPengguna(int idPengguna) async {
+    await _isar.writeTxn(() async {
+      final data = await _isar.berkasModels
+          .filter()
+          .idPenggunaEqualTo(idPengguna)
+          .findAll();
+
+      await _isar.berkasModels.deleteAll(
+        data.map((e) => e.id).toList(),
+      );
+    });
+  }
+
   Future<void> hapus(int id) async {
     final data = await berdasarkanId(id);
 

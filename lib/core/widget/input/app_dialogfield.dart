@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 
 import '../../../app/data/local/isar/models/pengguna_model.dart';
+import '../../../localization/locale_keys.dart';
 import '../../constants/app_typography.dart';
 import '../action/app_button.dart';
 
@@ -405,13 +406,14 @@ class AppDeleteAccountDialog extends StatefulWidget {
 }
 
 class _AppDeleteAccountDialogState extends State<AppDeleteAccountDialog> {
-  static const confirmation = "konfirmasi penghapusan";
+  String get confirmation => LocaleKeys.deleteAccountConfirmation.tr;
 
   final controller = TextEditingController();
 
   bool loading = false;
 
-  bool get canDelete => controller.text.trim().toLowerCase() == confirmation;
+  bool get canDelete =>
+      controller.text.trim().toLowerCase() == confirmation.toLowerCase();
 
   @override
   void initState() {
@@ -462,25 +464,25 @@ class _AppDeleteAccountDialogState extends State<AppDeleteAccountDialog> {
             ),
             const SizedBox(height: 20),
             Text(
-              "Delete Account",
+              LocaleKeys.deleteAccountTitle.tr,
               style: AppTypography.title2(
                 fontWeight: AppTypography.bold,
               ),
             ),
             const SizedBox(height: 8),
             Text(
-              "This action cannot be undone.\n\n"
-              "Type\n"
-              "\"konfirmasi penghapusan\"\n"
-              "to continue.",
+              "${LocaleKeys.deleteAccountWarning.tr}\n\n"
+              "${LocaleKeys.deleteAccountType.tr}\n"
+              "\"$confirmation\"\n"
+              "${LocaleKeys.startunlockFiles.tr.toLowerCase()}.",
               textAlign: TextAlign.center,
               style: AppTypography.subhead(),
             ),
             const SizedBox(height: 24),
             TextField(
               controller: controller,
-              decoration: const InputDecoration(
-                hintText: "konfirmasi penghapusan",
+              decoration: InputDecoration(
+                hintText: confirmation,
               ),
             ),
             const SizedBox(height: 24),
@@ -488,7 +490,7 @@ class _AppDeleteAccountDialogState extends State<AppDeleteAccountDialog> {
               children: [
                 Expanded(
                   child: AppButton(
-                    text: "Cancel",
+                    text: LocaleKeys.cancel.tr,
                     type: AppTipeTombol.secondary,
                     onPressed: () => Get.back(),
                   ),
@@ -496,7 +498,7 @@ class _AppDeleteAccountDialogState extends State<AppDeleteAccountDialog> {
                 const SizedBox(width: 12),
                 Expanded(
                   child: AppButton(
-                    text: "Delete",
+                    text: LocaleKeys.confirmDelete.tr,
                     type: AppTipeTombol.danger,
                     enabled: canDelete,
                     isLoading: loading,

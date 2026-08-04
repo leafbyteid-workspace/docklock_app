@@ -4,6 +4,7 @@ import 'package:material_symbols_icons/material_symbols_icons.dart';
 
 import '../../../../../../../../../core/widget/card/app_feature_card.dart';
 import '../../../../../../../../../core/widget/navigation/app_appbar.dart';
+import '../../../../../../../../../localization/locale_keys.dart';
 import '../../../controllers/bantuan/tentang_aplikasi/index_controller.dart';
 
 class IndexTentangAplikasiView extends GetView<IndexTentangAplikasiController> {
@@ -11,8 +12,8 @@ class IndexTentangAplikasiView extends GetView<IndexTentangAplikasiController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const AppBarPengguna(
-        title: "Tentang Aplikasi",
+      appBar: AppBarPengguna(
+        title: LocaleKeys.aboutApp.tr,
       ),
       body: ListView(
         padding: const EdgeInsets.all(20),
@@ -57,19 +58,19 @@ class IndexTentangAplikasiView extends GetView<IndexTentangAplikasiController> {
                 ),
                 const SizedBox(height: 24),
                 Text(
-                  "Lindungi dokumen dan folder penting Anda dengan sistem penguncian yang cepat, sederhana, dan aman.",
+                  "Protect your important files and folders with a fast, simple, and secure locking system.",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.white.withOpacity(.92),
                     height: 1.5,
                   ),
-                )
+                ),
               ],
             ),
           ),
           const SizedBox(height: 24),
           const Text(
-            "Tentang DocLock",
+            "About DocLock",
             style: TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.bold,
@@ -77,7 +78,7 @@ class IndexTentangAplikasiView extends GetView<IndexTentangAplikasiController> {
           ),
           const SizedBox(height: 16),
           const Text(
-            "DocLock merupakan aplikasi keamanan lokal yang dirancang untuk membantu pengguna menjaga privasi Berkas dan folder penting. Dengan antarmuka yang sederhana namun modern, pengguna dapat mengunci dokumen secara cepat sehingga tidak dapat diakses oleh pihak lain tanpa izin.",
+            "DocLock is a local security application designed to help users protect the privacy of important files and folders. With a simple yet modern interface, users can quickly lock documents to prevent unauthorized access.",
             style: TextStyle(
               height: 1.6,
               fontSize: 15,
@@ -85,7 +86,7 @@ class IndexTentangAplikasiView extends GetView<IndexTentangAplikasiController> {
           ),
           const SizedBox(height: 24),
           const Text(
-            "Tujuan",
+            "Purpose",
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 22,
@@ -93,7 +94,7 @@ class IndexTentangAplikasiView extends GetView<IndexTentangAplikasiController> {
           ),
           const SizedBox(height: 16),
           const Text(
-            "DocLock hadir sebagai solusi ringan untuk memberikan perlindungan tambahan terhadap data pribadi maupun pekerjaan. Aplikasi ini memudahkan siapa saja dalam menjaga kerahasiaan dokumen penting tanpa memerlukan konfigurasi keamanan yang rumit.",
+            "DocLock provides a lightweight solution for adding an extra layer of protection to personal and work-related data. It enables users to keep important documents secure without requiring complicated security configurations.",
             style: TextStyle(
               height: 1.6,
               fontSize: 15,
@@ -101,7 +102,7 @@ class IndexTentangAplikasiView extends GetView<IndexTentangAplikasiController> {
           ),
           const SizedBox(height: 24),
           const Text(
-            "Fitur Utama",
+            "Main Features",
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 22,
@@ -110,42 +111,42 @@ class IndexTentangAplikasiView extends GetView<IndexTentangAplikasiController> {
           const SizedBox(height: 16),
           const AppFeatureCard(
             label: "Security",
-            title: "Kunci Berkas",
+            title: "File Locking",
             description:
-                "Lindungi berbagai jenis Berkas maupun folder agar tidak dapat diakses tanpa izin.",
+                "Protect various types of files and folders from unauthorized access.",
             backgroundIcon: Symbols.lock_rounded,
-            actionText: "Pelajari",
+            actionText: "Learn More",
           ),
           const SizedBox(height: 16),
           const AppFeatureCard(
             label: "Authentication",
-            title: "Autentikasi Aman",
+            title: "Secure Authentication",
             description:
-                "Pembukaan Berkas hanya dapat dilakukan setelah proses autentikasi berhasil.",
+                "Files can only be unlocked after successful authentication.",
             backgroundIcon: Symbols.verified_user_rounded,
-            actionText: "Pelajari",
+            actionText: "Learn More",
           ),
           const SizedBox(height: 16),
           const AppFeatureCard(
             label: "Performance",
-            title: "Cepat & Ringan",
+            title: "Fast & Lightweight",
             description:
-                "Dirancang dengan proses penguncian yang efisien tanpa mengurangi performa perangkat.",
+                "Designed with an efficient locking process without compromising device performance.",
             backgroundIcon: Symbols.bolt_rounded,
-            actionText: "Pelajari",
+            actionText: "Learn More",
           ),
           const SizedBox(height: 16),
           const AppFeatureCard(
             label: "Simple",
-            title: "Antarmuka Modern",
+            title: "Modern Interface",
             description:
-                "Desain sederhana sehingga mudah digunakan oleh semua kalangan pengguna.",
+                "A clean and intuitive design that is easy for everyone to use.",
             backgroundIcon: Symbols.dashboard_customize_rounded,
-            actionText: "Pelajari",
+            actionText: "Learn More",
           ),
           const SizedBox(height: 32),
           const Text(
-            "Kegunaan",
+            "Use Cases",
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 22,
@@ -154,23 +155,23 @@ class IndexTentangAplikasiView extends GetView<IndexTentangAplikasiController> {
           const SizedBox(height: 16),
           _item(
             Symbols.description_rounded,
-            "Melindungi dokumen pribadi.",
+            "Protect personal documents.",
           ),
           _item(
             Symbols.work_rounded,
-            "Mengamankan Berkas pekerjaan maupun proyek.",
+            "Secure work files and project documents.",
           ),
           _item(
             Symbols.folder_rounded,
-            "Mencegah akses tidak sah pada folder tertentu.",
+            "Prevent unauthorized access to specific folders.",
           ),
           _item(
             Symbols.security_rounded,
-            "Menjaga kerahasiaan data sensitif.",
+            "Keep sensitive data confidential.",
           ),
           const SizedBox(height: 32),
           const Text(
-            "Keamanan & Privasi",
+            "Security & Privacy",
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 22,
@@ -193,7 +194,7 @@ class IndexTentangAplikasiView extends GetView<IndexTentangAplikasiController> {
                 const SizedBox(width: 16),
                 Expanded(
                   child: Text(
-                    "DocLock merupakan aplikasi keamanan lokal. Untuk perlindungan yang lebih tinggi, pengguna disarankan mengombinasikan aplikasi ini dengan metode enkripsi serta praktik keamanan sistem yang baik.",
+                    "DocLock is a local security application. For stronger protection, users are encouraged to combine this application with encryption methods and good system security practices.",
                     style: TextStyle(
                       height: 1.6,
                       color: Colors.grey.shade700,
@@ -205,7 +206,7 @@ class IndexTentangAplikasiView extends GetView<IndexTentangAplikasiController> {
           ),
           const SizedBox(height: 32),
           const Text(
-            "Informasi Aplikasi",
+            "Application Information",
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 22,
@@ -218,14 +219,14 @@ class IndexTentangAplikasiView extends GetView<IndexTentangAplikasiController> {
               children: [
                 ListTile(
                   leading: Icon(Symbols.new_releases_rounded),
-                  title: Text("Versi"),
+                  title: Text("Version"),
                   trailing: Text("1.0.0"),
                 ),
                 Divider(height: 1),
                 ListTile(
                   leading: Icon(Symbols.code_rounded),
                   title: Text("Developer"),
-                  trailing: Text("DocLock Team"),
+                  trailing: Text("Leafbyte Team"),
                 ),
                 Divider(height: 1),
                 ListTile(
@@ -236,8 +237,8 @@ class IndexTentangAplikasiView extends GetView<IndexTentangAplikasiController> {
                 Divider(height: 1),
                 ListTile(
                   leading: Icon(Symbols.copyright_rounded),
-                  title: Text("Hak Cipta"),
-                  trailing: Text("© 2026"),
+                  title: Text("Copyright"),
+                  trailing: Text("Leafbyte© 2026"),
                 ),
               ],
             ),
@@ -245,7 +246,7 @@ class IndexTentangAplikasiView extends GetView<IndexTentangAplikasiController> {
           const SizedBox(height: 40),
           Center(
             child: Text(
-              "Terima kasih telah menggunakan DocLock.\nKami berkomitmen membantu menjaga keamanan data Anda.",
+              "Thank you for using DocLock.\nWe are committed to helping keep your data secure.",
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.grey.shade600,
