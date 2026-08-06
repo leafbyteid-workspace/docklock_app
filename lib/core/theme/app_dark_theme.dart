@@ -94,7 +94,7 @@ class AppDarkTheme {
         foregroundColor: AppColorDark.textPrimary,
         surfaceTintColor: Colors.transparent,
       ),
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         color: AppColorDark.surface,
         elevation: 0,
         shape: RoundedRectangleBorder(

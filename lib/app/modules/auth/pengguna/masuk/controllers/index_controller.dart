@@ -15,8 +15,8 @@ class IndexMasukPenggunaController extends GetxController {
   IndexMasukPenggunaController({
     RepositoriAkun? repositoriAkun,
     RepositoriPengguna? repositoriPengguna,
-  })  : _repositoriAkun = repositoriAkun ?? RepositoriAkun(),
-        _repositoriPengguna = repositoriPengguna ?? RepositoriPengguna();
+  }) : _repositoriAkun = repositoriAkun ?? RepositoriAkun(),
+       _repositoriPengguna = repositoriPengguna ?? RepositoriPengguna();
 
   final RepositoriAkun _repositoriAkun;
   final RepositoriPengguna _repositoriPengguna;
@@ -31,19 +31,18 @@ class IndexMasukPenggunaController extends GetxController {
   final emailController = TextEditingController();
   final kataSandiController = TextEditingController();
 
-  @override
-  void onClose() {
-    emailController.dispose();
-    kataSandiController.dispose();
-    super.onClose();
-  }
-
   String? validasiEmail(String? value) {
-    if (value == null || value.trim().isEmpty) {
+    final email = value?.trim().toLowerCase() ?? '';
+
+    if (email.isEmpty) {
       return LocaleKeys.emailRequired.tr;
     }
 
-    if (!GetUtils.isEmail(value.trim())) {
+    if (email.length > 254) {
+      return LocaleKeys.emailTooLong.tr;
+    }
+
+    if (!GetUtils.isEmail(email)) {
       return LocaleKeys.invalidEmailFormat.tr;
     }
 
@@ -51,12 +50,18 @@ class IndexMasukPenggunaController extends GetxController {
   }
 
   String? validasiKataSandi(String? value) {
-    if (value == null || value.isEmpty) {
+    final password = value ?? '';
+
+    if (password.isEmpty) {
       return LocaleKeys.passwordRequired.tr;
     }
 
-    if (value.length < 8) {
+    if (password.length < 8) {
       return LocaleKeys.passwordMinLength.tr;
+    }
+
+    if (password.length > 128) {
+      return LocaleKeys.passwordTooLong.tr;
     }
 
     return null;
@@ -94,8 +99,9 @@ class IndexMasukPenggunaController extends GetxController {
         return;
       }
 
-      final pengguna =
-          await _repositoriPengguna.berdasarkanId(akun.idPengguna!);
+      final pengguna = await _repositoriPengguna.berdasarkanId(
+        akun.idPengguna!,
+      );
 
       if (pengguna == null) {
         AppSnackbar.gagal(
@@ -104,14 +110,13 @@ class IndexMasukPenggunaController extends GetxController {
         );
         return;
       }
-      await _layananAutentikasi.masuk(
-        idAkun: akun.id,
-      );
+      await _layananAutentikasi.masuk(idAkun: akun.id);
 
       emailController.clear();
       kataSandiController.clear();
 
       final localization = Get.find<LocalizationService>();
+      await localization.saveCurrentLocaleToAccount();
       await localization.reloadLocale();
 
       final themeService = Get.find<AppThemeService>();
@@ -126,5 +131,12 @@ class IndexMasukPenggunaController extends GetxController {
     } finally {
       isLoading.value = false;
     }
+  }
+
+  @override
+  void onClose() {
+    emailController.dispose();
+    kataSandiController.dispose();
+    super.onClose();
   }
 }

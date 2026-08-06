@@ -220,7 +220,7 @@ class IndexTentangAplikasiView extends GetView<IndexTentangAplikasiController> {
                 ListTile(
                   leading: Icon(Symbols.new_releases_rounded),
                   title: Text("Version"),
-                  trailing: Text("1.0.0"),
+                  trailing: Text("1.0.1"),
                 ),
                 Divider(height: 1),
                 ListTile(

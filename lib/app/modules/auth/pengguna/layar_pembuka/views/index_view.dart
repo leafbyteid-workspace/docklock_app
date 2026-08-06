@@ -78,7 +78,7 @@ class LayarPembukaView extends StatelessWidget {
                     ),
                     const Spacer(flex: 3),
                     Text(
-                      "${LocaleKeys.appVersion.tr} 1.0.0",
+                      "${LocaleKeys.appVersion.tr} 1.0.1",
                       textAlign: TextAlign.center,
                       style: AppTypography.footnote().copyWith(
                         color: AppColor.textInverse,

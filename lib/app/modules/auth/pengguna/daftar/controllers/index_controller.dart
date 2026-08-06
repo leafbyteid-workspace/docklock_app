@@ -1,27 +1,24 @@
 import 'package:doclock_app/core/errors/app_snackbar.dart';
-import 'package:doclock_app/core/errors/app_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:isar/isar.dart';
 
+import '../../../../../../core/errors/app_confirmationAlert.dart';
 import '../../../../../../core/utils/security/app_password_hasher.dart';
 import '../../../../../../localization/locale_keys.dart';
 import '../../../../../data/local/isar/repository/akun_repository.dart';
 import '../../../../../data/local/isar/repository/pengguna_repository.dart';
-import '../../../../../data/local/isar/services/main/isar_service.dart';
 
 class IndexDaftarPenggunaController extends GetxController {
   IndexDaftarPenggunaController({
     RepositoriPengguna? repositoriPengguna,
     RepositoriAkun? repositoriAkun,
     Isar? isar,
-  })  : _repositoriPengguna = repositoriPengguna ?? RepositoriPengguna(),
-        _repositoriAkun = repositoriAkun ?? RepositoriAkun(),
-        _isar = isar ?? IsarService.instance.isar;
+  }) : _repositoriPengguna = repositoriPengguna ?? RepositoriPengguna(),
+       _repositoriAkun = repositoriAkun ?? RepositoriAkun();
 
   final RepositoriPengguna _repositoriPengguna;
   final RepositoriAkun _repositoriAkun;
-  final Isar _isar;
 
   final formKey = GlobalKey<FormState>();
 
@@ -45,63 +42,133 @@ class IndexDaftarPenggunaController extends GetxController {
   }
 
   String? validasiNamaLengkap(String? value) {
-    if (value == null || value.trim().isEmpty) {
+    final nama = value?.trim() ?? '';
+
+    if (nama.isEmpty) {
       return LocaleKeys.fullNameRequired.tr;
     }
 
-    if (value.trim().length < 3) {
+    if (nama.length < 3) {
       return LocaleKeys.fullNameMinLength.tr;
+    }
+
+    if (nama.length > 40) {
+      return LocaleKeys.fullNameMaxLength.tr;
+    }
+    final regex = RegExp(r"^[a-zA-ZÀ-ÿ\s.'-]+$");
+
+    if (!regex.hasMatch(nama)) {
+      return LocaleKeys.fullNameInvalidCharacter.tr;
+    }
+
+    if (RegExp(r'\s{2,}').hasMatch(nama)) {
+      return LocaleKeys.fullNameMultipleSpaces.tr;
     }
 
     return null;
   }
 
   String? validasiNamaPengguna(String? value) {
-    if (value == null || value.trim().isEmpty) {
+    final username = value?.trim() ?? '';
+
+    if (username.isEmpty) {
       return LocaleKeys.usernameRequired.tr;
     }
 
-    if (value.contains(" ")) {
+    if (username.length < 4) {
+      return LocaleKeys.usernameMinLength.tr;
+    }
+
+    if (username.length > 15) {
+      return LocaleKeys.usernameMaxLength.tr;
+    }
+
+    if (username.contains(" ")) {
       return LocaleKeys.usernameNoSpaces.tr;
     }
 
-    if (value.length < 4) {
-      return LocaleKeys.usernameMinLength.tr;
+    final regex = RegExp(r'^[a-zA-Z0-9_]+$');
+
+    if (!regex.hasMatch(username)) {
+      return LocaleKeys.usernameInvalidCharacter.tr;
+    }
+
+    final blockedUsername = [
+      "admin",
+      "administrator",
+      "root",
+      "system",
+      "null",
+      "undefined",
+    ];
+
+    if (blockedUsername.contains(username.toLowerCase())) {
+      return LocaleKeys.usernameNotAllowed.tr;
     }
 
     return null;
   }
 
   String? validasiEmail(String? value) {
-    if (value == null || value.trim().isEmpty) {
+    final email = value?.trim().toLowerCase() ?? '';
+
+    if (email.isEmpty) {
       return LocaleKeys.emailRequired.tr;
     }
 
-    if (!GetUtils.isEmail(value.trim())) {
+    if (email.length > 254) {
+      return LocaleKeys.emailTooLong.tr;
+    }
+
+    if (!GetUtils.isEmail(email)) {
       return LocaleKeys.invalidEmailFormat.tr;
+    }
+
+    if (email.contains("..")) {
+      return LocaleKeys.invalidEmailDoubleDot.tr;
     }
 
     return null;
   }
 
   String? validasiKataSandi(String? value) {
-    if (value == null || value.isEmpty) {
+    final password = value ?? '';
+
+    if (password.isEmpty) {
       return LocaleKeys.passwordRequired.tr;
     }
 
-    if (value.length < 8) {
+    if (password.length < 8) {
       return LocaleKeys.passwordMinLength.tr;
+    }
+
+    if (password.length > 24) {
+      return LocaleKeys.passwordMaxLength.tr;
+    }
+
+    if (password.contains(" ")) {
+      return LocaleKeys.passwordNoSpaces.tr;
+    }
+
+    if (!RegExp(r'[A-Z]').hasMatch(password)) {
+      return LocaleKeys.passwordRequireUppercase.tr;
+    }
+
+    if (!RegExp(r'[0-9]').hasMatch(password)) {
+      return LocaleKeys.passwordRequireNumber.tr;
     }
 
     return null;
   }
 
   String? validasiKonfirmasiKataSandi(String? value) {
-    if (value == null || value.isEmpty) {
+    final confirm = value ?? '';
+
+    if (confirm.isEmpty) {
       return LocaleKeys.confirmPasswordRequired.tr;
     }
 
-    if (value != kataSandiController.text) {
+    if (confirm != kataSandiController.text) {
       return LocaleKeys.confirmPasswordMismatch.tr;
     }
 
@@ -109,10 +176,12 @@ class IndexDaftarPenggunaController extends GetxController {
   }
 
   Future<void> daftarPengguna() async {
+    if (isLoading.value) {
+      return;
+    }
     if (!formKey.currentState!.validate()) {
       return;
     }
-
     isLoading.value = true;
 
     try {
@@ -130,10 +199,8 @@ class IndexDaftarPenggunaController extends GetxController {
         return;
       }
 
-      final penggunaSudahAda =
-          await _repositoriPengguna.namaPenggunaSudahDigunakan(
-        namaPengguna,
-      );
+      final penggunaSudahAda = await _repositoriPengguna
+          .namaPenggunaSudahDigunakan(namaPengguna);
 
       if (penggunaSudahAda) {
         AppSnackbar.gagal(
@@ -143,28 +210,35 @@ class IndexDaftarPenggunaController extends GetxController {
         return;
       }
 
-      await _isar.writeTxn(() async {
-        final pengguna = await _repositoriPengguna.tambahPengguna(
-          namaLengkap: namaLengkap,
-          namaPengguna: namaPengguna,
-        );
-
-        final hashedPassword = PasswordHasher.hash(
-          kataSandiController.text.trim(),
-        );
-
-        await _repositoriAkun.tambahAkun(
-          idPengguna: pengguna,
-          email: email,
-          kataSandi: hashedPassword,
-        );
-      });
-
-      _bersihkanFormulir();
-
-      AppToast.sukses(
-        title: LocaleKeys.registerSuccess.tr,
+      final pengguna = await _repositoriPengguna.tambahPengguna(
+        namaLengkap: namaLengkap,
+        namaPengguna: namaPengguna,
       );
+
+      final hashedPassword = PasswordHasher.hash(
+        kataSandiController.text.trim(),
+      );
+
+      await _repositoriAkun.tambahAkun(
+        idPengguna: pengguna,
+        email: email,
+        kataSandi: hashedPassword,
+      );
+
+      final berhasil = await ShowConfirmationDialog.show(
+        context: Get.context!,
+        title: LocaleKeys.registerSuccessTitle.tr,
+        subtitle: LocaleKeys.registerSuccessMessage.tr,
+        confirmText: LocaleKeys.continueText.tr,
+        cancelText: '',
+        type: ConfirmationDialogType.success,
+      );
+
+      if (berhasil) {
+        _bersihkanFormulir();
+
+        Get.back();
+      }
     } catch (e) {
       AppSnackbar.gagal(
         title: LocaleKeys.anError,

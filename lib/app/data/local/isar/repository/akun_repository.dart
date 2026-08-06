@@ -22,8 +22,10 @@ class RepositoriAkun {
   }
 
   Future<int> simpan(AkunModel akun) async {
-    akun.diperbaruiPada = DateTime.now();
-    return await _isar.akunModels.put(akun);
+    return await _isar.writeTxn(() async {
+      akun.diperbaruiPada = DateTime.now();
+      return await _isar.akunModels.put(akun);
+    });
   }
 
   Future<AkunModel?> berdasarkanId(int id) {

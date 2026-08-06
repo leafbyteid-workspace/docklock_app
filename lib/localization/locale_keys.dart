@@ -23,11 +23,40 @@ class LocaleKeys {
 
   // Auth
   // Login
+  static const copyright = "copyright";
+  static const loginDescription = "loginDescription";
+  static const noAccountYet = "noAccountYet";
   static const loginFailedTitle = "login_failed_title";
   static const emailNotRegistered = "email_not_registered";
   static const incorrectPassword = "incorrect_password";
   static const userNotFound = "user_not_found";
   static const loginSuccess = "login_success";
+  static const emailTooLong = "email_too_long";
+  static const passwordTooLong = "password_too_long";
+
+  // Register View
+  static const register = "register";
+  static const createAccountDesc = "createAccountDesc";
+
+  static const fullName = "fullName";
+  static const fullNameHint = "fullNameHint";
+
+  static const username = "username";
+  static const usernameHint = "usernameHint";
+
+  static const emailHint = "emailHint";
+
+  static const confirmPassword = "confirmPassword";
+  static const confirmPasswordHint = "confirmPasswordHint";
+
+  static const processing = "processing";
+
+  static const alreadyHaveAccount = "alreadyHaveAccount";
+
+  static const agreeRegister = "agreeRegister";
+  static const termsAndConditions = "termsAndConditions";
+  static const and = "and";
+
   // Register Validation
   static const fullNameRequired = "full_name_required";
   static const fullNameMinLength = "full_name_min_length";
@@ -45,7 +74,23 @@ class LocaleKeys {
   static const confirmPasswordRequired = "confirm_password_required";
   static const confirmPasswordMismatch = "confirm_password_mismatch";
 
-// Register
+  // Register Validation Extended
+  static const fullNameMaxLength = "full_name_max_length";
+  static const fullNameInvalidCharacter = "full_name_invalid_character";
+  static const fullNameMultipleSpaces = "full_name_multiple_spaces";
+
+  static const usernameMaxLength = "username_max_length";
+  static const usernameInvalidCharacter = "username_invalid_character";
+  static const usernameNotAllowed = "username_not_allowed";
+
+  static const invalidEmailDoubleDot = "invalid_email_double_dot";
+
+  static const passwordMaxLength = "password_max_length";
+  static const passwordNoSpaces = "password_no_spaces";
+  static const passwordRequireUppercase = "password_require_uppercase";
+  static const passwordRequireNumber = "password_require_number";
+
+  // Register
   static const emailAlreadyExistsTitle = "email_already_exists_title";
   static const emailAlreadyExistsDesc = "email_already_exists_desc";
 
@@ -53,7 +98,13 @@ class LocaleKeys {
   static const usernameAlreadyExistsDesc = "username_already_exists_desc";
 
   static const registerSuccess = "register_success";
-// Auth / Logout
+
+  // Register Success Dialog
+  static const registerSuccessTitle = "register_success_title";
+  static const registerSuccessMessage = "register_success_message";
+  static const continueText = "continue_text";
+
+  // Auth / Logout
   static const logoutSuccess = "logout_success";
   static const logoutFailed = "logout_failed";
 
@@ -78,7 +129,6 @@ class LocaleKeys {
   static const fileName = "file_name";
 
   static const passwordHint = "password_hint";
-  static const confirmPassword = "confirm_password";
 
   static const enterPassword = "enter_password";
   static const repeatPassword = "repeat_password";
@@ -149,11 +199,11 @@ class LocaleKeys {
   // Buka Kunci Berkas
   static const unlockFile = "unlock_file";
 
-  static const encryptedFile = "encrypted_file";
+  static const encryptedFile = "Encryption File";
 
   static const selectEncryptedFile = "select_encrypted_file";
 
-  static const openingFile = "opening_file";
+  static const openingFile = "Decryption File";
   static const openingFileDesc = "opening_file_desc";
 
   static const opening = "opening";
@@ -218,11 +268,30 @@ class LocaleKeys {
 
   // Informasi Pribadi
   static const userDataDetails = "user_data_details";
-  static const fullName = "full_name";
   static const userName = "username";
   static const age = "age";
   static const gender = "gender";
   static const genderHint = "gender_hint";
+
+  // Field
+  // Enum Jenis Kelamin
+  static const genderMale = "gender_male";
+  static const genderFemale = "gender_female";
+  static const genderNotFilled = "gender_not_filled";
+
+  // Field Informasi Pribadi
+  static const enterFullNameDesc = "enter_full_name_desc";
+  static const usernameDialogDesc = "username_dialog_desc";
+  static const emailDialogDesc = "email_dialog_desc";
+
+  static const ageDialogDesc = "age_dialog_desc";
+  static const ageHint = "age_hint";
+  static const ageRequired = "age_required";
+  static const ageMustBeNumber = "age_must_be_number";
+  static const ageInvalid = "age_invalid";
+
+  static const genderDialogDesc = "gender_dialog_desc";
+
   // Keamanan Akun
   // Ubah Kata Sandi
   static const accountSecurityTitle = "account_security_title";
@@ -235,6 +304,17 @@ class LocaleKeys {
   static const currentPasswordHint = "current_password_hint";
   static const newPasswordHint = "new_password_hint";
   static const confirmNewPasswordHint = "confirm_new_password_hint";
+
+  // Keamanan Akun - Ubah Kata Sandi Validation & Message
+  static const oldPasswordRequired = "old_password_required";
+  static const newPasswordRequired = "new_password_required";
+  static const confirmNewPasswordRequired = "confirm_new_password_required";
+  static const newPasswordSameAsOld = "new_password_same_as_old";
+  static const oldPasswordIncorrect = "old_password_incorrect";
+  static const passwordChangedSuccess = "password_changed_success";
+  static const sessionNotFound = "session_not_found";
+  static const accountNotFound = "account_not_found";
+  static const passwordMinCharacter = "password_min_character";
 
   // Aktivitas
   // Daftar Aktivitas
@@ -364,6 +444,5 @@ class LocaleKeys {
   // Hapus Data
 
   // List
-  static const processing = "processing";
   static const failed = "failed";
 }

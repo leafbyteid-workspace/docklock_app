@@ -49,9 +49,7 @@ class _AppInputDialogState extends State<AppInputDialog> {
   @override
   void initState() {
     super.initState();
-    controller = TextEditingController(
-      text: widget.initialValue ?? "",
-    );
+    controller = TextEditingController(text: widget.initialValue ?? "");
   }
 
   @override
@@ -86,9 +84,7 @@ class _AppInputDialogState extends State<AppInputDialog> {
         decoration: BoxDecoration(
           color: context.appTheme.surface,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: context.appTheme.borderSubtle,
-          ),
+          border: Border.all(color: context.appTheme.borderSubtle),
           boxShadow: [
             BoxShadow(
               color: context.appTheme.surfaceVariant.withOpacity(.03),
@@ -128,9 +124,7 @@ class _AppInputDialogState extends State<AppInputDialog> {
                 textAlign: TextAlign.center,
                 style: AppTypography.title2(
                   fontWeight: AppTypography.bold,
-                ).copyWith(
-                  color: context.appTheme.textPrimary,
-                ),
+                ).copyWith(color: context.appTheme.textPrimary),
               ),
               if (widget.subtitle != null) ...[
                 const SizedBox(height: 8),
@@ -174,9 +168,7 @@ class _AppInputDialogState extends State<AppInputDialog> {
                   ),
                   errorBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(
-                      color: Colors.red.shade400,
-                    ),
+                    borderSide: BorderSide(color: Colors.red.shade400),
                   ),
                 ),
               ),
@@ -201,7 +193,7 @@ class _AppInputDialogState extends State<AppInputDialog> {
                     ),
                   ),
                 ],
-              )
+              ),
             ],
           ),
         ),
@@ -253,10 +245,7 @@ class _AppSelectionDialogState extends State<AppSelectionDialog> {
       },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(
-          horizontal: 16,
-          vertical: 14,
-        ),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           color: isSelected
@@ -310,9 +299,7 @@ class _AppSelectionDialogState extends State<AppSelectionDialog> {
         decoration: BoxDecoration(
           color: context.appTheme.surface,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: context.appTheme.borderSubtle,
-          ),
+          border: Border.all(color: context.appTheme.borderSubtle),
         ),
         child: Padding(
           padding: const EdgeInsets.all(24),
@@ -337,9 +324,7 @@ class _AppSelectionDialogState extends State<AppSelectionDialog> {
               ],
               Text(
                 widget.title,
-                style: AppTypography.title2(
-                  fontWeight: AppTypography.bold,
-                ),
+                style: AppTypography.title2(fontWeight: AppTypography.bold),
               ),
               if (widget.subtitle != null) ...[
                 const SizedBox(height: 8),
@@ -353,13 +338,15 @@ class _AppSelectionDialogState extends State<AppSelectionDialog> {
               ],
               const SizedBox(height: 24),
               _buildOption(
-                title: "Pria",
+                title: LocaleKeys.genderMale.tr,
                 icon: Icons.male,
                 value: JenisKelamin.pria,
               ),
-              const SizedBox(height: 12),
+
+              const SizedBox(height: 16),
+
               _buildOption(
-                title: "Wanita",
+                title: LocaleKeys.genderFemale.tr,
                 icon: Icons.female,
                 value: JenisKelamin.wanita,
               ),
@@ -394,10 +381,7 @@ class _AppSelectionDialogState extends State<AppSelectionDialog> {
 }
 
 class AppDeleteAccountDialog extends StatefulWidget {
-  const AppDeleteAccountDialog({
-    super.key,
-    required this.onDelete,
-  });
+  const AppDeleteAccountDialog({super.key, required this.onDelete});
 
   final Future<void> Function() onDelete;
 
@@ -465,9 +449,7 @@ class _AppDeleteAccountDialogState extends State<AppDeleteAccountDialog> {
             const SizedBox(height: 20),
             Text(
               LocaleKeys.deleteAccountTitle.tr,
-              style: AppTypography.title2(
-                fontWeight: AppTypography.bold,
-              ),
+              style: AppTypography.title2(fontWeight: AppTypography.bold),
             ),
             const SizedBox(height: 8),
             Text(
@@ -481,9 +463,7 @@ class _AppDeleteAccountDialogState extends State<AppDeleteAccountDialog> {
             const SizedBox(height: 24),
             TextField(
               controller: controller,
-              decoration: InputDecoration(
-                hintText: confirmation,
-              ),
+              decoration: InputDecoration(hintText: confirmation),
             ),
             const SizedBox(height: 24),
             Row(

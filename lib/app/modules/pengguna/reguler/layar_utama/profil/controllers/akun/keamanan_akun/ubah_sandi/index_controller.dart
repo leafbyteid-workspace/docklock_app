@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../../../../../../../../core/errors/app_snackbar.dart';
+import '../../../../../../../../../../localization/locale_keys.dart';
 import '../../../../../../../../../data/local/isar/repository/akun_repository.dart';
 import '../../../../../../../../../data/local/isar/services/auth/pengguna/auth_service.dart';
 
@@ -22,12 +23,40 @@ class IndexKeamananAkunUbahSandiController extends GetxController {
   final obscureNew = true.obs;
   final obscureConfirm = true.obs;
 
-  @override
-  void onClose() {
-    sandiLamaController.dispose();
-    sandiBaruController.dispose();
-    konfirmasiController.dispose();
-    super.onClose();
+  String? validatorSandiLama(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return LocaleKeys.oldPasswordRequired.tr;
+    }
+
+    return null;
+  }
+
+  String? validatorSandiBaru(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return LocaleKeys.newPasswordRequired.tr;
+    }
+
+    if (value.length < 8) {
+      return LocaleKeys.passwordMinCharacter.tr;
+    }
+
+    if (value == sandiLamaController.text) {
+      return LocaleKeys.newPasswordSameAsOld.tr;
+    }
+
+    return null;
+  }
+
+  String? validatorKonfirmasi(String? value) {
+    if (value == null || value.isEmpty) {
+      return LocaleKeys.confirmNewPasswordRequired.tr;
+    }
+
+    if (value != sandiBaruController.text) {
+      return LocaleKeys.confirmPasswordMismatch.tr;
+    }
+
+    return null;
   }
 
   Future<void> ubahSandi() async {
@@ -41,13 +70,13 @@ class IndexKeamananAkunUbahSandiController extends GetxController {
       final idAkun = await _auth.idAkunSaatIni();
 
       if (idAkun == null) {
-        throw Exception("Sesi tidak ditemukan");
+        throw Exception(LocaleKeys.sessionNotFound.tr);
       }
 
       final akun = await _repositoriAkun.berdasarkanId(idAkun);
 
       if (akun == null) {
-        throw Exception("Akun tidak ditemukan");
+        throw Exception(LocaleKeys.accountNotFound.tr);
       }
 
       final valid = BCrypt.checkpw(
@@ -57,13 +86,16 @@ class IndexKeamananAkunUbahSandiController extends GetxController {
 
       if (!valid) {
         AppSnackbar.gagal(
-            title: "Terjadi Kesalahan",
-            message: "Kata Sandi Lama Tidak Sesuai!");
+          title: LocaleKeys.anError.tr,
+          message: LocaleKeys.oldPasswordIncorrect.tr,
+        );
         return;
       }
 
-      final passwordBaru =
-          BCrypt.hashpw(sandiBaruController.text.trim(), BCrypt.gensalt());
+      final passwordBaru = BCrypt.hashpw(
+        sandiBaruController.text.trim(),
+        BCrypt.gensalt(),
+      );
 
       await _repositoriAkun.ubahKataSandi(
         id: akun.id,
@@ -71,12 +103,14 @@ class IndexKeamananAkunUbahSandiController extends GetxController {
       );
 
       AppSnackbar.sukses(
-          title: "Berhasil", message: "Kata Sandi Berhasil Di Perbarui");
+        title: LocaleKeys.save.tr,
+        message: LocaleKeys.passwordChangedSuccess.tr,
+      );
 
       Get.back();
     } catch (e) {
       Get.snackbar(
-        "Error",
+        LocaleKeys.anError.tr,
         e.toString(),
         snackPosition: SnackPosition.BOTTOM,
       );
@@ -85,39 +119,11 @@ class IndexKeamananAkunUbahSandiController extends GetxController {
     }
   }
 
-  String? validatorSandiLama(String? value) {
-    if (value == null || value.trim().isEmpty) {
-      return "Password lama wajib diisi";
-    }
-
-    return null;
-  }
-
-  String? validatorSandiBaru(String? value) {
-    if (value == null || value.trim().isEmpty) {
-      return "Password baru wajib diisi";
-    }
-
-    if (value.length < 8) {
-      return "Minimal 8 karakter";
-    }
-
-    if (value == sandiLamaController.text) {
-      return "Password baru tidak boleh sama";
-    }
-
-    return null;
-  }
-
-  String? validatorKonfirmasi(String? value) {
-    if (value == null || value.isEmpty) {
-      return "Konfirmasi password wajib diisi";
-    }
-
-    if (value != sandiBaruController.text) {
-      return "Konfirmasi password tidak sesuai";
-    }
-
-    return null;
+  @override
+  void onClose() {
+    sandiLamaController.dispose();
+    sandiBaruController.dispose();
+    konfirmasiController.dispose();
+    super.onClose();
   }
 }

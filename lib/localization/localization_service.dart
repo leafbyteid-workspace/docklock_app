@@ -10,8 +10,8 @@ class LocalizationService extends GetxService {
   LocalizationService({
     RepositoriSetelanAkun? repositoriSetelan,
     AuthServicePengguna? authService,
-  })  : _repositoriSetelan = repositoriSetelan ?? RepositoriSetelanAkun(),
-        _authService = authService ?? Get.find<AuthServicePengguna>();
+  }) : _repositoriSetelan = repositoriSetelan ?? RepositoriSetelanAkun(),
+       _authService = authService ?? Get.find<AuthServicePengguna>();
 
   final RepositoriSetelanAkun _repositoriSetelan;
   final AuthServicePengguna _authService;
@@ -65,13 +65,31 @@ class LocalizationService extends GetxService {
     final idAkun = await _authService.idAkunSaatIni();
 
     if (idAkun != null) {
-      await _repositoriSetelan.simpanBahasa(
-        idAkun: idAkun,
-        bahasa: code,
-      );
+      await _repositoriSetelan.simpanBahasa(idAkun: idAkun, bahasa: code);
     }
 
     await Get.updateLocale(language.locale);
+  }
+
+  Future<void> changeTemporaryLocale(String code) async {
+    final language = languages.firstWhere(
+      (e) => e.code == code,
+      orElse: () => languages.first,
+    );
+
+    currentLocale.value = language.locale;
+
+    await Get.updateLocale(language.locale);
+  }
+
+  Future<void> saveCurrentLocaleToAccount() async {
+    final idAkun = await _authService.idAkunSaatIni();
+
+    if (idAkun == null) return;
+
+    final code = codeFromLocale(currentLocale.value);
+
+    await _repositoriSetelan.simpanBahasa(idAkun: idAkun, bahasa: code);
   }
 
   Locale localeFromCode(String code) {

@@ -19,17 +19,17 @@ class RepositoriPengguna {
   }
 
   Future<int> simpan(PenggunaModel pengguna) async {
-    pengguna.diperbaruiPada = DateTime.now();
-    return await _isar.penggunaModels.put(pengguna);
+    return await _isar.writeTxn(() async {
+      pengguna.diperbaruiPada = DateTime.now();
+      return await _isar.penggunaModels.put(pengguna);
+    });
   }
 
   Future<PenggunaModel?> berdasarkanId(int id) {
     return _isar.penggunaModels.get(id);
   }
 
-  Future<PenggunaModel?> berdasarkanNamaPengguna(
-    String namaPengguna,
-  ) {
+  Future<PenggunaModel?> berdasarkanNamaPengguna(String namaPengguna) {
     return _isar.penggunaModels
         .filter()
         .namaPenggunaEqualTo(namaPengguna)
@@ -40,13 +40,8 @@ class RepositoriPengguna {
     return _isar.penggunaModels.where().findAll();
   }
 
-  Future<bool> namaPenggunaSudahDigunakan(
-    String namaPengguna,
-  ) async {
-    return await berdasarkanNamaPengguna(
-          namaPengguna,
-        ) !=
-        null;
+  Future<bool> namaPenggunaSudahDigunakan(String namaPengguna) async {
+    return await berdasarkanNamaPengguna(namaPengguna) != null;
   }
 
   Future<void> hapus(int id) async {

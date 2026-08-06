@@ -8,6 +8,7 @@ import '../../../../../../../../../core/constants/app_color.dart';
 import '../../../../../../../../../core/layout/pengguna/profil/app_profilecard.dart';
 import '../../../../../../../../../core/layout/pengguna/profil/app_profilemenusection.dart';
 import '../../../../../../../../../core/layout/pengguna/profil/app_proflemenu.dart';
+import '../../../../../../../../../core/utils/extension/jenis_kelamin.dart';
 import '../../../../../../../../../core/widget/navigation/app_appbar.dart';
 import '../../../../../../../../../localization/locale_keys.dart';
 import '../../../controllers/akun/informasi_pribadi/index_controller.dart';
@@ -40,9 +41,10 @@ class IndexAkunInformasiPribadiView
         if (pengguna == null) {
           return const Center(
             child: EmptyState(
-                icon: Symbols.empty_dashboard_rounded,
-                title: "Data Pengguna Tidak Ditemukan",
-                subtitle: "Silahkan Lakukan Proses Masuk Terlebih Dahulu!"),
+              icon: Symbols.empty_dashboard_rounded,
+              title: "Data Pengguna Tidak Ditemukan",
+              subtitle: "Silahkan Lakukan Proses Masuk Terlebih Dahulu!",
+            ),
           );
         }
 
@@ -92,7 +94,7 @@ class IndexAkunInformasiPribadiView
                   AppDetailProfilMenu(
                     icon: Symbols.male_rounded,
                     title: LocaleKeys.gender.tr,
-                    value: pengguna.jenisKelamin.name,
+                    value: (pengguna.jenisKelamin).text,
                     onTap: controller.editJenisKelamin,
                   ),
                 ],

@@ -8,10 +8,9 @@ class StorageChecker {
 
   static const int reservedSpace = 10 * 1024 * 1024;
 
-  static Future<bool> hasEnoughStorage({
-    required int requiredBytes,
-  }) async {
-    final freeSpaceMb = await DiskSpacePlus.getFreeDiskSpace ?? 0;
+  static Future<bool> hasEnoughStorage({required int requiredBytes}) async {
+    final diskSpace = DiskSpacePlus();
+    final freeSpaceMb = await diskSpace.getFreeDiskSpace ?? 0;
 
     final freeBytes = (freeSpaceMb * 1024 * 1024).toInt();
 

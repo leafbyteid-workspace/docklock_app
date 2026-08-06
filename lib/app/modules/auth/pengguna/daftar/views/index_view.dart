@@ -7,6 +7,7 @@ import '../../../../../../core/constants/app_typography.dart';
 import '../../../../../../core/utils/responsive_device/responsive_service.dart';
 import '../../../../../../core/widget/action/app_button.dart';
 import '../../../../../../core/widget/input/app_textfield.dart';
+import '../../../../../../localization/locale_keys.dart';
 import '../../../../../routes/app_pages.dart';
 import '../controllers/index_controller.dart';
 
@@ -22,9 +23,7 @@ class IndexDaftarPenggunaView extends GetView<IndexDaftarPenggunaController> {
           onTap: () => FocusScope.of(context).unfocus(),
           child: Center(
             child: SingleChildScrollView(
-              padding: EdgeInsets.all(
-                Responsive.horizontalPadding(context),
-              ),
+              padding: EdgeInsets.all(Responsive.horizontalPadding(context)),
               child: ConstrainedBox(
                 constraints: BoxConstraints(
                   maxWidth: Responsive.formWidth(context),
@@ -44,28 +43,25 @@ class IndexDaftarPenggunaView extends GetView<IndexDaftarPenggunaController> {
                           ),
                         ),
                       ),
-                      SizedBox(
-                        height: Responsive.textFieldSpacing(context),
-                      ),
+                      SizedBox(height: Responsive.textFieldSpacing(context)),
                       Text(
-                        'Daftar',
-                        style: AppTypography.title2(
-                          fontWeight: AppTypography.bold,
-                        ).copyWith(
-                          fontSize: Responsive.titleSize(context),
-                          color: AppColor.textPrimary,
-                        ),
+                        LocaleKeys.register.tr,
+                        style:
+                            AppTypography.title2(
+                              fontWeight: AppTypography.bold,
+                            ).copyWith(
+                              fontSize: Responsive.titleSize(context),
+                              color: AppColor.textPrimary,
+                            ),
                       ),
-                      SizedBox(
-                        height: Responsive.sectionSpacing(context),
-                      ),
+                      SizedBox(height: Responsive.sectionSpacing(context)),
                       Padding(
                         padding: EdgeInsets.symmetric(
                           horizontal:
                               Responsive.horizontalPadding(context) * 0.5,
                         ),
                         child: Text(
-                          'Buat akun untuk mulai melindungi dokumen penting Anda.',
+                          LocaleKeys.createAccountDesc.tr,
                           textAlign: TextAlign.center,
                           style: AppTypography.bodySmall().copyWith(
                             fontSize: Responsive.descriptionSize(context),
@@ -73,59 +69,49 @@ class IndexDaftarPenggunaView extends GetView<IndexDaftarPenggunaController> {
                           ),
                         ),
                       ),
-                      SizedBox(
-                        height: Responsive.sectionSpacing(context),
-                      ),
+                      SizedBox(height: Responsive.sectionSpacing(context)),
                       AppTextField(
                         controller: controller.namaLengkapController,
-                        label: "Nama Lengkap",
-                        hint: "Masukkan Nama Lengkap...",
+                        label: LocaleKeys.fullName.tr,
+                        hint: LocaleKeys.fullNameHint.tr,
                         type: AppTextFieldType.text,
                         validator: controller.validasiNamaLengkap,
                         textInputAction: TextInputAction.next,
                         prefix: const Icon(Icons.person_outline_rounded),
                       ),
-                      SizedBox(
-                        height: Responsive.textFieldSpacing(context),
-                      ),
+                      SizedBox(height: Responsive.textFieldSpacing(context)),
                       AppTextField(
                         controller: controller.namaPenggunaController,
-                        label: "Nama Pengguna",
-                        hint: "Masukkan Nama Pengguna...",
+                        label: LocaleKeys.username.tr,
+                        hint: LocaleKeys.usernameHint.tr,
                         type: AppTextFieldType.text,
                         validator: controller.validasiNamaPengguna,
                         textInputAction: TextInputAction.next,
                         prefix: const Icon(Icons.person_outline_rounded),
                       ),
-                      SizedBox(
-                        height: Responsive.textFieldSpacing(context),
-                      ),
+                      SizedBox(height: Responsive.textFieldSpacing(context)),
                       AppTextField(
                         controller: controller.emailController,
-                        label: "Email",
-                        hint: "Masukkan Email...",
+                        label: LocaleKeys.email.tr,
+                        hint: LocaleKeys.emailHint.tr,
                         type: AppTextFieldType.email,
                         validator: controller.validasiEmail,
                         textInputAction: TextInputAction.next,
                       ),
-                      SizedBox(
-                        height: Responsive.textFieldSpacing(context),
-                      ),
+                      SizedBox(height: Responsive.textFieldSpacing(context)),
                       AppTextField(
                         controller: controller.kataSandiController,
-                        label: "Kata Sandi",
-                        hint: "Masukkan Kata Sandi...",
+                        label: LocaleKeys.password.tr,
+                        hint: LocaleKeys.passwordHint.tr,
                         type: AppTextFieldType.password,
                         validator: controller.validasiKataSandi,
                         textInputAction: TextInputAction.next,
                       ),
-                      SizedBox(
-                        height: Responsive.textFieldSpacing(context),
-                      ),
+                      SizedBox(height: Responsive.textFieldSpacing(context)),
                       AppTextField(
                         controller: controller.konfirmasiKataSandiController,
-                        label: "Ulangi Kata Sandi",
-                        hint: "Masukkan Ulang Kata Sandi...",
+                        label: LocaleKeys.confirmPassword.tr,
+                        hint: LocaleKeys.confirmPasswordHint.tr,
                         type: AppTextFieldType.password,
                         validator: controller.validasiKonfirmasiKataSandi,
                         textInputAction: TextInputAction.done,
@@ -141,7 +127,9 @@ class IndexDaftarPenggunaView extends GetView<IndexDaftarPenggunaController> {
                           height: Responsive.buttonHeight(context),
                           child: AppButton(
                             type: AppTipeTombol.primary,
-                            text: isLoading ? "Memproses..." : "Daftar",
+                            text: isLoading
+                                ? LocaleKeys.processing.tr
+                                : LocaleKeys.register.tr,
                             onPressed: isLoading
                                 ? null
                                 : () {
@@ -150,23 +138,19 @@ class IndexDaftarPenggunaView extends GetView<IndexDaftarPenggunaController> {
                           ),
                         );
                       }),
-                      SizedBox(
-                        height: Responsive.textFieldSpacing(context),
-                      ),
+                      SizedBox(height: Responsive.textFieldSpacing(context)),
                       SizedBox(
                         width: double.infinity,
                         height: Responsive.buttonHeight(context),
                         child: AppButton(
                           type: AppTipeTombol.secondary,
-                          text: "Sudah Punya Akun?",
+                          text: LocaleKeys.alreadyHaveAccount.tr,
                           onPressed: () {
                             Get.back();
                           },
                         ),
                       ),
-                      SizedBox(
-                        height: Responsive.textFieldSpacing(context),
-                      ),
+                      SizedBox(height: Responsive.textFieldSpacing(context)),
                       Padding(
                         padding: EdgeInsets.symmetric(
                           horizontal:
@@ -181,12 +165,14 @@ class IndexDaftarPenggunaView extends GetView<IndexDaftarPenggunaController> {
                               fontWeight: AppTypography.semiBold,
                             ),
                             children: [
-                              const TextSpan(
-                                text: 'Dengan mendaftar, Anda menyetujui ',
-                                style: TextStyle(color: AppColor.textTertiary),
+                              TextSpan(
+                                text: LocaleKeys.agreeRegister.tr,
+                                style: const TextStyle(
+                                  color: AppColor.textTertiary,
+                                ),
                               ),
                               TextSpan(
-                                text: 'Syarat & Ketentuan',
+                                text: LocaleKeys.termsAndConditions.tr,
                                 style: AppTypography.bodySmall().copyWith(
                                   color: AppColor.primary,
                                   fontWeight: AppTypography.semiBold,
@@ -196,12 +182,14 @@ class IndexDaftarPenggunaView extends GetView<IndexDaftarPenggunaController> {
                                     Get.toNamed(Routes.indexSyaratdanKetentuan);
                                   },
                               ),
-                              const TextSpan(
-                                text: ' serta ',
-                                style: TextStyle(color: AppColor.textTertiary),
+                              TextSpan(
+                                text: LocaleKeys.and.tr,
+                                style: const TextStyle(
+                                  color: AppColor.textTertiary,
+                                ),
                               ),
                               TextSpan(
-                                text: 'Kebijakan Privasi',
+                                text: LocaleKeys.privacyPolicy.tr,
                                 style: AppTypography.bodySmall().copyWith(
                                   color: AppColor.primary,
                                   fontWeight: AppTypography.semiBold,

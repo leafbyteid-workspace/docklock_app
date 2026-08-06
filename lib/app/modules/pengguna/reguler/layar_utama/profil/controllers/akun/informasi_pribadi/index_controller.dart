@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../../../../../../../core/widget/input/app_dialogfield.dart';
+import '../../../../../../../../../localization/locale_keys.dart';
 import '../../../../../../../../data/local/isar/models/akun_model.dart';
 import '../../../../../../../../data/local/isar/models/pengguna_model.dart';
 import '../../../../../../../../data/local/isar/repository/akun_repository.dart';
@@ -13,8 +14,8 @@ class IndexAkunInformasiPribadiController extends GetxController {
   IndexAkunInformasiPribadiController({
     RepositoriPengguna? repositoriPengguna,
     RepositoriAkun? repositoriAkun,
-  })  : _repositoriPengguna = repositoriPengguna ?? RepositoriPengguna(),
-        _repositoriAkun = repositoriAkun ?? RepositoriAkun();
+  }) : _repositoriPengguna = repositoriPengguna ?? RepositoriPengguna(),
+       _repositoriAkun = repositoriAkun ?? RepositoriAkun();
 
   final AuthServicePengguna _auth = Get.find<AuthServicePengguna>();
 
@@ -77,18 +78,18 @@ class IndexAkunInformasiPribadiController extends GetxController {
 
   Future<void> editNamaLengkap() async {
     final result = await _showInputDialog(
-      title: "Nama Lengkap",
-      subtitle: "Masukkan nama lengkap Anda.",
-      hintText: "Nama Lengkap",
+      title: LocaleKeys.fullName.tr,
+      subtitle: LocaleKeys.enterFullNameDesc.tr,
+      hintText: LocaleKeys.fullName.tr,
       initialValue: pengguna.value?.namaLengkap,
       icon: Icons.badge_outlined,
       validator: (value) {
         if (value.isEmpty) {
-          return "Nama lengkap tidak boleh kosong";
+          return LocaleKeys.fullNameRequired.tr;
         }
 
         if (value.length < 3) {
-          return "Minimal 3 karakter";
+          return LocaleKeys.fullNameMinLength.tr;
         }
 
         return null;
@@ -107,18 +108,18 @@ class IndexAkunInformasiPribadiController extends GetxController {
 
   Future<void> editNamaPengguna() async {
     final result = await _showInputDialog(
-      title: "Nama Pengguna",
-      subtitle: "Nama pengguna digunakan saat login.",
-      hintText: "Nama Pengguna",
+      title: LocaleKeys.userName.tr,
+      subtitle: LocaleKeys.usernameDialogDesc.tr,
+      hintText: LocaleKeys.userName.tr,
       initialValue: pengguna.value?.namaPengguna,
       icon: Icons.person_outline,
       validator: (value) {
         if (value.isEmpty) {
-          return "Nama pengguna tidak boleh kosong";
+          return LocaleKeys.usernameRequired.tr;
         }
 
         if (value.length < 4) {
-          return "Minimal 4 karakter";
+          return LocaleKeys.usernameMinLength.tr;
         }
 
         return null;
@@ -127,13 +128,14 @@ class IndexAkunInformasiPribadiController extends GetxController {
 
     if (result == null) return;
 
-    final sudahDipakai =
-        await _repositoriPengguna.namaPenggunaSudahDigunakan(result);
+    final sudahDipakai = await _repositoriPengguna.namaPenggunaSudahDigunakan(
+      result,
+    );
 
     if (sudahDipakai && result != pengguna.value!.namaPengguna) {
       AppSnackbar.gagal(
-        title: "Gagal",
-        message: "Nama pengguna telah digunakan",
+        title: LocaleKeys.anError.tr,
+        message: LocaleKeys.usernameAlreadyExistsDesc.tr,
       );
       return;
     }
@@ -148,19 +150,19 @@ class IndexAkunInformasiPribadiController extends GetxController {
 
   Future<void> editEmail() async {
     final result = await _showInputDialog(
-      title: "Email",
-      subtitle: "Masukkan alamat email aktif.",
-      hintText: "Email",
+      title: LocaleKeys.email.tr,
+      subtitle: LocaleKeys.emailDialogDesc.tr,
+      hintText: LocaleKeys.email.tr,
       initialValue: akun.value?.email,
       icon: Icons.email_outlined,
       keyboardType: TextInputType.emailAddress,
       validator: (value) {
         if (value.isEmpty) {
-          return "Email tidak boleh kosong";
+          return LocaleKeys.emailRequired.tr;
         }
 
         if (!GetUtils.isEmail(value)) {
-          return "Format email tidak valid";
+          return LocaleKeys.invalidEmailFormat.tr;
         }
 
         return null;
@@ -172,39 +174,40 @@ class IndexAkunInformasiPribadiController extends GetxController {
     final sudahDipakai = await _repositoriAkun.emailSudahDigunakan(result);
 
     if (sudahDipakai && result != akun.value!.email) {
-      Get.snackbar(
-        "Gagal",
-        "Email telah digunakan",
+      AppSnackbar.gagal(
+        title: LocaleKeys.anError.tr,
+        message: LocaleKeys.emailAlreadyExistsDesc.tr,
       );
       return;
     }
 
     akun.value!.email = result;
     await _repositoriAkun.simpan(akun.value!);
+
     await memuatData();
   }
 
   Future<void> editUsia() async {
     final result = await _showInputDialog(
-      title: "Usia",
-      subtitle: "Masukkan usia Anda.",
-      hintText: "Contoh: 25",
+      title: LocaleKeys.age.tr,
+      subtitle: LocaleKeys.ageDialogDesc.tr,
+      hintText: LocaleKeys.ageHint.tr,
       initialValue: pengguna.value?.usia?.toString(),
       icon: Icons.cake_outlined,
       keyboardType: TextInputType.number,
       validator: (value) {
         if (value.isEmpty) {
-          return "Usia tidak boleh kosong";
+          return LocaleKeys.ageRequired.tr;
         }
 
         final usia = int.tryParse(value);
 
         if (usia == null) {
-          return "Harus berupa angka";
+          return LocaleKeys.ageMustBeNumber.tr;
         }
 
         if (usia < 1 || usia > 120) {
-          return "Usia tidak valid";
+          return LocaleKeys.ageInvalid.tr;
         }
 
         return null;
@@ -224,13 +227,12 @@ class IndexAkunInformasiPribadiController extends GetxController {
   Future<void> editJenisKelamin() async {
     final hasil = await Get.dialog<JenisKelamin>(
       AppSelectionDialog(
-        title: "Jenis Kelamin",
-        subtitle: "Pilih jenis kelamin Anda.",
+        title: LocaleKeys.gender.tr,
+        subtitle: LocaleKeys.genderDialogDesc.tr,
         icon: Icons.wc_outlined,
         initialValue: pengguna.value?.jenisKelamin,
       ),
     );
-
     if (hasil == null) return;
 
     await _repositoriPengguna.ubahData(
@@ -240,5 +242,4 @@ class IndexAkunInformasiPribadiController extends GetxController {
 
     await memuatData();
   }
-
 }

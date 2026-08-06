@@ -94,7 +94,7 @@ class AppLightTheme {
         foregroundColor: AppColor.textPrimary,
         surfaceTintColor: Colors.transparent,
       ),
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         color: AppColor.surface,
         elevation: 0,
         shape: RoundedRectangleBorder(

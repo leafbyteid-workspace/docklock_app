@@ -20,7 +20,7 @@ class ThemeController extends GetxController {
 
       case TemaAplikasi.gelap:
         return ThemeMode.dark;
-
+        
       case TemaAplikasi.sistem:
         return ThemeMode.system;
     }
